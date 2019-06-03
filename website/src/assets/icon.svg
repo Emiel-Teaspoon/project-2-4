@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128px" height="128px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55 (78076) - https://sketchapp.com -->
+    <title>Base</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Base" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval" fill="#EF6A6E" cx="64" cy="64" r="64"></circle>
+        <path d="M64,114 C89,114 114,91.6142375 114,64 C114,36.3857625 91.6142375,14 64,14 C36.3857625,14 14,36.3857625 14,64 C14,91.6142375 39,114 64,114 Z" id="Oval-Copy" stroke="#FFFFFF" stroke-width="10" fill="#EF6A6E" stroke-linecap="round" stroke-dasharray="70,30"></path>
+        <path d="M64,89 C76.5,89 89,77.8071187 89,64 C89,50.1928813 77.8071187,39 64,39 C50.1928813,39 39,50.1928813 39,64 C39,77.8071187 51.5,89 64,89 Z" id="Oval-Copy-2" stroke="#FFFFFF" stroke-width="10" fill="#EF6A6E" stroke-linecap="round" stroke-dasharray="70,30" transform="translate(64.000000, 64.000000) rotate(43.000000) translate(-64.000000, -64.000000) "></path>
+    </g>
+</svg>

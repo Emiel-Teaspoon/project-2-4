@@ -1,0 +1,16 @@
+.Drawer {
+    width: 240px;
+    flex-shrink: 0;
+}
+
+.DrawerPaper {
+    width: 240px;
+}
+
+.DrawerHeader {
+    flex-direction: row;
+    display: 'flex';
+    align-items: 'center';
+    padding: '0 8px';
+    justify-content: 'flex-end';
+}

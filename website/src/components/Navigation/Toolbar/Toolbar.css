@@ -1,0 +1,13 @@
+.Root {
+    display: flex;
+    flex-direction: row;
+}
+
+.Grow {
+    flex-grow: 1;
+}
+
+.MenuButton {
+    margin-left: -12;
+    margin-right: 20;
+}

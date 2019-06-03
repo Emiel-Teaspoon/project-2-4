@@ -1,0 +1,11 @@
+.Container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.Content {
+    display: flex;
+    flex: 1;
+}
