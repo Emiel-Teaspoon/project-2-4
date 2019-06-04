@@ -20,6 +20,11 @@
             return $this->conn;
         }
 
+        function closeConnection()
+        {
+            $this->setConnection(null);
+        }
+        
         function getEvents($limit, $userID)
         {
             $sql = "Select statement";

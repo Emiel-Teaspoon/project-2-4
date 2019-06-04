@@ -16,7 +16,7 @@
         function login($dbo, $username, $password) {
             $db = new UserDB($dbo);
 
-            $stmt = $db->loginWithUsername($username, $password, $udid);
+            $stmt = $db->login($username, $password, $udid);
             $db->closeConnection();
             return $stmt;
         }

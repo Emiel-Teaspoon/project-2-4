@@ -10,8 +10,11 @@ All notable changes of the PHPUnit 7.5 release series are documented in this fil
 
 ### Fixed
 
-* Fixed [#3694](https://github.com/sebastianbergmann/phpunit/pull/3694): Constructor arguments for `Throwable` and `Exception` are ignored
 * Fixed [#3709](https://github.com/sebastianbergmann/phpunit/pull/3709): Method-level `@coversNothing` annotation does not prevent code coverage data collection
+
+### Fixed
+
+* Fixed [#3694](https://github.com/sebastianbergmann/phpunit/pull/3694): Constructor arguments for `Throwable` and `Exception` are ignored
 
 ## [7.5.11] - 2019-05-14
 

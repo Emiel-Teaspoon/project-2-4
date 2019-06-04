@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -24,8 +24,10 @@ use PHPUnit\Framework\TestCase;
  * @uses \PHPUnit\Framework\MockObject\Matcher\MethodName
  * @uses \PHPUnit\Framework\MockObject\Stub\ReturnStub
  * @uses \PHPUnit\Framework\MockObject\Matcher\InvokedCount
+ *
+ * @small
  */
-class GeneratorTest extends TestCase
+final class GeneratorTest extends TestCase
 {
     /**
      * @var Generator
@@ -226,7 +228,7 @@ class GeneratorTest extends TestCase
         $this->assertSame('It works', $mock->getMessage());
     }
 
-    public function testVariadicArgumentsArePassedToOriginalMethod()
+    public function testVariadicArgumentsArePassedToOriginalMethod(): void
     {
         /** @var ClassWithVariadicArgumentMethod|MockObject $mock */
         $mock = $this->generator->getMock(
@@ -245,7 +247,7 @@ class GeneratorTest extends TestCase
         $this->assertSame($arguments, $mock->foo(...$arguments));
     }
 
-    public function testVariadicArgumentsArePassedToMockedMethod()
+    public function testVariadicArgumentsArePassedToMockedMethod(): void
     {
         /** @var ClassWithVariadicArgumentMethod|MockObject $mock */
         $mock = $this->createMock(ClassWithVariadicArgumentMethod::class);

@@ -9,18 +9,18 @@ return [
             'template_path' => __DIR__ . '/../templates/',
         ],
 
-        'db' => [
-            'user' => 'eventmap',
-            'pass' => 'J9Y1;=&TkbB+',
-            'host' => 'localhost',
-            'name' => 'eventmap',
-        ],
-
         // Monolog settings
         'logger' => [
             'name' => 'slim-app',
             'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
             'level' => \Monolog\Logger::DEBUG,
+        ],
+
+        'db' => [
+            'user' => 'eventmap',
+            'pass' => 'J9Y1;=&TkbB+',
+            'host' => 'localhost',
+            'name' => 'eventmap',
         ],
     ],
 ];

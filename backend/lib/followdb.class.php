@@ -20,6 +20,11 @@
             return $this->conn;
         }
 
+        function closeConnection()
+        {
+            $this->setConnection(null);
+        }
+
         function followUser($userToFollow, $userID)
         {
             $sql = "INSERT INTO followers (user, follower) VALUES (:userToFollow, :userID)";
@@ -35,6 +40,5 @@
             }
             return array('Code' => 403, 'Message' => 'Error');
         }
-
     }
 ?>

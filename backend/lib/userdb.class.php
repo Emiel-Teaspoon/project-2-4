@@ -20,6 +20,11 @@
             return $this->conn;
         }
 
+        function closeConnection()
+        {
+            $this->setConnection(null);
+        }
+        
         function login($username, $password)
         {
             $sql = "SELECT user.user_password, user.user_id, user.api_key FROM user WHERE user_username = :username";
