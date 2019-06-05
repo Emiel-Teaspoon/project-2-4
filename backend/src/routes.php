@@ -23,7 +23,7 @@ return function (App $app) {
         return $response->withJson($result);
      });
 
-     $app->get('/getEvents/{limit}/{userid}', function ($request, $response) {
+     $app->get('/getEvents/{limit}/{userid}', function ($request, $response, $args) {
         $limit = $args['limit'];
         $userid = $args['userid'];
         $api = new EventMapAPI();
@@ -38,4 +38,15 @@ return function (App $app) {
         $result = $api->followUser($this->db, $usertofollow, $userid);
         return $response->withJson($result);
      });
+
+    $app->get('/registerUser/{username}/{password}/{email}/{api_key}', function (Request $request, Response $response, $args) {
+        $username = $args['username'];
+        $password = $args['password'];
+        $email = $args['email'];
+        $api_key = $args['api_key'];
+        echo($username.$password.$email.$api_key);
+        $api = new EventMapAPI();
+        $result = $api->registerUser($this->db, $username, $password, $email, $api_key);
+        return $response->withJSON($result);
+    });
 };

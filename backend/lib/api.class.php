@@ -13,10 +13,18 @@
         }
 
         // User functions
+        function registerUser($dbo, $username, $password, $email, $api_key) {
+            $db = new UserDB($dbo);
+
+            $stmt = $db->registerUser($username, $password, $email, $api_key);
+            $db->closeConnection();
+            return $stmt;
+        }
+
         function login($dbo, $username, $password) {
             $db = new UserDB($dbo);
 
-            $stmt = $db->login($username, $password, $udid);
+            $stmt = $db->login($username, $password);
             $db->closeConnection();
             return $stmt;
         }

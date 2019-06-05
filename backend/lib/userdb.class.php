@@ -62,5 +62,18 @@
             return array('Code' => 401, 'Message' => 'Wrong password/username');
         }
 
+        function registerUser($username, $password, $email, $api_key) {
+            $sql = "INSERT INTO users VALUES (null, :username, :password, :email, :api_key, current_timestamp)";
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bindvalue(':username', $username);
+            $stmt->bindvalue(':password', $password);
+            $stmt->bindvalue(':email', $email);
+            $stmt->bindvalue(':api_key', $api_key);
+
+            $stmt->execute();
+            
+            return array('Code' => 200);
+        }
     }
 ?>
