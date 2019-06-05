@@ -39,14 +39,12 @@ return function (App $app) {
         return $response->withJson($result);
      });
 
-    $app->get('/registerUser/{username}/{password}/{email}/{api_key}', function (Request $request, Response $response, $args) {
+    $app->get('/registerUser/{username}/{password}/{email}', function (Request $request, Response $response, $args) {
         $username = $args['username'];
         $password = $args['password'];
         $email = $args['email'];
-        $api_key = $args['api_key'];
-        echo($username.$password.$email.$api_key);
         $api = new EventMapAPI();
-        $result = $api->registerUser($this->db, $username, $password, $email, $api_key);
+        $result = $api->registerUser($this->db, $username, $password, $email);
         return $response->withJSON($result);
     });
 };

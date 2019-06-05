@@ -62,18 +62,43 @@
             return array('Code' => 401, 'Message' => 'Wrong password/username');
         }
 
-        function registerUser($username, $password, $email, $api_key) {
-            $sql = "INSERT INTO users VALUES (null, :username, :password, :email, :api_key, current_timestamp)";
+        function registerUser($username, $password, $email) {
+            $sql = "INSERT INTO users VALUES (:username, :password, :email, :api_key)";
             $stmt = $this->conn->prepare($sql);
 
+            $key = 'Some key for encoding';
+            $string = $password;
+
+            $iv = mcrypt_create_iv(
+                mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC),
+                MCRYPT_DEV_URANDOM
+            );
+
+            $encrypted = base64_encode(
+                $iv .
+                mcrypt_encrypt(
+                    MCRYPT_RIJNDAEL_128,
+                    hash('sha256', $key, true),
+                    $string,
+                    MCRYPT_MODE_CBC,
+                    $iv
+                )
+            );
+
+            $api_key = base64_encode(md5(uniqid(rand(), true)));
+
             $stmt->bindvalue(':username', $username);
-            $stmt->bindvalue(':password', $password);
+            $stmt->bindvalue(':password', $encrypted);
             $stmt->bindvalue(':email', $email);
             $stmt->bindvalue(':api_key', $api_key);
 
-            $stmt->execute();
+            $result = $stmt->execute();
             
-            return array('Code' => 200);
+            if($result === true) {
+                $this->sendVerification($email, $username, $hash);
+                return array('Code' => 200, 'Message' => 'Success', 'Username' => $username, 'Email' => $email, 'APIKey' => $api_key);
+            }
+            
         }
     }
 ?>
