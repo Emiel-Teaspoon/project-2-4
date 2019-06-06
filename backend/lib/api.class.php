@@ -38,6 +38,22 @@
         }
 
         // Event functions
+        function addEvent($dbo, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT) {
+            $db = new EventDB($dbo);
+
+            $stmt = $db->addEvent($title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
+            $db->closeConnection();
+            return $stmt;
+        }
+
+        function updateEvent($dbo, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT) {
+            $db = new EventDB($dbo);
+
+            $stmt = $db->updateEvent($title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
+            $db->closeConnection();
+            return $stmt;
+        }
+        
         function getEvents($dbo, $limit, $userid) {
             $db = new EventDB($dbo);
 

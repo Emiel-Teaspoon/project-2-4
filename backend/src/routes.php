@@ -14,6 +14,25 @@ return function (App $app) {
         $result = $api->version();
         return $response->withJson($result);
     });
+
+    $app->get('/registerUser/{username}/{password}/{email}', function (Request $request, Response $response, $args) {
+        $username = $args['username'];
+        $password = $args['password'];
+        $email = $args['email'];
+        $api = new EventMapAPI();
+        $result = $api->registerUser($this->db, $username, $password, $email);
+        return $response->withJSON($result);
+    });
+
+    $app->get('/changePassword/{username}/{oldPassword}/{newPassword}', function (Request $request, Response $response, $args) {
+        $username = $args['username'];
+        $oldPassword = $args['oldPassword'];
+        $newPassword = $args['newPassword'];
+        
+        $api = new EventMapAPI();
+        $result = $api->changePassword($this->db, $username, $oldPassword, $newPassword);
+        return $response->withJSON($result);
+    });
     
     $app->get('/login/{username}/{password}', function (Request $request, Response $response, $args) {
         $username = $args['username'];
@@ -21,6 +40,36 @@ return function (App $app) {
         $api = new EventMapAPI();
         $result = $api->login($this->db, $username, $password);
         return $response->withJson($result);
+     });
+
+     $app->get('/addEvent/{title}/{description}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
+        $title = $args['title'];
+        $description = $args['description'];
+        $img = $args['img'];
+        $latd = $args['latd'];
+        $lotd = $args['lotd'];
+        $attendees = $args['attendees'];
+        $eventStartDT = $args['eventStartDT'];
+        $eventEndDT = $args['eventEndDT'];
+
+        $api = new EventMapAPI();
+        $result = $api->addEvent($this->db, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
+        return $response->withJSON($result);
+     });
+
+     $app->get('/updateEvent/{title}/{description}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
+        $title = $args['title'];
+        $description = $args['description'];
+        $img = $args['img'];
+        $latd = $args['latd'];
+        $lotd = $args['lotd'];
+        $attendees = $args['attendees'];
+        $eventStartDT = $args['eventStartDT'];
+        $eventEndDT = $args['eventEndDT'];
+
+        $api = new EventMapAPI();
+        $result = $api->updateEvent($this->db, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
+        return $response->withJSON($result);
      });
 
      $app->get('/getEvents/{limit}/{userid}', function ($request, $response, $args) {
@@ -39,22 +88,5 @@ return function (App $app) {
         return $response->withJson($result);
      });
 
-    $app->post('/registerUser/{username}/{password}/{email}', function (Request $request, Response $response, $args) {
-        $username = $args['username'];
-        $password = $args['password'];
-        $email = $args['email'];
-        $api = new EventMapAPI();
-        $result = $api->registerUser($this->db, $username, $password, $email);
-        return $response->withJSON($result);
-    });
 
-    $app->get('/changePassword/{username}/{oldPassword}/{newPassword}', function (Request $request, Response $response, $args) {
-        $username = $args['username'];
-        $oldPassword = $args['oldPassword'];
-        $newPassword = $args['newPassword'];
-        
-        $api = new EventMapAPI();
-        $result = $api->changePassword($this->db, $username, $oldPassword, $newPassword);
-        return $response->withJSON($result);
-    });
 };
