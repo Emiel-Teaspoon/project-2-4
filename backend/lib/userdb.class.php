@@ -100,5 +100,20 @@
             }
             
         }
+
+        function changePassword($username, $oldPassword, $newPassword) {
+            $sql = "UPDATE users SET password = :newPassword WHERE username = :username AND password = :oldPassword";
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bindvalue(':newPassword', $newPassword);
+            $stmt->bindvalue(':username', $username);
+            $stmt->bindvalue(':oldPassword', $oldPassword);
+
+            $result = $stmt->execute();
+
+            if ($result === true) {
+                return array('Code' => 200);
+            }
+        }
     }
 ?>

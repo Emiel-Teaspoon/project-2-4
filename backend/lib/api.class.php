@@ -29,6 +29,14 @@
             return $stmt;
         }
 
+        function changePassword($dbo, $username, $oldPassword, $newPassword) {
+            $db = new UserDB($dbo);
+
+            $stmt = $db->changePassword($username, $oldPassword, $newPassword);
+            $db->closeConnection();
+            return $stmt;
+        }
+
         // Event functions
         function getEvents($dbo, $limit, $userid) {
             $db = new EventDB($dbo);
