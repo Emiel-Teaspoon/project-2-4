@@ -136,4 +136,12 @@ return function (App $app) {
         return $response->withJSON($result);
     });
 
+    $app->get('/getFollowed/{user_id}', function (Request $request, Response $response, $args) {
+        $user_id = $args['user_id'];
+
+        $api = new EventMapAPI();
+        $result = $api->getFollowed($this->db, $user_id);
+        return $response->withJSON($result);
+    });
+
 };

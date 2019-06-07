@@ -88,5 +88,39 @@
             }
             return array ('Code' => 200, 'result' => $results); 
         }
+
+        function getFollowed($user_id) {
+            $sql = "SELECT user FROM followers WHERE follower = :user_id";
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bindValue(':user_id', $user_id);
+
+            $result = $stmt->execute();
+
+            while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
+                $users[] = array (
+                    'user' => $fetch->user
+                );
+            }
+
+            foreach ($users as $user) {
+                foreach ($user as $key => $value) {
+                    $sql = "SELECT username, email FROM users WHERE user_id = :user;";
+                    $stmt = $this->conn->prepare($sql);
+
+                    $stmt->bindValue('user', $value);
+
+                    $result = $stmt->execute();
+
+                    while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
+                        $results[] = array(
+                            'username' => $fetch->username,
+                            'email' => $fetch->email
+                        );
+                    }
+                }
+            }
+            return array ('Code' => 200, 'result' => $results); 
+        }
     }
 ?>
