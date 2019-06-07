@@ -57,9 +57,10 @@ return function (App $app) {
         return $response->withJSON($result);
      });
 
-     $app->get('/updateEvent/{title}/{description}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
+     $app->get('/updateEvent/{event_ID}/{title}/{desc}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
+        $event_ID = $args['event_ID'];
         $title = $args['title'];
-        $description = $args['description'];
+        $desc = $args['desc'];
         $img = $args['img'];
         $latd = $args['latd'];
         $lotd = $args['lotd'];
@@ -68,7 +69,7 @@ return function (App $app) {
         $eventEndDT = $args['eventEndDT'];
 
         $api = new EventMapAPI();
-        $result = $api->updateEvent($this->db, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
+        $result = $api->updateEvent($this->db, $event_ID, $title, $desc, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
         return $response->withJSON($result);
      });
 

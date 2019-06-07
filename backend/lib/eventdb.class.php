@@ -45,13 +45,14 @@
             }
         }
 
-        function updateEvent($title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT) {
+        function updateEvent($event_ID, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT) {
             $sql = "UPDATE events 
-                    SET description = :description, image=:img, latitude=:latd, longitude=:lotd, attendees=:attendees,
-                     event_start_datetime=:eventStartDT, event_end_datetime=:eventEndDT
-                    WHERE title = :title";
+                    SET title = :title, description = :description, image=:img, latitude=:latd, longitude=:lotd, 
+                    attendees=:attendees, event_start_datetime=:eventStartDT, event_end_datetime=:eventEndDT
+                    WHERE event_ID = :event_ID";
             $stmt = $this->conn->prepare($sql);
 
+            $stmt->bindValue(':event_ID', $event_ID);
             $stmt->bindValue(':title', $title);
             $stmt->bindValue(':description', $description);
             $stmt->bindValue(':img', $img);

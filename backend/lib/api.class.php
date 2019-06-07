@@ -46,10 +46,10 @@
             return $stmt;
         }
 
-        function updateEvent($dbo, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT) {
+        function updateEvent($dbo, $event_id, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT) {
             $db = new EventDB($dbo);
 
-            $stmt = $db->updateEvent($title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
+            $stmt = $db->updateEvent($event_id, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
             $db->closeConnection();
             return $stmt;
         }
