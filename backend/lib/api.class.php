@@ -62,6 +62,14 @@
             return $stmt;
         }
 
+        function getEvents($dbo, $limit) {
+            $db = new EventDB($dbo);
+
+            $stmt = $db->getEvents($limit);
+            $db->closeConnection();
+            return $stmt;
+        }
+
         function removeEvent($dbo, $event_ID) {
             $db = new EventDB($dbo);
 

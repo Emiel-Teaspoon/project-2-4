@@ -42,9 +42,9 @@ return function (App $app) {
         $api = new EventMapAPI();
         $result = $api->login($this->db, $username, $password);
         return $response->withJson($result);
-     });
+    });
 
-     $app->get('/addEvent/{title}/{description}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
+    $app->get('/addEvent/{title}/{description}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
         $title = $args['title'];
         $description = $args['description'];
         $img = $args['img'];
@@ -57,9 +57,9 @@ return function (App $app) {
         $api = new EventMapAPI();
         $result = $api->addEvent($this->db, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
         return $response->withJSON($result);
-     });
+    });
 
-     $app->get('/updateEvent/{event_ID}/{title}/{desc}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
+    $app->get('/updateEvent/{event_ID}/{title}/{desc}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
         $event_ID = $args['event_ID'];
         $title = $args['title'];
         $desc = $args['desc'];
@@ -73,14 +73,22 @@ return function (App $app) {
         $api = new EventMapAPI();
         $result = $api->updateEvent($this->db, $event_ID, $title, $desc, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
         return $response->withJSON($result);
-     });
+    });
 
-     $app->get('/getEventsByUser/{limit}/{user_ID}', function ($request, $response, $args) {
+    $app->get('/getEventsByUser/{limit}/{user_ID}', function ($request, $response, $args) {
         $limit = $args['limit'];
         $user_ID = $args['user_ID'];
 
         $api = new EventMapAPI();
         $result = $api->getEventsByUser($this->db, $limit, $user_ID);
+        return $response->withJson($result);
+    });
+
+    $app->get('/getEvents/{limit}', function ($request, $response, $args) {
+        $limit = $args['limit'];
+
+        $api = new EventMapAPI();
+        $result = $api->getEvents($this->db, $limit);
         return $response->withJson($result);
     });
 
@@ -99,7 +107,7 @@ return function (App $app) {
         $api = new EventMapAPI();
         $result = $api->followUser($this->db, $usertofollow, $userid);
         return $response->withJson($result);
-     });
+    });
 
 
 };

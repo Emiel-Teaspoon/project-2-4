@@ -103,6 +103,39 @@
             return array('Code' => 403, 'Message' => 'Error');
         }
 
+        function getEvents($limit)
+        {
+            $sql = "SELECT event_id, title, description, image, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner, creation_datetime
+                    FROM events LIMIT :limit";
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);            
+
+            $res = $stmt->execute();
+            
+            while ($result = $stmt->fetch(PDO::FETCH_OBJ)) {
+                $results[] = array(
+                    'event_ID' => $result->event_id,
+                    'title' => $result->title,
+                    'description' => $result->description,
+                    'image' => $result->image,
+                    'latitude' => $result->latitude,
+                    'longitude' => $result->longitude,
+                    'attendees' => $result->attendees,
+                    'eventStartDT' => $result->event_start_datetime,
+                    'eventEndDT' => $result->event_end_datetime,
+                    'event_owner' => $result->event_owner,
+                    'creation_datetime' => $result->creation_datetime
+                );
+            }
+
+
+            if($res) {
+                return array('Code' => 200, 'Message' => 'Success', 'result' => $results);
+            }
+            return array('Code' => 403, 'Message' => 'Error');
+        }
+
         function removeEvent($event_ID) {
             $sql = "DELETE FROM events WHERE event_id = :event_ID";
             $stmt = $this->conn->prepare($sql);
