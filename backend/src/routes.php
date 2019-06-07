@@ -119,5 +119,14 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
+    $app->get('/unfollowUser/{user_id}/{follower_id}', function (Request $request, Response $response, $args) {
+        $user_id = $args['user_id'];
+        $follower_id = $args['follower_id'];
+        
+        $api = new EventMapAPI();
+        $result = $api->unfollowUser($this->db, $user_id, $follower_id);
+        return $response->withJson($result);
+    });
+
 
 };

@@ -94,5 +94,13 @@
             $db->closeConnection();
             return $stmt;
         }
+
+        function unfollowUser($dbo, $user_id, $follower_id) {
+            $db = new FollowDB($dbo);
+
+            $stmt = $db->unfollowUser($user_id, $follower_id);
+            $db->closeConnection();
+            return $stmt;
+        }
     }
 ?>
