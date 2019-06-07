@@ -102,5 +102,13 @@
             $db->closeConnection();
             return $stmt;
         }
+
+        function getFollowers($dbo, $user_id) {
+            $db = new FollowDB($dbo);
+
+            $stmt = $db->getFollowers($user_id);
+            $db->closeConnection();
+            return $stmt;
+        }
     }
 ?>

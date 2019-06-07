@@ -128,5 +128,12 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
+    $app->get('/getFollowers/{user_id}', function (Request $request, Response $response, $args) {
+        $user_id = $args['user_id'];
+
+        $api = new EventMapAPI();
+        $result = $api->getFollowers($this->db, $user_id);
+        return $response->withJSON($result);
+    });
 
 };
