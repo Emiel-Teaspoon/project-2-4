@@ -69,71 +69,114 @@
             }
         }
         
-        function getEventsByUser($limit, $user_ID)
-        {
+        function getEventsByUser($limit, $user_id) {
             $sql = "SELECT event_id, title, description, image, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner, creation_datetime
-                    FROM events WHERE event_owner = :user_ID LIMIT :limit";
+                    FROM events WHERE event_owner = :user_id LIMIT :limit";
             $stmt = $this->conn->prepare($sql);
 
-            $stmt->bindValue(':user_ID', $user_ID, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);            
 
-            $res = $stmt->execute();
+            $result = $stmt->execute();
             
-            while ($result = $stmt->fetch(PDO::FETCH_OBJ)) {
+            while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
                 $results[] = array(
-                    'event_ID' => $result->event_id,
-                    'title' => $result->title,
-                    'description' => $result->description,
-                    'image' => $result->image,
-                    'latitude' => $result->latitude,
-                    'longitude' => $result->longitude,
-                    'attendees' => $result->attendees,
-                    'eventStartDT' => $result->event_start_datetime,
-                    'eventEndDT' => $result->event_end_datetime,
-                    'event_owner' => $result->event_owner,
-                    'creation_datetime' => $result->creation_datetime
+                    'event_ID' => $fetch->event_id,
+                    'title' => $fetch->title,
+                    'description' => $fetch->description,
+                    'image' => $fetch->image,
+                    'latitude' => $fetch->latitude,
+                    'longitude' => $fetch->longitude,
+                    'attendees' => $fetch->attendees,
+                    'eventStartDT' => $fetch->event_start_datetime,
+                    'eventEndDT' => $fetch->event_end_datetime,
+                    'event_owner' => $fetch->event_owner,
+                    'creation_datetime' => $fetch->creation_datetime
                 );
             }
 
 
-            if($res) {
+            if($result) {
                 return array('Code' => 200, 'Message' => 'Success', 'result' => $results);
             }
             return array('Code' => 403, 'Message' => 'Error');
         }
 
-        function getEvents($limit)
-        {
+        function getEvents($limit) {
             $sql = "SELECT event_id, title, description, image, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner, creation_datetime
                     FROM events LIMIT :limit";
             $stmt = $this->conn->prepare($sql);
 
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);            
 
-            $res = $stmt->execute();
+            $result = $stmt->execute();
             
-            while ($result = $stmt->fetch(PDO::FETCH_OBJ)) {
+            while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
                 $results[] = array(
-                    'event_ID' => $result->event_id,
-                    'title' => $result->title,
-                    'description' => $result->description,
-                    'image' => $result->image,
-                    'latitude' => $result->latitude,
-                    'longitude' => $result->longitude,
-                    'attendees' => $result->attendees,
-                    'eventStartDT' => $result->event_start_datetime,
-                    'eventEndDT' => $result->event_end_datetime,
-                    'event_owner' => $result->event_owner,
-                    'creation_datetime' => $result->creation_datetime
+                    'event_ID' => $fetch->event_id,
+                    'title' => $fetch->title,
+                    'description' => $fetch->description,
+                    'image' => $fetch->image,
+                    'latitude' => $fetch->latitude,
+                    'longitude' => $fetch->longitude,
+                    'attendees' => $fetch->attendees,
+                    'eventStartDT' => $fetch->event_start_datetime,
+                    'eventEndDT' => $fetch->event_end_datetime,
+                    'event_owner' => $fetch->event_owner,
+                    'creation_datetime' => $fetch->creation_datetime
                 );
             }
 
 
-            if($res) {
+            if($result) {
                 return array('Code' => 200, 'Message' => 'Success', 'result' => $results);
             }
             return array('Code' => 403, 'Message' => 'Error');
+        }
+
+        function getFollowerEvents($user_limit, $event_limit, $user_id) {
+            $sql = "SELECT follower FROM followers WHERE user = :user_id";
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bindValue(':user_id', $user_id);
+
+            $result = $stmt->execute();
+
+            while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
+                $followers[] = array (
+                    'follower' => $fetch->follower
+                );
+            }
+
+            foreach ($followers as $follower) {
+                foreach ($follower as $key => $value) {
+                    $sql = "SELECT event_id, title, description, image, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner, creation_datetime
+                    FROM events WHERE event_owner = :follower;";
+                    $stmt = $this->conn->prepare($sql);
+
+                    $stmt->bindValue('follower', $value);
+
+                    $result = $stmt->execute();
+
+                    while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
+                        $results[] = array(
+                            'event_ID' => $fetch->event_id,
+                            'title' => $fetch->title,
+                            'description' => $fetch->description,
+                            'image' => $fetch->image,
+                            'latitude' => $fetch->latitude,
+                            'longitude' => $fetch->longitude,
+                            'attendees' => $fetch->attendees,
+                            'eventStartDT' => $fetch->event_start_datetime,
+                            'eventEndDT' => $fetch->event_end_datetime,
+                            'event_owner' => $fetch->event_owner,
+                            'creation_datetime' => $fetch->creation_datetime
+                        );
+                    }
+
+                }
+            }
+            return array ('Code' => 200, 'result' => $results); 
         }
 
         function removeEvent($event_ID) {

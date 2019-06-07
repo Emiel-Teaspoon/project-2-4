@@ -75,12 +75,12 @@ return function (App $app) {
         return $response->withJSON($result);
     });
 
-    $app->get('/getEventsByUser/{limit}/{user_ID}', function ($request, $response, $args) {
+    $app->get('/getEventsByUser/{limit}/{user_id}', function ($request, $response, $args) {
         $limit = $args['limit'];
-        $user_ID = $args['user_ID'];
+        $user_id = $args['user_id'];
 
         $api = new EventMapAPI();
-        $result = $api->getEventsByUser($this->db, $limit, $user_ID);
+        $result = $api->getEventsByUser($this->db, $limit, $user_id);
         return $response->withJson($result);
     });
 
@@ -90,6 +90,16 @@ return function (App $app) {
         $api = new EventMapAPI();
         $result = $api->getEvents($this->db, $limit);
         return $response->withJson($result);
+    });
+
+    $app->get('/getFollowerEvents/{user_limit}/{event_limit}/{user_id}', function (Request $request, Response $response, $args) {
+        $user_limit = $args['user_limit'];
+        $event_limit = $args['event_limit'];
+        $user_id = $args['user_id'];
+
+        $api = new EventMapAPI();
+        $result = $api->getFollowerEvents($this->db, $user_limit, $event_limit, $user_id);
+        return $response->withJSON($result);
     });
 
     $app->get('/removeEvent/{event_ID}', function (Request $request, Response $response, $args) {

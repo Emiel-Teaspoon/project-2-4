@@ -54,10 +54,10 @@
             return $stmt;
         }
         
-        function getEventsByUser($dbo, $limit, $user_ID) {
+        function getEventsByUser($dbo, $limit, $user_id) {
             $db = new EventDB($dbo);
 
-            $stmt = $db->getEventsByUser($limit, $user_ID);
+            $stmt = $db->getEventsByUser($limit, $user_id);
             $db->closeConnection();
             return $stmt;
         }
@@ -66,6 +66,14 @@
             $db = new EventDB($dbo);
 
             $stmt = $db->getEvents($limit);
+            $db->closeConnection();
+            return $stmt;
+        }
+
+        function getFollowerEvents($dbo, $user_limit, $event_limit, $user_id) {
+            $db = new EventDB($dbo);
+
+            $stmt = $db->getFollowerEvents($user_limit, $event_limit, $user_id);
             $db->closeConnection();
             return $stmt;
         }
