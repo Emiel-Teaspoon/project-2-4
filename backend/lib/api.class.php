@@ -54,10 +54,10 @@
             return $stmt;
         }
         
-        function getEvents($dbo, $limit, $userid) {
+        function getEventsByUser($dbo, $limit, $user_ID) {
             $db = new EventDB($dbo);
 
-            $stmt = $db->selectEventsWithLimit($limit, $userid);
+            $stmt = $db->getEventsByUser($limit, $user_ID);
             $db->closeConnection();
             return $stmt;
         }

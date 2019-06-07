@@ -69,19 +69,36 @@
             }
         }
         
-        function getEvents($limit, $userID)
+        function getEventsByUser($limit, $user_ID)
         {
-            $sql = "Select statement";
+            $sql = "SELECT event_id, title, description, image, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner, creation_datetime
+                    FROM events WHERE event_owner = :user_ID LIMIT :limit";
             $stmt = $this->conn->prepare($sql);
 
-            $stmt->bindValue(':userToFollow', $userToFollow);
-            $stmt->bindValue(':userID', $userID);
+            $stmt->bindValue(':user_ID', $user_ID, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);            
 
             $res = $stmt->execute();
-            $events = array();
             
+            while ($result = $stmt->fetch(PDO::FETCH_OBJ)) {
+                $results[] = array(
+                    'event_ID' => $result->event_id,
+                    'title' => $result->title,
+                    'description' => $result->description,
+                    'image' => $result->image,
+                    'latitude' => $result->latitude,
+                    'longitude' => $result->longitude,
+                    'attendees' => $result->attendees,
+                    'eventStartDT' => $result->event_start_datetime,
+                    'eventEndDT' => $result->event_end_datetime,
+                    'event_owner' => $result->event_owner,
+                    'creation_datetime' => $result->creation_datetime
+                );
+            }
+
+
             if($res) {
-                return array('Code' => 200, 'Message' => 'Success', 'result' => $events);
+                return array('Code' => 200, 'Message' => 'Success', 'result' => $results);
             }
             return array('Code' => 403, 'Message' => 'Error');
         }

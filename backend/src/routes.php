@@ -18,6 +18,7 @@ return function (App $app) {
     $app->get('/registerUser/{username}/{password}/{email}', function (Request $request, Response $response, $args) {
         $username = $args['username'];
         $password = $args['password'];
+
         $email = $args['email'];
         $api = new EventMapAPI();
         $result = $api->registerUser($this->db, $username, $password, $email);
@@ -37,6 +38,7 @@ return function (App $app) {
     $app->get('/login/{username}/{password}', function (Request $request, Response $response, $args) {
         $username = $args['username'];
         $password = $args['password'];
+
         $api = new EventMapAPI();
         $result = $api->login($this->db, $username, $password);
         return $response->withJson($result);
@@ -73,11 +75,12 @@ return function (App $app) {
         return $response->withJSON($result);
      });
 
-     $app->get('/getEvents/{limit}/{userid}', function ($request, $response, $args) {
+     $app->get('/getEventsByUser/{limit}/{user_ID}', function ($request, $response, $args) {
         $limit = $args['limit'];
-        $userid = $args['userid'];
+        $user_ID = $args['user_ID'];
+
         $api = new EventMapAPI();
-        $result = $api->getEvents($this->db, $limit, $userid);
+        $result = $api->getEventsByUser($this->db, $limit, $user_ID);
         return $response->withJson($result);
     });
 
@@ -92,6 +95,7 @@ return function (App $app) {
     $app->get('/followUser/{usertofollow}/{userid}', function (Request $request, Response $response, $args) {
         $usertofollow = $args['usertofollow'];
         $userid = $args['userid'];
+
         $api = new EventMapAPI();
         $result = $api->followUser($this->db, $usertofollow, $userid);
         return $response->withJson($result);
