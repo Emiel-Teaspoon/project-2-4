@@ -81,6 +81,14 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
+    $app->get('/removeEvent/{event_ID}', function (Request $request, Response $response, $args) {
+        $event_ID = $args['event_ID'];
+
+        $api = new EventMapAPI();
+        $result = $api->removeEvent($this->db, $event_ID);
+        return $response->withJSON($result);
+    });
+
     $app->get('/followUser/{usertofollow}/{userid}', function (Request $request, Response $response, $args) {
         $usertofollow = $args['usertofollow'];
         $userid = $args['userid'];

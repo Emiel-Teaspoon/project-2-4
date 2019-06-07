@@ -62,6 +62,14 @@
             return $stmt;
         }
 
+        function removeEvent($dbo, $event_ID) {
+            $db = new EventDB($dbo);
+
+            $stmt = $db->removeEvent($event_ID);
+            $db->closeConnection();
+            return $stmt;
+        }
+
         // Event functions
         function followUser($dbo, $userToFollow, $userID) {
             $db = new FollowDB($dbo);

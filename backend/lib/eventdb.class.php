@@ -86,5 +86,18 @@
             return array('Code' => 403, 'Message' => 'Error');
         }
 
+        function removeEvent($event_ID) {
+            $sql = "DELETE FROM events WHERE event_id = :event_ID";
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bindValue(':event_ID', $event_ID);
+
+            $result = $stmt->execute();
+
+            if ($result === true) {
+                return array('Code' => 200);
+            }
+        }
+
     }
 ?>
