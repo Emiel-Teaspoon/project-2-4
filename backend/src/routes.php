@@ -110,12 +110,12 @@ return function (App $app) {
         return $response->withJSON($result);
     });
 
-    $app->get('/followUser/{usertofollow}/{userid}', function (Request $request, Response $response, $args) {
-        $usertofollow = $args['usertofollow'];
-        $userid = $args['userid'];
-
+    $app->get('/followUser/{user_id}/{follower_id}', function (Request $request, Response $response, $args) {
+        $user_id = $args['user_id'];
+        $follower_id = $args['follower_id'];
+        
         $api = new EventMapAPI();
-        $result = $api->followUser($this->db, $usertofollow, $userid);
+        $result = $api->followUser($this->db, $user_id, $follower_id);
         return $response->withJson($result);
     });
 

@@ -25,13 +25,13 @@
             $this->setConnection(null);
         }
 
-        function followUser($userToFollow, $userID)
+        function followUser($user_id, $follower_id)
         {
-            $sql = "INSERT INTO followers (user, follower) VALUES (:userToFollow, :userID)";
+            $sql = "INSERT INTO followers VALUES (:user_id, :follower_id)";
             $stmt = $this->conn->prepare($sql);
 
-            $stmt->bindValue(':userToFollow', $userToFollow);
-            $stmt->bindValue(':userID', $userID);
+            $stmt->bindValue(':follower_id', $follower_id);
+            $stmt->bindValue(':user_id', $user_id);
 
             $res = $stmt->execute();
             

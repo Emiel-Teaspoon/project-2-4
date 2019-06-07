@@ -87,10 +87,10 @@
         }
 
         // Event functions
-        function followUser($dbo, $userToFollow, $userID) {
+        function followUser($dbo, $user_id, $follower_id) {
             $db = new FollowDB($dbo);
 
-            $stmt = $db->followUser($userToFollow, $userID);
+            $stmt = $db->followUser($user_id, $follower_id);
             $db->closeConnection();
             return $stmt;
         }
