@@ -142,8 +142,7 @@ class Login extends React.Component {
               variant="body2"
               onClick={() => {
                 this.setState({isRegistering: !this.state.isRegistering});
-              }}
-            >
+              }}>
               {this.state.isRegistering ? "Already have an account?" : "Don't have an account?"}
             </Link>
           </form>

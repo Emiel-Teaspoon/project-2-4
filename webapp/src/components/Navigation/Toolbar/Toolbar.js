@@ -11,6 +11,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
+import { throwStatement } from '@babel/types';
 
 class MenuAppBar extends React.Component {
     state = {
@@ -25,8 +26,6 @@ class MenuAppBar extends React.Component {
       this.setState({ anchorEl: null });
     };
 
-
-  
     render() {
 
       const { anchorEl } = this.state;
@@ -62,17 +61,23 @@ class MenuAppBar extends React.Component {
       </div>
 
       const loginButton = 
-      <Button color="inherit" onClick={this.handleLoginClick}>
+      <Button color="inherit" onClick={() => this.props.onLogin()}>
         Log in
       </Button>
+
+      let drawerToggle = <div/>;
+      if(!this.props.showLogin) {
+        drawerToggle = 
+        <IconButton className={classes.MenuButton} color="inherit" aria-label="Menu" onClick={() => this.props.openDrawer()}>
+          <MenuIcon />
+        </IconButton>
+      }
 
       return (
         <div className={classes.Root}>
           <AppBar position="relative">
             <Toolbar>
-              <IconButton className={classes.MenuButton} color="inherit" aria-label="Menu" onClick={() => this.props.openDrawer()}>
-                <MenuIcon />
-              </IconButton>
+              {drawerToggle}
               <Typography variant="h6" color="inherit" className={classes.Grow}>
                 {this.props.children}
               </Typography>
