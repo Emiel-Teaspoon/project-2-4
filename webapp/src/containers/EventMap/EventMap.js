@@ -70,6 +70,10 @@ class EventMap extends Component {
             },
         ],
     }
+    
+    componentDidMount() {
+        this.getEvents();
+    }
 
     addEventHandler = () => {
 
@@ -107,6 +111,24 @@ class EventMap extends Component {
     setMapCallback = (map) => {
         this.setState({map: map});
     }
+
+    async getEvents () {
+        fetch('https://spicymemes.app/eventmap/public/Events/' + 50)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); 
+            // this.setState({isLoading: false});
+            // if(data.Code === 200) {
+            //     const user = {
+            //         userId: data.UserID, 
+            //         username: data.Username,
+            //         apiKey: data.APIKey,
+            //     }
+            //     this.setState({isAuthenticated: true, user: user});
+            //     console.log(data);
+            //   }
+        });//.catch(this.setState({isLoading: false}));
+      }
 
     render () 
     {

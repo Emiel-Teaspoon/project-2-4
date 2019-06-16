@@ -63,7 +63,7 @@
         }
 
         function registerUser($username, $password, $email) {
-            $sql = "INSERT INTO users VALUES (:username, :password, :email, :api_key)";
+            $sql = "INSERT INTO users (username, password, email, api_key) VALUES (:username, :password, :email, :api_key)";
             $stmt = $this->conn->prepare($sql);
 
             $key = 'Some key for encoding';
@@ -95,7 +95,7 @@
             $result = $stmt->execute();
             
             if($result === true) {
-                $this->sendVerification($email, $username, $hash);
+                // $this->sendVerification($email, $username, $hash);
                 return array('Code' => 200, 'Message' => 'Success', 'Username' => $username, 'Email' => $email, 'APIKey' => $api_key);
             }
             
