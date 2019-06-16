@@ -10,6 +10,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Button from '@material-ui/core/Button';
 
 class MenuAppBar extends React.Component {
     state = {
@@ -23,11 +24,47 @@ class MenuAppBar extends React.Component {
     handleClose = () => {
       this.setState({ anchorEl: null });
     };
+
+
   
     render() {
 
       const { anchorEl } = this.state;
       const open = Boolean(anchorEl);
+
+      const accountButton = 
+      <div>
+        <IconButton
+          aria-owns={open ? 'menu-appbar' : undefined}
+          aria-haspopup="true"
+          onClick={this.handleMenu}
+          color="inherit"
+        >
+          <AccountCircle />
+        </IconButton>
+        <Menu
+          id="menu-appbar"
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={open}
+          onClose={this.handleClose}
+        >
+          <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+          <MenuItem onClick={this.handleClose}>My account</MenuItem>
+        </Menu>
+      </div>
+
+      const loginButton = 
+      <Button color="inherit" onClick={this.handleLoginClick}>
+        Log in
+      </Button>
 
       return (
         <div className={classes.Root}>
@@ -39,35 +76,7 @@ class MenuAppBar extends React.Component {
               <Typography variant="h6" color="inherit" className={classes.Grow}>
                 {this.props.children}
               </Typography>
-              {this.props.auth && (
-                <div>
-                  <IconButton
-                    aria-owns={open ? 'menu-appbar' : undefined}
-                    aria-haspopup="true"
-                    onClick={this.handleMenu}
-                    color="inherit"
-                  >
-                    <AccountCircle />
-                  </IconButton>
-                  <Menu
-                    id="menu-appbar"
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    open={open}
-                    onClose={this.handleClose}
-                  >
-                    <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                  </Menu>
-                </div>
-              )}
+              {this.props.auth ? accountButton : loginButton}
             </Toolbar>
           </AppBar>
         </div>
