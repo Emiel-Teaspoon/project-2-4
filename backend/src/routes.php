@@ -15,7 +15,7 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->get('/registerUser/{username}/{password}/{email}', function (Request $request, Response $response, $args) {
+    $app->post('/user/{username}/{password}/{email}', function (Request $request, Response $response, $args) {
         $username = $args['username'];
         $password = $args['password'];
 
@@ -25,7 +25,7 @@ return function (App $app) {
         return $response->withJSON($result);
     });
 
-    $app->get('/changePassword/{username}/{oldPassword}/{newPassword}', function (Request $request, Response $response, $args) {
+    $app->put('/password/{username}/{oldPassword}/{newPassword}', function (Request $request, Response $response, $args) {
         $username = $args['username'];
         $oldPassword = $args['oldPassword'];
         $newPassword = $args['newPassword'];
@@ -44,7 +44,7 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->get('/addEvent/{title}/{description}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
+    $app->post('/addEvent/{title}/{description}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
         $title = $args['title'];
         $description = $args['description'];
         $img = $args['img'];
@@ -59,7 +59,7 @@ return function (App $app) {
         return $response->withJSON($result);
     });
 
-    $app->get('/updateEvent/{event_ID}/{title}/{desc}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
+    $app->put('/event/{event_ID}/{title}/{desc}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
         $event_ID = $args['event_ID'];
         $title = $args['title'];
         $desc = $args['desc'];
@@ -75,7 +75,7 @@ return function (App $app) {
         return $response->withJSON($result);
     });
 
-    $app->get('/getEventsByUser/{limit}/{user_id}', function ($request, $response, $args) {
+    $app->get('/EventsByUser/{limit}/{user_id}', function ($request, $response, $args) {
         $limit = $args['limit'];
         $user_id = $args['user_id'];
 
@@ -84,7 +84,7 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->get('/getEvents/{limit}', function ($request, $response, $args) {
+    $app->get('/Events/{limit}', function ($request, $response, $args) {
         $limit = $args['limit'];
 
         $api = new EventMapAPI();
@@ -92,7 +92,7 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->get('/getFollowerEvents/{user_limit}/{event_limit}/{user_id}', function (Request $request, Response $response, $args) {
+    $app->get('/FollowerEvents/{user_limit}/{event_limit}/{user_id}', function (Request $request, Response $response, $args) {
         $user_limit = $args['user_limit'];
         $event_limit = $args['event_limit'];
         $user_id = $args['user_id'];
@@ -102,7 +102,7 @@ return function (App $app) {
         return $response->withJSON($result);
     });
 
-    $app->get('/removeEvent/{event_ID}', function (Request $request, Response $response, $args) {
+    $app->delete('/event/{event_ID}', function (Request $request, Response $response, $args) {
         $event_ID = $args['event_ID'];
 
         $api = new EventMapAPI();
@@ -110,7 +110,7 @@ return function (App $app) {
         return $response->withJSON($result);
     });
 
-    $app->get('/followUser/{user_id}/{follower_id}', function (Request $request, Response $response, $args) {
+    $app->post('/followUser/{user_id}/{follower_id}', function (Request $request, Response $response, $args) {
         $user_id = $args['user_id'];
         $follower_id = $args['follower_id'];
         
@@ -119,7 +119,7 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->get('/unfollowUser/{user_id}/{follower_id}', function (Request $request, Response $response, $args) {
+    $app->delete('/unfollowUser/{user_id}/{follower_id}', function (Request $request, Response $response, $args) {
         $user_id = $args['user_id'];
         $follower_id = $args['follower_id'];
         
