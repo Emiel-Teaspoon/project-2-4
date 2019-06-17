@@ -1,6 +1,7 @@
 package com.example.project24;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -99,22 +100,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch(id) {
             case R.id.nav_home:
-
+                Intent mainActivity = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(mainActivity);
                 break;
-            case R.id.nav_gallery:
-
+            case R.id.nav_account:
+                Intent accountActivity = new Intent(MainActivity.this, AccountActivity.class);
+                startActivity(accountActivity);
                 break;
-            case R.id.nav_slideshow:
-
+            case R.id.nav_myEvents:
+                Intent myEventsActivity = new Intent(MainActivity.this, MyEventsActivity.class);
+                startActivity(myEventsActivity);
                 break;
-            case R.id.nav_tools:
-
+            case R.id.nav_friendsEvents:
+                Intent friendsEventsActivity = new Intent(MainActivity.this, FriendsActivity.class);
+                startActivity(friendsEventsActivity);
                 break;
-            case R.id.nav_share:
-
+            case R.id.nav_friends:
+                Intent friendsActivity = new Intent(MainActivity.this, FriendsActivity.class);
+                startActivity(friendsActivity);
                 break;
-            case R.id.nav_send:
-
+            case R.id.nav_logout:
+                Intent loginActivity = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(loginActivity);
                 break;
         }
 
