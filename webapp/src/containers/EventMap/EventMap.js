@@ -4,6 +4,10 @@ import Aux from '../../hoc/Aux';
 import Map from '../../components/Map/Map'
 import Event from '../../components/Event/Event';
 
+import axios from 'axios';
+import { array } from 'prop-types';
+import eventMarker from '../../components/Event/EventMarker/EventMarker';
+
 class EventMap extends Component {
 
     latlng = {lat: 53.18, lng: 6.53}
@@ -11,64 +15,7 @@ class EventMap extends Component {
     state = {
         map: null,
         openEventId: -1,
-        events: [
-            {
-                id: 10,
-                open: false,
-                size: 10,
-                position: {
-                    lat: 53.2180043,
-                    lng: 6.5668195, 
-                },
-                details: {
-                    title: "Title",
-                    description: "Description",
-                    img: "https://media.resources.festicket.com/www/admin/uploads/images/SW4_8iu8hh9.png",
-                }
-            },
-            {
-                id: 11,
-                open: false,
-                size: 15,
-                position: {
-                    lat: 53.2,
-                    lng: 6.59, 
-                },
-                details: {
-                    title: "Title",
-                    description: "Description",
-                    img: "https://media.resources.festicket.com/www/admin/uploads/images/SW4_8iu8hh9.png",
-                }
-            },
-            {
-                id: 12,
-                open: false,
-                size: 300,
-                position: {
-                    lat: 53.25,
-                    lng: 6.51, 
-                },
-                details: {
-                    title: "Title",
-                    description: "Description",
-                    img: "https://media.resources.festicket.com/www/admin/uploads/images/SW4_8iu8hh9.png",
-                }
-            },            
-            {
-                id: 13,
-                open: false,
-                size: 1,
-                position: {
-                    lat: 53.25,
-                    lng: 6.6, 
-                },
-                details: {
-                    title: "Title",
-                    description: "Description",
-                    img: "https://media.resources.festicket.com/www/admin/uploads/images/SW4_8iu8hh9.png",
-                }
-            },
-        ],
+        events: [],
     }
     
     componentDidMount() {
@@ -113,21 +60,31 @@ class EventMap extends Component {
     }
 
     async getEvents () {
-        fetch('https://spicymemes.app/eventmap/public/Events/' + 50)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data); 
-            // this.setState({isLoading: false});
-            // if(data.Code === 200) {
-            //     const user = {
-            //         userId: data.UserID, 
-            //         username: data.Username,
-            //         apiKey: data.APIKey,
-            //     }
-            //     this.setState({isAuthenticated: true, user: user});
-            //     console.log(data);
-            //   }
-        });//.catch(this.setState({isLoading: false}));
+        axios.get("https://spicymemes.app/eventmap/public/Events/50", { crossdomain: true })
+        .then(response => {
+            if(response.data.Code === 200) {
+                console.log(response.data.result);
+                let events = [];
+                response.data.result.map((event, index) => {
+                    const eventObject = {
+                        id: event.event_id, 
+                        open: false, 
+                        size:event.attendees, 
+                        position: {
+                            lat: event.latitude, 
+                            lng: event.longitude
+                        }, 
+                        details: {
+                            title: event.title, 
+                            description: event.description, 
+                            img:event.image
+                        }
+                    };
+                    events.push(eventObject);
+                })
+                this.setState({events: events})
+            }
+        });
       }
 
     render () 
