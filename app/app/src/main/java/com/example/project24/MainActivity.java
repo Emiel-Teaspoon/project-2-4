@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(myEventsActivity);
                 break;
             case R.id.nav_friendsEvents:
-                Intent friendsEventsActivity = new Intent(MainActivity.this, FriendsActivity.class);
+                Intent friendsEventsActivity = new Intent(MainActivity.this, FriendsEventsActivity.class);
                 startActivity(friendsEventsActivity);
                 break;
             case R.id.nav_friends:
