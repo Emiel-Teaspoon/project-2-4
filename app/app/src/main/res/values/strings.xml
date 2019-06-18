@@ -13,4 +13,11 @@
     <string name="menu_myEvents">My Events</string>
     <string name="menu_friendsEvents">Friends Events</string>
     <string name="menu_friends">Friends</string>
+    <string name="event_name">Naam</string>
+    <string name="event_adres">Adres</string>
+    <string name="event_begin">Begin</string>
+    <string name="event_einde">Eindigt</string>
+    <string name="event_maker">Organisator</string>
+
+
 </resources>

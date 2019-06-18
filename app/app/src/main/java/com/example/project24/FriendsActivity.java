@@ -34,6 +34,7 @@ public class FriendsActivity extends AppCompatActivity {
         );
         listView.setAdapter(adapter);
 
+
         //TODO remove test line below
         adapter.add("Bob");
 
