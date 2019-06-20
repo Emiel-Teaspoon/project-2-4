@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                Snackbar.make(view, "Replace this.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mapFragment.getMapAsync(this);
         }
         navigationView.setNavigationItemSelectedListener(this);
+        ApiClient.getVersion(this);
     }
 
     @Override
@@ -164,5 +165,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
         }
+    }
+
+    public String getApiKey() {
+        return "The Key";
     }
 }
