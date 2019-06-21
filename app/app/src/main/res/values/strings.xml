@@ -19,5 +19,9 @@
     <string name="event_einde">Eindigt</string>
     <string name="event_maker">Organisator</string>
 
+    <string name="login_username_hint">Username</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button">Login</string>
+
 
 </resources>
