@@ -22,6 +22,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(friendsActivity);
                 break;
             case R.id.nav_logout:
-
+                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT);
                 break;
             case R.id.nav_login:
                 Intent loginActivity = new Intent(MainActivity.this, LoginActivity.class);

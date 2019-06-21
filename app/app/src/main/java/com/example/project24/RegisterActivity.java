@@ -29,7 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
                 ApiClient.registerAccount(getBaseContext(), usernameText.getText().toString(), passwordText.getText().toString(),emailText.getText().toString(), new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("Login Response", response.toString());
+                        Log.d("Register Response", response.toString());
                     }
                 }, new Response.ErrorListener() {
                     @Override
