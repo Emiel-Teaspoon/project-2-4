@@ -91,8 +91,9 @@ public class ApiClient {
 
     // Nog niet getest of het werkt
     public static void loginAccount(final Context context, String username,String password, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
-        String action = "login/" + username +"/" + password;
+        String action = "login/" + username + "/" + password;
         sendObjectRequest(context, Request.Method.POST, action, null, responseListener, errorListener);
+    }
 
     public static void getUserByUsername(final Context context, final String username, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
         String action = "findUserByUsername/" + username;
