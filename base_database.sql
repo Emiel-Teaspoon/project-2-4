@@ -58,7 +58,6 @@ CREATE TABLE events (
 -- ALTER TABLE users ADD UNIQUE INDEX username_unique (username ASC);
 -- ALTER TABLE users ADD UNIQUE INDEX email_unique (email ASC);
 -- ALTER TABLE users ADD UNIQUE INDEX api_key_unique (api_key ASC);
--- ALTER TABLE events ADD UNIQUE INDEX title_unique (title ASC);
 
 -- ---------------
 --   Add data   --

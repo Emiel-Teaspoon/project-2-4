@@ -44,6 +44,14 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
+    $app->get('/findUserByUsername/{username}', function (Request $request, Response $response, $args) {
+        $username = $args['username'];
+
+        $api = new EventMapAPI();
+        $result = $api->findUserByUsername($this->db, $username);
+        return $response->withJson($result);
+    });
+
     $app->post('/addEvent/{title}/{description}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
         $title = $args['title'];
         $description = $args['description'];
