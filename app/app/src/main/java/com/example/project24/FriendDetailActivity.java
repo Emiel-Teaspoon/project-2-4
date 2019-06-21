@@ -46,7 +46,7 @@ public class FriendDetailActivity extends AppCompatActivity {
                     JSONArray result = response.getJSONArray("result");
                     for (int i = 0; i < result.length(); i++) {
                         JSONObject eventObject = result.getJSONObject(i);
-                        adapter.add(eventObject.getString("title"));
+                        adapter.add(eventObject.getString("title") + "#" + eventObject.getString("event_ID"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
