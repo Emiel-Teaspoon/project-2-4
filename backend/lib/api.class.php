@@ -37,6 +37,14 @@
             return $stmt;
         }
 
+        function findUserByUsername($dbo, $username) {
+            $db = new UserDB($dbo);
+
+            $stmt = $db->findUserByUsername($username);
+            $db->closeConnection();
+            return $stmt;
+        }
+
         // Event functions
         function addEvent($dbo, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT) {
             $db = new EventDB($dbo);

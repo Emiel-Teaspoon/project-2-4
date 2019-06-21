@@ -115,5 +115,27 @@
                 return array('Code' => 200);
             }
         }
+
+        function findUserByUsername($username) {
+            $sql = "SELECT email from users WHERE username = :username";
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bindvalue(':username', $username);
+
+            $Result = $stmt->execute();
+
+            while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
+                $results[] = array(
+                    'email' => $fetch->email
+                );
+            }
+
+            if ($Result === true) {
+                return array('Code' => 200, 'result' => $results);
+            } else {
+                return array('Code'=> 403);
+            }
+
+        }
     }
 ?>
