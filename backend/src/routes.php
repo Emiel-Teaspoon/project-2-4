@@ -79,7 +79,7 @@ return function (App $app) {
         $user_id = $args['user_id'];
 
         $api = new EventMapAPI();
-        $result = $api->getEventsByUser($this->db, $user_id);
+        $result = $api->getEventsByUserID($this->db, $user_id);
         return $response->withJson($result);
     });
 
@@ -87,7 +87,7 @@ return function (App $app) {
         $username = $args['username'];
 
         $api = new EventMapAPI();
-        $result = $api->getEventsByUser($this->db, $username);
+        $result = $api->getEventsByUsername($this->db, $username);
         return $response->withJson($result);
     });
 
