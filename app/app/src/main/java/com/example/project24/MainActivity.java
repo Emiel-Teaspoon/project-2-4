@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
+    public final static EventmapApp app = new EventmapApp();
     private GoogleMap mMap;
     private static final String TAG = MainActivity.class.getSimpleName();
 

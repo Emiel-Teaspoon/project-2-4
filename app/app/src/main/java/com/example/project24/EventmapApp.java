@@ -4,7 +4,7 @@ import android.app.Application;
 
 public class EventmapApp extends Application {
 
-    private String user_id;
+    private int user_id = 1;
     private String userName;
     private String ApiKey;
 
@@ -12,7 +12,7 @@ public class EventmapApp extends Application {
 
     }
 
-    public void setUser(String id, String name, String key) {
+    public void setUser(int id, String name, String key) {
         user_id = id;
         userName = name;
         ApiKey = key;
@@ -21,5 +21,7 @@ public class EventmapApp extends Application {
     public String getApiKey() {
         return "The Key";
     }
+
+    public int getUser_id() {return user_id;}
 
 }

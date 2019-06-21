@@ -38,7 +38,7 @@ public class FriendsActivity extends AppCompatActivity {
         );
         listView.setAdapter(adapter);
 
-        ApiClient.getFriends(this, 1, new Response.Listener<JSONObject>() {
+        ApiClient.getFriends(this, MainActivity.app.getUser_id(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("response", response.toString());
