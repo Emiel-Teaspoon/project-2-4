@@ -94,6 +94,11 @@ public class ApiClient {
         String action = "login/" + username + "/" + password;
         sendObjectRequest(context, Request.Method.POST, action, null, responseListener, errorListener);
     }
+    // ook nog niet getest
+    public static void registerAccount(final Context context, String username,String password,String email, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+        String action = "login/" + username + "/" + password +"/" + email;
+        sendObjectRequest(context, Request.Method.POST, action, null, responseListener, errorListener);
+    }
 
     public static void getUserByUsername(final Context context, final String username, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
         String action = "findUserByUsername/" + username;

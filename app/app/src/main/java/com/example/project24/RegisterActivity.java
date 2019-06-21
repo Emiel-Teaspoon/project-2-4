@@ -18,15 +18,15 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        final Button loginButton = findViewById(R.id.loginButton);
-        final EditText usernameText = findViewById(R.id.loginUsernameText);
-        final EditText passwordText = findViewById(R.id.loginPasswordText);
-        final EditText emailText = findViewById(R.id.loginPasswordText);
+        final Button registerButton = findViewById(R.id.registerButton);
+        final EditText usernameText = findViewById(R.id.registerUsernameText);
+        final EditText passwordText = findViewById(R.id.registerPasswordText);
+        final EditText emailText = findViewById(R.id.registerEmailText);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApiClient.loginAccount(getBaseContext(), usernameText.getText().toString(), passwordText.getText().toString(), new Response.Listener<JSONObject>() {
+                ApiClient.registerAccount(getBaseContext(), usernameText.getText().toString(), passwordText.getText().toString(),emailText.getText().toString(), new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("Login Response", response.toString());
