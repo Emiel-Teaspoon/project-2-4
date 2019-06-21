@@ -76,7 +76,7 @@ public class ApiClient {
 
     public static void getFriends(final Context context, final int userID, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener)
     {
-        String action = "getFollowers/" + userID + "/";
+        String action = "getFollowers/" + userID;
         sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
     }
 

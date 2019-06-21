@@ -14,6 +14,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class FriendsActivity extends AppCompatActivity {
         final ListView listView = findViewById(R.id.listView);
         ArrayList<String> friendsList = new ArrayList<>();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_list_item_1,
                 friendsList
@@ -39,7 +41,16 @@ public class FriendsActivity extends AppCompatActivity {
         ApiClient.getFriends(this, 1, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.i("Succes", "Response");
+                Log.d("response", response.toString());
+                try {
+                    JSONArray result = response.getJSONArray("result");
+                    for (int i = 0; i < result.length(); i++) {
+                        JSONObject friendObject = result.getJSONObject(i);
+                        adapter.add(friendObject.getString("username"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -47,9 +58,6 @@ public class FriendsActivity extends AppCompatActivity {
                 Log.e("Error", "Things did not work");
             }
         });
-
-        //TODO remove test line below
-        adapter.add("Bob");
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
