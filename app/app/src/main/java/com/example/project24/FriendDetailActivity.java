@@ -37,11 +37,11 @@ public class FriendDetailActivity extends AppCompatActivity {
 
         TextView textView = findViewById(R.id.friendName);
         textView.setText(friend);
-
+        Log.d("FriendName", friend);
         ApiClient.getFriendEvents(this, friend, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("response", response.toString());
+                Log.d("Friend Detail response", response.toString());
                 try {
                     JSONArray result = response.getJSONArray("result");
                     for (int i = 0; i < result.length(); i++) {

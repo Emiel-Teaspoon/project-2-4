@@ -4,7 +4,7 @@ import android.app.Application;
 
 public class EventmapApp extends Application {
 
-    private int user_id = 1;
+    private int user_id = 3;
     private String userName;
     private String ApiKey;
 

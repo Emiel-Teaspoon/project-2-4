@@ -41,7 +41,7 @@ public class FriendsActivity extends AppCompatActivity {
         ApiClient.getFriends(this, MainActivity.app.getUser_id(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("response", response.toString());
+                Log.d("FriendList Response", response.toString());
                 try {
                     JSONArray result = response.getJSONArray("result");
                     for (int i = 0; i < result.length(); i++) {

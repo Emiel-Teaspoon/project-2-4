@@ -66,15 +66,21 @@ CREATE TABLE events (
 INSERT INTO users VALUES 
 	(1, 'Bob', 'test', 'valid@email.com', 'apikey', CURRENT_TIMESTAMP),
     (2, 'Bobby', 'test', 'valid@email.nl', 'apikey1', CURRENT_TIMESTAMP),
-    (3, 'Bobbington', 'test', 'valid@email.net', 'apikey2', CURRENT_TIMESTAMP);
+    (3, 'Bobbington', 'test', 'valid@email.net', 'apikey2', CURRENT_TIMESTAMP),
+    (4, 'Jan', 'test', 'valid@email.ru', 'apikey3', CURRENT_TIMESTAMP);
 
 INSERT INTO followers VALUES
 	(1, 2),
     (1, 3),
-    (2, 1);
+    (2, 1),
+    (2, 4),
+    (3, 1),
+    (3, 4);
 
 INSERT INTO events VALUES
-	(1, 'Descriptive title', 'Concise description', 'img-url', 53.241081, 6.533918, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 1, CURRENT_TIMESTAMP),
-    (2, 'Deceptive title', 'Longwinded description', 'img-url', 53.241081, 6.533918, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 2, CURRENT_TIMESTAMP),
-    (3, 'Title', 'Desc', 'img', 52.525252, 6.666777, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 3, CURRENT_TIMESTAMP);
+	(1, 'Bobs feest', 'Bobs verjaardagsfeest', 'img-url', 53.241081, 6.533918, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 1, CURRENT_TIMESTAMP),
+    (2, 'Bobs feest', 'Vier de verjaardag van bobs kat', 'img-url', 53.241081, 6.533918, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 1, CURRENT_TIMESTAMP),
+    (3, 'Bobbys feestje', 'Bobby geeft een feestje', 'img-url', 53.241081, 6.533918, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 2, CURRENT_TIMESTAMP),
+    (4, 'Bobbingtons trouwerij', 'Kom naar de trouwerij van de Bobbingtons.', 'img-url', 53.241081, 6.533918, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 1, CURRENT_TIMESTAMP),
+    (5, 'Meldrinken bij Jan', 'Iedereen is welkom om melk te komen drinken bij Jan', 'img', 52.525252, 6.666777, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 3, CURRENT_TIMESTAMP);
     
