@@ -54,10 +54,18 @@
             return $stmt;
         }
         
-        function getEventsByUser($dbo, $limit, $user_id) {
+        function getEventsByUserID($dbo, $user_id) {
             $db = new EventDB($dbo);
 
-            $stmt = $db->getEventsByUser($limit, $user_id);
+            $stmt = $db->getEventsByUserID($user_id);
+            $db->closeConnection();
+            return $stmt;
+        }
+
+        function getEventsByUsername($dbo, $Username) {
+            $db = new EventDB($dbo);
+
+            $stmt = $db->getEventsByUsername($Username);
             $db->closeConnection();
             return $stmt;
         }

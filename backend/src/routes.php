@@ -75,12 +75,19 @@ return function (App $app) {
         return $response->withJSON($result);
     });
 
-    $app->get('/EventsByUser/{limit}/{user_id}', function ($request, $response, $args) {
-        $limit = $args['limit'];
+    $app->get('/EventsByUserID/{user_id}', function ($request, $response, $args) {
         $user_id = $args['user_id'];
 
         $api = new EventMapAPI();
-        $result = $api->getEventsByUser($this->db, $limit, $user_id);
+        $result = $api->getEventsByUser($this->db, $user_id);
+        return $response->withJson($result);
+    });
+
+    $app->get('/EventsByUsername/{username}', function ($request, $response, $args) {
+        $username = $args['username'];
+
+        $api = new EventMapAPI();
+        $result = $api->getEventsByUser($this->db, $username);
         return $response->withJson($result);
     });
 

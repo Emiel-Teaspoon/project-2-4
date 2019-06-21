@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class FriendsActivity extends AppCompatActivity {
 
-    public final static String EXTRA_FRIEND = "com.example.seriesapp.FRIEND";
+    public final static String EXTRA_FRIEND = "com.example.project24.FRIEND";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
