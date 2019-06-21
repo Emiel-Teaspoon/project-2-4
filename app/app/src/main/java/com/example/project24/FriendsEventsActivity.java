@@ -9,6 +9,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,9 +36,29 @@ public class FriendsEventsActivity extends AppCompatActivity {
                 (this, android.R.layout.simple_list_item_1, res_list);
         listView.setAdapter(arrayAdapter);
 
+        ApiClient.getFriendsEvents(this, 1, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("response", response.toString());
+                try {
+                    JSONArray result = response.getJSONArray("result");
+                    for (int i = 0; i < result.length(); i++) {
+                        JSONObject friendsEventsObject = result.getJSONObject(i);
+                        arrayAdapter.add(friendsEventsObject.getString("title"));
+                        Log.d("test",friendsEventsObject.getString("title"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error", "Things did not work");
+            }
+        });
 
-        res_list.add("Mc Donalds");
-        res_list.add("Reef and Beef");
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
