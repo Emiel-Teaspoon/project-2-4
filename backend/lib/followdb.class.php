@@ -80,6 +80,7 @@
 
                     while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
                         $results[] = array(
+                            'user_id' => $fetch->user_id,
                             'username' => $fetch->username,
                             'email' => $fetch->email
                         );

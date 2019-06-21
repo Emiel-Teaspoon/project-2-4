@@ -74,8 +74,7 @@
                     FROM events WHERE event_owner = :user_id LIMIT $limit";
             $stmt = $this->conn->prepare($sql);
 
-            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-            // $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);            
+            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);           
 
             $result = $stmt->execute();
             
@@ -105,9 +104,7 @@
         function getEvents($limit) {
             $sql = "SELECT event_id, title, description, image, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner, creation_datetime
                     FROM events LIMIT $limit";
-            $stmt = $this->conn->prepare($sql);
-
-            // $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);            
+            $stmt = $this->conn->prepare($sql);          
 
             $result = $stmt->execute();
             
@@ -134,7 +131,7 @@
             return array('Code' => 403, 'Message' => 'Error');
         }
 
-        function getFollowerEvents($user_limit, $event_limit, $user_id) {
+        function getFollowerEvents($user_id) {
             $sql = "SELECT follower FROM followers WHERE user = :user_id";
             $stmt = $this->conn->prepare($sql);
 

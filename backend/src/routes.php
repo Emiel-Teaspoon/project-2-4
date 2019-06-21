@@ -92,13 +92,11 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->get('/FollowerEvents/{user_limit}/{event_limit}/{user_id}', function (Request $request, Response $response, $args) {
-        $user_limit = $args['user_limit'];
-        $event_limit = $args['event_limit'];
+    $app->get('/FollowerEvents/{user_id}', function (Request $request, Response $response, $args) {
         $user_id = $args['user_id'];
 
         $api = new EventMapAPI();
-        $result = $api->getFollowerEvents($this->db, $user_limit, $event_limit, $user_id);
+        $result = $api->getFollowerEvents($this->db, $user_id);
         return $response->withJSON($result);
     });
 

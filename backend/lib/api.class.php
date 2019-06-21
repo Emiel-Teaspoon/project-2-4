@@ -70,10 +70,10 @@
             return $stmt;
         }
 
-        function getFollowerEvents($dbo, $user_limit, $event_limit, $user_id) {
+        function getFollowerEvents($dbo, $user_id) {
             $db = new EventDB($dbo);
 
-            $stmt = $db->getFollowerEvents($user_limit, $event_limit, $user_id);
+            $stmt = $db->getFollowerEvents($user_id);
             $db->closeConnection();
             return $stmt;
         }
@@ -86,7 +86,7 @@
             return $stmt;
         }
 
-        // Event functions
+        // Follow functions
         function followUser($dbo, $user_id, $follower_id) {
             $db = new FollowDB($dbo);
 
