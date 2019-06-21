@@ -122,8 +122,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(friendsActivity);
                 break;
             case R.id.nav_logout:
+
+                break;
+            case R.id.nav_login:
                 Intent loginActivity = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(loginActivity);
+                break;
+            case R.id.nav_register:
+                Intent registerActivity = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivity(registerActivity);
                 break;
         }
 
