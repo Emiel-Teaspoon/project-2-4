@@ -77,9 +77,9 @@ INSERT INTO followers VALUES
     (3, 4);
 
 INSERT INTO events VALUES
-	(1, 'Bobs feest', 'Bobs verjaardagsfeest', 'img-url', 53.241081, 6.533918, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 1, CURRENT_TIMESTAMP),
-    (2, 'Bobs feest', 'Vier de verjaardag van bobs kat', 'img-url', 53.241081, 6.533918, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 1, CURRENT_TIMESTAMP),
-    (3, 'Bobbys feestje', 'Bobby geeft een feestje', 'img-url', 53.241081, 6.533918, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 2, CURRENT_TIMESTAMP),
-    (4, 'Bobbingtons trouwerij', 'Kom naar de trouwerij van de Bobbingtons.', 'img-url', 53.241081, 6.533918, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 1, CURRENT_TIMESTAMP),
-    (5, 'Meldrinken bij Jan', 'Iedereen is welkom om melk te komen drinken bij Jan', 'img', 52.525252, 6.666777, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 3, CURRENT_TIMESTAMP);
+	(1, 'Bobs feest', 'Bobs verjaardagsfeest', 'img-url', 53.232882, 6.540572, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 1, CURRENT_TIMESTAMP),
+    (2, 'Bobs feest', 'Vier de verjaardag van bobs kat', 'img-url', 53.232904, 6.540692, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 1, CURRENT_TIMESTAMP),
+    (3, 'Bobbys feestje', 'Bobby geeft een feestje', 'img-url', 53.237218, 6.556211, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 2, CURRENT_TIMESTAMP),
+    (4, 'Bobbingtons trouwerij', 'Kom naar de trouwerij van de Bobbingtons.', 'img-url', 53.212122, 6.549218, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 1, CURRENT_TIMESTAMP),
+    (5, 'Meldrinken bij Jan', 'Iedereen is welkom om melk te komen drinken bij Jan', 'img', 53.195524, 6.598142, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 3, CURRENT_TIMESTAMP);
     
