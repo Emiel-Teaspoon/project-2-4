@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ApiClient {
+class ApiClient {
 
     private static final String API_CALL = "https://spicymemes.app/eventmap/public/";
     private static final String TAG = ApiClient.class.getSimpleName();
@@ -52,7 +52,7 @@ public class ApiClient {
         MySingleton.getInstance(context).addToRequestQueue(request);
     }
 
-    public static void getVersion(final Context context)
+    static void getVersion(final Context context)
     {
         String action = "version";
 
@@ -74,35 +74,39 @@ public class ApiClient {
                 });
     }
 
-    public static void getFriends(final Context context, final int userID, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+    static void getFriends(final Context context, final int userID, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
         String action = "getFollowers/" + userID;
         sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
     }
-    public static void getFriendsEvents(final Context context, final int userID,final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+    static void getFriendsEvents(final Context context, final int userID,final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
         String action = "FollowerEvents/" + userID;
         sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
     }
 
-    public static void getFriendEvents(final Context context, final String username, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+    static void getFriendEvents(final Context context, final String username, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
         String action = "EventsByUsername/" + username;
+        sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
+    }
+
+    static void getAllEvents(final Context context, final int limit, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+        String action = "Events/" + limit;
         sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
     }
 
 
     // Nog niet getest of het werkt
-    public static void loginAccount(final Context context, String username,String password, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+    static void loginAccount(final Context context, String username,String password, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
         String action = "login/" + username + "/" + password;
         sendObjectRequest(context, Request.Method.POST, action, null, responseListener, errorListener);
     }
     // ook nog niet getest
-    public static void registerAccount(final Context context, String username,String password,String email, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+    static void registerAccount(final Context context, String username,String password,String email, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
         String action = "login/" + username + "/" + password +"/" + email;
         sendObjectRequest(context, Request.Method.POST, action, null, responseListener, errorListener);
     }
 
-    public static void getUserByUsername(final Context context, final String username, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+    static void getUserByUsername(final Context context, final String username, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
         String action = "findUserByUsername/" + username;
         sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
-
     }
 }

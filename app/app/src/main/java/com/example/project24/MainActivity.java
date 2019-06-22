@@ -24,6 +24,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -31,6 +33,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -148,6 +154,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mMap.addMarker(new MarkerOptions().position(groningen).title("Groningen"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(groningen, 11));
 
+        ApiClient.getAllEvents(this, 100, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("All events response", response.toString());
+                try {
+                    JSONArray result = response.getJSONArray("result");
+                    for (int i = 0; i < result.length(); i++) {
+                        JSONObject eventObject = result.getJSONObject(i);
+                        LatLng position = new LatLng(eventObject.getLong("latitude"), eventObject.getLong("longitude"));
+                        mMap.addMarker(new MarkerOptions().position(position).title(eventObject.getString("title")));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("All events error", error.toString());
+            }
+        });
+
         try {
             boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
 
@@ -174,9 +202,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
         }
-    }
-
-    public String getApiKey() {
-        return "The Key";
     }
 }
