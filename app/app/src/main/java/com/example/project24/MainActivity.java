@@ -1,17 +1,20 @@
 package com.example.project24;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,6 +25,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -32,6 +37,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -41,7 +47,7 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
     public final static EventmapApp app = new EventmapApp();
-    private GoogleMap mMap;
+    private GoogleMap map;
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -147,12 +153,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
+    public void onMapReady(final GoogleMap map) {
         LatLng groningen = new LatLng(53.2314884, 6.5677468);
-        mMap.addMarker(new MarkerOptions().position(groningen).title("Groningen"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(groningen, 11));
+        map.addMarker(new MarkerOptions().position(groningen).title("Groningen"));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(groningen, 11));
 
         ApiClient.getAllEvents(this, 100, new Response.Listener<JSONObject>() {
             @Override
@@ -163,8 +167,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     for (int i = 0; i < result.length(); i++) {
                         JSONObject eventObject = result.getJSONObject(i);
                         LatLng position = new LatLng(eventObject.getLong("latitude"), eventObject.getLong("longitude"));
-                        mMap.addMarker(new MarkerOptions().position(position).title(eventObject.getString("title")));
+                        String markerInfo = "Description: " + eventObject.getString("description") + "\n" +
+                                "Starting date: " + eventObject.getString("eventStartDT") + "\n" +
+                                "End date: " + eventObject.getString("eventEndDT");
+                        map.addMarker(new MarkerOptions().position(position).title(eventObject.getString("title")).snippet(markerInfo));
                     }
+                    map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                        @Override
+                        public View getInfoWindow(Marker marker) {
+                            return null;
+                        }
+
+                        @Override
+                        public View getInfoContents(Marker marker) {
+                            LinearLayout info = new LinearLayout(MainActivity.this);
+                            info.setOrientation(LinearLayout.VERTICAL);
+
+                            TextView title = new TextView(MainActivity.this);
+                            title.setTextColor(Color.BLACK);
+                            title.setGravity(Gravity.CENTER);
+                            title.setTypeface(null, Typeface.BOLD);
+                            title.setText(marker.getTitle());
+
+                            TextView snippet = new TextView(MainActivity.this);
+                            snippet.setTextColor(Color.GRAY);
+                            snippet.setText(marker.getSnippet());
+
+                            info.addView(title);
+                            info.addView(snippet);
+
+                            return info;
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -177,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         try {
-            boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
+            boolean success = map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
 
             if (!success) {
                 Log.e(TAG, "Style parsing failed.");
@@ -187,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
+            map.setMyLocationEnabled(true);
         } else {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
         }
@@ -198,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.i("dasdadf", "asdfadsfasdfa");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
+            map.setMyLocationEnabled(true);
         } else {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
         }
