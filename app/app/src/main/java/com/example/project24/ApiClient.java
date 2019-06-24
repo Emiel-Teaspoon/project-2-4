@@ -96,13 +96,20 @@ class ApiClient {
 
     // Nog niet getest of het werkt
     static void loginAccount(final Context context, String username,String password, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
-        String action = "login/" + username + "/" + password;
-        sendObjectRequest(context, Request.Method.POST, action, null, responseListener, errorListener);
+        String action = "login/";
+        HashMap<String, String> hmap = new HashMap<>();
+        hmap.put("username",username);
+        hmap.put("password",password);
+        sendObjectRequest(context, Request.Method.POST, action,hmap, responseListener, errorListener);
     }
     // ook nog niet getest
     static void registerAccount(final Context context, String username,String password,String email, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
-        String action = "login/" + username + "/" + password +"/" + email;
-        sendObjectRequest(context, Request.Method.POST, action, null, responseListener, errorListener);
+        String action = "user/" ;
+        HashMap<String, String> hmap = new HashMap<>();
+        hmap.put("username",username);
+        hmap.put("password",password);
+        hmap.put("email",email);
+        sendObjectRequest(context, Request.Method.POST, action,hmap, responseListener, errorListener);
     }
 
     static void getUserByUsername(final Context context, final String username, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
