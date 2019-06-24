@@ -15,6 +15,7 @@ class App extends React.Component {
     isAuthenticated: false,
     showLogin: false,
     isError: false,
+    isUserError: false,
     logError: "",
     user: [],
   }
@@ -75,7 +76,7 @@ class App extends React.Component {
         cookies.set('loggedIn', 1);
       }
       else {
-        this.setState({isLoading: false, isError:true, logError:data.Message});
+        this.setState({isLoading: false, isError:true, isUserError:false, logError:data.Message});
       }
     });
   }
@@ -97,7 +98,7 @@ class App extends React.Component {
         cookies.set('loggedIn', 1);
       }
       else {
-        this.setState({isLoading: false, isError:true, logError:data.Message});
+        this.setState({isLoading: false, isUserError:true, isError:false, logError:data.Message});
       }
     });
   }
@@ -125,6 +126,7 @@ class App extends React.Component {
             isLoading={this.state.isLoading} 
             onRegister={this.registerHandler} 
             isError={this.state.isError} 
+            isUserError={this.state.isUserError} 
             logError={this.state.logError}/> : <EventMap/>}
         </Layout>
       </div>

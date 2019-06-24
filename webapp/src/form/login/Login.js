@@ -109,9 +109,10 @@ class Login extends React.Component {
             {this.state.isRegistering ? "Register" : "Sign in"}
           </Typography>
           <form className={classes.form} onSubmit={this.state.isRegistering ? this.onRegister : this.onLogin}>
-            <FormControl margin="normal" required fullWidth>
+            <FormControl margin="normal" required fullWidth error={this.props.isUserError}>
               <InputLabel htmlFor="username">Username</InputLabel>
               <Input id="username" name="username" autoComplete="username" defaultValue={this.props.username} onChange={this.handleUsernameChange} autoFocus />
+              {this.props.isUserError ? <FormHelperText id="component-error-text">{this.props.logError}</FormHelperText> : <div/>}
             </FormControl>
             <FormControl margin="normal" required fullWidth error={this.props.isError}>
               <InputLabel htmlFor="password">Password</InputLabel>
