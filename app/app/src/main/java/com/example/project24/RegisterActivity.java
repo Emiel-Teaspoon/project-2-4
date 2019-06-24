@@ -54,10 +54,10 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                username = usernameText.getEditText().toString();
-                password = passwordText.getEditText().toString();
-                passwordRepeat = passwordRepeatText.getEditText().toString();
-                email = emailText.getEditText().toString();
+                username = usernameText.getEditText().getText().toString();
+                password = passwordText.getEditText().getText().toString();
+                passwordRepeat = passwordRepeatText.getEditText().getText().toString();
+                email = emailText.getEditText().getText().toString();
 
                 if (confirmInput()){
                 ApiClient.registerAccount(getBaseContext(), username, password,email, new Response.Listener<JSONObject>() {
@@ -79,12 +79,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean validatePassword(String passwordInput, String passwordRepeatInput)
     {
-        if (passwordInput.isEmpty() || passwordInput.length()==0) {
+        if (passwordInput.isEmpty()) {
             passwordText.setError("Password can't be empty");
             return false;
-        } else if (passwordInput != passwordRepeatInput){
-            passwordRepeatText.setError("Passwords do not match");
-            return false;
+//        } else if (passwordInput != passwordRepeatInput){
+//            passwordRepeatText.setError("Passwords do not match");
+//            return false;
         } else if (!PASSWORD_PATTERN.matcher(passwordInput).matches()){
             passwordText.setError("Password is weak");
             return false;

@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApiClient.loginAccount(getBaseContext(), usernameText.getEditText().toString(), passwordText.getEditText().toString(), new Response.Listener<JSONObject>() {
+                ApiClient.loginAccount(getBaseContext(), usernameText.getEditText().getText().toString(), passwordText.getEditText().getText().toString(), new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("Login Response", response.toString());
