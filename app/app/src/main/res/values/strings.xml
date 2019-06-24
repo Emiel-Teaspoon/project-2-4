@@ -34,6 +34,7 @@
 
     <string name="register_username_hint">Username</string>
     <string name="register_password_hint">Password</string>
+    <string name="register_password_repeat_hint">Password Repeat</string>
     <string name="register_email_hint">Email</string>
     <string name="register_button">Register</string>
 

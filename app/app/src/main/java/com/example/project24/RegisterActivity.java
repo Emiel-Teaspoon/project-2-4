@@ -33,9 +33,11 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registerButton;
     private TextInputLayout usernameText;
     private TextInputLayout passwordText;
+    private TextInputLayout passwordRepeatText;
     private TextInputLayout emailText;
     private String username;
     private String password;
+    private String passwordRepeat;
     private String email;
 
 
@@ -46,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.registerButton);
         usernameText = findViewById(R.id.registerUsernameText);
         passwordText = findViewById(R.id.registerPasswordText);
+        passwordRepeatText = findViewById(R.id.registerPasswordRepeatText);
         emailText = findViewById(R.id.registerEmailText);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 username = usernameText.getEditText().toString();
                 password = passwordText.getEditText().toString();
+                passwordRepeat = passwordRepeatText.getEditText().toString();
                 email = emailText.getEditText().toString();
 
                 if (confirmInput()){
@@ -73,10 +77,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private boolean validatePassword(String passwordInput)
+    private boolean validatePassword(String passwordInput, String passwordRepeatInput)
     {
-        if (passwordInput.isEmpty()){
+        if (passwordInput.isEmpty() || passwordInput.length()==0) {
             passwordText.setError("Password can't be empty");
+            return false;
+        } else if (passwordInput != passwordRepeatInput){
+            passwordRepeatText.setError("Passwords do not match");
             return false;
         } else if (!PASSWORD_PATTERN.matcher(passwordInput).matches()){
             passwordText.setError("Password is weak");
@@ -115,7 +122,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
     private boolean confirmInput(){
-        if(!validateEmail(email) | !validateUsername(username) | !validatePassword(password)){
+        if(!validateEmail(email) | !validateUsername(username) | !validatePassword(password,passwordRepeat)){
             return false;
         }
         Toast.makeText(this, "confirmed", Toast.LENGTH_SHORT).show();
