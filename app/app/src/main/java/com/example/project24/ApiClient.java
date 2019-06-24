@@ -96,7 +96,7 @@ class ApiClient {
 
     // Nog niet getest of het werkt
     static void loginAccount(final Context context, String username,String password, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
-        String action = "login/";
+        String action = "login";
         HashMap<String, String> hmap = new HashMap<>();
         hmap.put("username",username);
         hmap.put("password",password);
@@ -104,7 +104,7 @@ class ApiClient {
     }
     // ook nog niet getest
     static void registerAccount(final Context context, String username,String password,String email, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
-        String action = "user/" ;
+        String action = "user" ;
         HashMap<String, String> hmap = new HashMap<>();
         hmap.put("username",username);
         hmap.put("password",password);
