@@ -55,26 +55,34 @@ CREATE TABLE events (
 -- ---------------
 -- Create rules --
 -- ---------------
--- ALTER TABLE users ADD UNIQUE INDEX username_unique (username ASC);
--- ALTER TABLE users ADD UNIQUE INDEX email_unique (email ASC);
--- ALTER TABLE users ADD UNIQUE INDEX api_key_unique (api_key ASC);
--- ALTER TABLE events ADD UNIQUE INDEX title_unique (title ASC);
+ALTER TABLE users ADD UNIQUE INDEX username_unique (username ASC);
+ALTER TABLE users ADD UNIQUE INDEX email_unique (email ASC);
+ALTER TABLE users ADD UNIQUE INDEX api_key_unique (api_key ASC);
 
 -- ---------------
 --   Add data   --
 -- ---------------
 INSERT INTO users VALUES 
-	(1, 'Bob', 'test', 'valid@email.com', 'apikey', CURRENT_TIMESTAMP),
-    (2, 'Bobby', 'test', 'valid@email.nl', 'apikey1', CURRENT_TIMESTAMP),
-    (3, 'Bobbington', 'test', 'valid@email.net', 'apikey2', CURRENT_TIMESTAMP);
+	(1, 'Bob', 'Test1!', 'valid@email.com', 'apikey', CURRENT_TIMESTAMP),
+    (2, 'Bobby', 'Test1!', 'valid@email.nl', 'apikey1', CURRENT_TIMESTAMP),
+    (3, 'Bobbington', 'Test1!', 'valid@email.net', 'apikey2', CURRENT_TIMESTAMP),
+    (4, 'Jan', 'Test1!', 'valid@email.ru', 'apikey3', CURRENT_TIMESTAMP);
 
 INSERT INTO followers VALUES
 	(1, 2),
     (1, 3),
-    (2, 1);
+    (2, 1),
+    (2, 4),
+    (3, 1),
+    (3, 4),
+	(4, 1),
+	(4, 2),
+	(4, 3);
 
 INSERT INTO events VALUES
-	(1, 'Descriptive title', 'Concise description', 'img-url', 53.241081, 6.533918, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 1, CURRENT_TIMESTAMP),
-    (2, 'Deceptive title', 'Longwinded description', 'img-url', 53.241081, 6.533918, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 2, CURRENT_TIMESTAMP),
-    (3, 'Title', 'Desc', 'img', 52.525252, 6.666777, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 3, CURRENT_TIMESTAMP);
+	(1, 'Bobs feest', 'Bobs verjaardagsfeest', 'img-url', 53.232882, 6.540572, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 1, CURRENT_TIMESTAMP),
+    (2, 'Bobs feest', 'Vier de verjaardag van bobs kat', 'img-url', 53.232904, 6.540692, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 1, CURRENT_TIMESTAMP),
+    (3, 'Bobbys feestje', 'Bobby geeft een feestje', 'img-url', 53.237218, 6.556211, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 2, CURRENT_TIMESTAMP),
+    (4, 'Bobbingtons trouwerij', 'Kom naar de trouwerij van de Bobbingtons.', 'img-url', 53.212122, 6.549218, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 3, CURRENT_TIMESTAMP),
+    (5, 'Meldrinken bij Jan', 'Iedereen is welkom om melk te komen drinken bij Jan', 'img', 53.195524, 6.598142, 0, '2019-05-31 08:15:15', '2019-08-31 08:15:15', 4, CURRENT_TIMESTAMP);
     

@@ -44,6 +44,14 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
+    $app->get('/findUserByUsername/{username}', function (Request $request, Response $response, $args) {
+        $username = $args['username'];
+
+        $api = new EventMapAPI();
+        $result = $api->findUserByUsername($this->db, $username);
+        return $response->withJson($result);
+    });
+
     $app->post('/addEvent/{title}/{description}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
         $title = $args['title'];
         $description = $args['description'];
@@ -75,12 +83,19 @@ return function (App $app) {
         return $response->withJSON($result);
     });
 
-    $app->get('/EventsByUser/{limit}/{user_id}', function ($request, $response, $args) {
-        $limit = $args['limit'];
+    $app->get('/EventsByUserID/{user_id}', function ($request, $response, $args) {
         $user_id = $args['user_id'];
 
         $api = new EventMapAPI();
-        $result = $api->getEventsByUser($this->db, $limit, $user_id);
+        $result = $api->getEventsByUserID($this->db, $user_id);
+        return $response->withJson($result);
+    });
+
+    $app->get('/EventsByUsername/{username}', function ($request, $response, $args) {
+        $username = $args['username'];
+
+        $api = new EventMapAPI();
+        $result = $api->getEventsByUsername($this->db, $username);
         return $response->withJson($result);
     });
 
@@ -92,13 +107,11 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->get('/FollowerEvents/{user_limit}/{event_limit}/{user_id}', function (Request $request, Response $response, $args) {
-        $user_limit = $args['user_limit'];
-        $event_limit = $args['event_limit'];
+    $app->get('/FollowerEvents/{user_id}', function (Request $request, Response $response, $args) {
         $user_id = $args['user_id'];
 
         $api = new EventMapAPI();
-        $result = $api->getFollowerEvents($this->db, $user_limit, $event_limit, $user_id);
+        $result = $api->getFollowerEvents($this->db, $user_id);
         return $response->withJSON($result);
     });
 

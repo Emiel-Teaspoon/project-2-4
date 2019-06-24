@@ -37,6 +37,14 @@
             return $stmt;
         }
 
+        function findUserByUsername($dbo, $username) {
+            $db = new UserDB($dbo);
+
+            $stmt = $db->findUserByUsername($username);
+            $db->closeConnection();
+            return $stmt;
+        }
+
         // Event functions
         function addEvent($dbo, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT) {
             $db = new EventDB($dbo);
@@ -54,10 +62,18 @@
             return $stmt;
         }
         
-        function getEventsByUser($dbo, $limit, $user_id) {
+        function getEventsByUserID($dbo, $user_id) {
             $db = new EventDB($dbo);
 
-            $stmt = $db->getEventsByUser($limit, $user_id);
+            $stmt = $db->getEventsByUserID($user_id);
+            $db->closeConnection();
+            return $stmt;
+        }
+
+        function getEventsByUsername($dbo, $Username) {
+            $db = new EventDB($dbo);
+
+            $stmt = $db->getEventsByUsername($Username);
             $db->closeConnection();
             return $stmt;
         }
@@ -70,10 +86,10 @@
             return $stmt;
         }
 
-        function getFollowerEvents($dbo, $user_limit, $event_limit, $user_id) {
+        function getFollowerEvents($dbo, $user_id) {
             $db = new EventDB($dbo);
 
-            $stmt = $db->getFollowerEvents($user_limit, $event_limit, $user_id);
+            $stmt = $db->getFollowerEvents($user_id);
             $db->closeConnection();
             return $stmt;
         }
@@ -86,7 +102,7 @@
             return $stmt;
         }
 
-        // Event functions
+        // Follow functions
         function followUser($dbo, $user_id, $follower_id) {
             $db = new FollowDB($dbo);
 

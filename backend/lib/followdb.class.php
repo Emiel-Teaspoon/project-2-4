@@ -71,7 +71,7 @@
 
             foreach ($followers as $follower) {
                 foreach ($follower as $key => $value) {
-                    $sql = "SELECT username, email FROM users WHERE user_id = :follower;";
+                    $sql = "SELECT user_id, username, email FROM users WHERE user_id = :follower;";
                     $stmt = $this->conn->prepare($sql);
 
                     $stmt->bindValue('follower', $value);
@@ -80,6 +80,7 @@
 
                     while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
                         $results[] = array(
+                            'user_id' => $fetch->user_id,
                             'username' => $fetch->username,
                             'email' => $fetch->email
                         );

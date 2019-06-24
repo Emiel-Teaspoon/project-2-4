@@ -69,13 +69,12 @@
             }
         }
         
-        function getEventsByUser($limit, $user_id) {
+        function getEventsByUserID($user_id) {
             $sql = "SELECT event_id, title, description, image, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner, creation_datetime
-                    FROM events WHERE event_owner = :user_id LIMIT $limit";
+                    FROM events WHERE event_owner = :user_id";
             $stmt = $this->conn->prepare($sql);
 
-            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-            // $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);            
+            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);           
 
             $result = $stmt->execute();
             
@@ -95,6 +94,35 @@
                 );
             }
 
+            if($result) {
+                return array('Code' => 200, 'Message' => 'Success', 'result' => $results);
+            }
+            return array('Code' => 403, 'Message' => 'Error');
+        }
+
+        function getEventsByUsername($username) {
+            $sql = "select * from events where event_owner = (select user_id from users where username = :username)";
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bindValue(':username', $username);           
+
+            $result = $stmt->execute();
+            
+            while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
+                $results[] = array(
+                    'event_ID' => $fetch->event_id,
+                    'title' => $fetch->title,
+                    'description' => $fetch->description,
+                    'image' => $fetch->image,
+                    'latitude' => $fetch->latitude,
+                    'longitude' => $fetch->longitude,
+                    'attendees' => $fetch->attendees,
+                    'eventStartDT' => $fetch->event_start_datetime,
+                    'eventEndDT' => $fetch->event_end_datetime,
+                    'event_owner' => $fetch->event_owner,
+                    'creation_datetime' => $fetch->creation_datetime
+                );
+            }
 
             if($result) {
                 return array('Code' => 200, 'Message' => 'Success', 'result' => $results);
@@ -105,9 +133,7 @@
         function getEvents($limit) {
             $sql = "SELECT event_id, title, description, image, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner, creation_datetime
                     FROM events LIMIT $limit";
-            $stmt = $this->conn->prepare($sql);
-
-            // $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);            
+            $stmt = $this->conn->prepare($sql);          
 
             $result = $stmt->execute();
             
@@ -127,14 +153,13 @@
                 );
             }
 
-
             if($result) {
                 return array('Code' => 200, 'Message' => 'Success', 'result' => $results);
             }
             return array('Code' => 403, 'Message' => 'Error');
         }
 
-        function getFollowerEvents($user_limit, $event_limit, $user_id) {
+        function getFollowerEvents($user_id) {
             $sql = "SELECT follower FROM followers WHERE user = :user_id";
             $stmt = $this->conn->prepare($sql);
 
