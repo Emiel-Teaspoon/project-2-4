@@ -37,7 +37,7 @@ class EventMap extends Component {
         }
         newEvents[this.getIdFromKey(id)].open = true;
         this.setState({openEventId: id, events: newEvents});
-        this.moveMapTo(this.state.events[this.getIdFromKey(id)].position);
+        this.moveMapTo(newEvents[this.getIdFromKey(id)].position);
     }
 
     closeEventHandler = () => {
@@ -63,16 +63,15 @@ class EventMap extends Component {
         axios.get("https://spicymemes.app/eventmap/public/Events/50", { crossdomain: true })
         .then(response => {
             if(response.data.Code === 200) {
-                console.log(response.data.result);
                 let events = [];
                 response.data.result.map((event, index) => {
                     const eventObject = {
-                        id: event.event_id, 
+                        id: index, 
                         open: false, 
-                        size:event.attendees, 
+                        size: Number(event.attendees), 
                         position: {
-                            lat: event.latitude, 
-                            lng: event.longitude
+                            lat: Number(event.latitude), 
+                            lng: Number(event.longitude)
                         }, 
                         details: {
                             title: event.title, 
@@ -82,6 +81,7 @@ class EventMap extends Component {
                     };
                     events.push(eventObject);
                 })
+                console.log(events);
                 this.setState({events: events})
             }
         });
@@ -92,7 +92,15 @@ class EventMap extends Component {
         const events = this.state.events.map(
             event => {
                 return (
-                    <Event key={event.id} id={event.id} lat={event.position.lat} lng={event.position.lng} click={this.openEventHandler} closeHandler={this.closeEventHandler} size={event.size} open={event.open}/>
+                    <Event 
+                        key={event.id} 
+                        id={event.id} 
+                        lat={event.position.lat} 
+                        lng={event.position.lng} 
+                        click={this.openEventHandler} 
+                        closeHandler={this.closeEventHandler} 
+                        size={event.size} 
+                        open={event.open}/>
                 );
             }
         );

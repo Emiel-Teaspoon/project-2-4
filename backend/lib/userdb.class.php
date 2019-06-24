@@ -27,7 +27,7 @@
         
         function login($username, $password)
         {
-            $sql = "SELECT user.user_password, user.user_id, user.api_key FROM user WHERE user_username = :username";
+            $sql = "SELECT users.password, users.user_id, users.api_key FROM users WHERE users.username = :username";
             $stmt = $this->conn->prepare($sql);
 
             $stmt->bindValue(':username', $username);
@@ -35,7 +35,7 @@
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_OBJ);
 
-            $encryptedPassword = $result->user_password;
+            $encryptedPassword = $result->password;
 
             $key = 'Some key for encoding';
             $string = $encryptedPassword;
@@ -63,42 +63,50 @@
         }
 
         function registerUser($username, $password, $email) {
-            $sql = "INSERT INTO users (username, password, email, api_key) VALUES (:username, :password, :email, :api_key)";
-            $stmt = $this->conn->prepare($sql);
+            try {
+                $sql = "INSERT INTO users (username, password, email, api_key) VALUES (:username, :password, :email, :api_key)";
+                $stmt = $this->conn->prepare($sql);
 
-            $key = 'Some key for encoding';
-            $string = $password;
+                $key = 'Some key for encoding';
+                $string = $password;
 
-            $iv = mcrypt_create_iv(
-                mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC),
-                MCRYPT_DEV_URANDOM
-            );
+                $iv = mcrypt_create_iv(
+                    mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC),
+                    MCRYPT_DEV_URANDOM
+                );
 
-            $encrypted = base64_encode(
-                $iv .
-                mcrypt_encrypt(
-                    MCRYPT_RIJNDAEL_128,
-                    hash('sha256', $key, true),
-                    $string,
-                    MCRYPT_MODE_CBC,
-                    $iv
-                )
-            );
+                $encrypted = base64_encode(
+                    $iv .
+                    mcrypt_encrypt(
+                        MCRYPT_RIJNDAEL_128,
+                        hash('sha256', $key, true),
+                        $string,
+                        MCRYPT_MODE_CBC,
+                        $iv
+                    )
+                );
 
-            $api_key = base64_encode(md5(uniqid(rand(), true)));
+                $api_key = base64_encode(md5(uniqid(rand(), true)));
 
-            $stmt->bindvalue(':username', $username);
-            $stmt->bindvalue(':password', $encrypted);
-            $stmt->bindvalue(':email', $email);
-            $stmt->bindvalue(':api_key', $api_key);
+                $stmt->bindvalue(':username', $username);
+                $stmt->bindvalue(':password', $encrypted);
+                $stmt->bindvalue(':email', $email);
+                $stmt->bindvalue(':api_key', $api_key);
 
-            $result = $stmt->execute();
-            
-            if($result === true) {
-                // $this->sendVerification($email, $username, $hash);
-                return array('Code' => 200, 'Message' => 'Success', 'Username' => $username, 'Email' => $email, 'APIKey' => $api_key);
+                $result = $stmt->execute();
+                
+                if($result === true) {
+                    return array('Code' => 200, 'Message' => 'Success', 'UserID' => $this->conn->lastInsertId(), 'Username' => $username, 'APIKey' => $api_key);
+                }
             }
-            
+            catch (PDOException $Exception) {
+                if((int)$Exception->getCode() === 23000) {
+                    return array('Code' => $Exception->getCode(), 'Message' => 'Username already exists');
+                }
+                else {
+                    return array('Code' => 500, 'Message' => 'An unknown error occured');
+                }
+            }
         }
 
         function changePassword($username, $oldPassword, $newPassword) {

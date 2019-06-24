@@ -4,6 +4,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -108,13 +109,15 @@ class Login extends React.Component {
             {this.state.isRegistering ? "Register" : "Sign in"}
           </Typography>
           <form className={classes.form} onSubmit={this.state.isRegistering ? this.onRegister : this.onLogin}>
-            <FormControl margin="normal" required fullWidth>
+            <FormControl margin="normal" required fullWidth error={this.props.isUserError}>
               <InputLabel htmlFor="username">Username</InputLabel>
               <Input id="username" name="username" autoComplete="username" defaultValue={this.props.username} onChange={this.handleUsernameChange} autoFocus />
+              {this.props.isUserError ? <FormHelperText id="component-error-text">{this.props.logError}</FormHelperText> : <div/>}
             </FormControl>
-            <FormControl margin="normal" required fullWidth>
+            <FormControl margin="normal" required fullWidth error={this.props.isError}>
               <InputLabel htmlFor="password">Password</InputLabel>
               <Input name="password" type="password" id="password" autoComplete={this.state.isRegistering ? "none" : "current-password"} defaultValue={this.props.password} onChange={this.handlePasswordChange} />
+              {this.props.isError ? <FormHelperText id="component-error-text">{this.props.logError}</FormHelperText> : <div/>}
             </FormControl>
             <Collapse in={this.state.isRegistering} timeout="auto" unmountOnExit>
               <FormControl margin="normal" required fullWidth>
