@@ -27,8 +27,17 @@ class Layout extends Component {
             <Aux>
                 <div className={classes.Container}>
                     <CssBaseline />
-                    <Toolbar openDrawer={this.drawerOpenHandler} className={classes.Header} auth={this.props.auth} onLogin={this.props.onLogin} showLogin={this.props.showLogin}>Event Map</Toolbar>
-                    <SideDrawer open={this.state.showDrawer} closeDrawer={this.drawerClosedHandler} auth={this.props.auth}/>
+                    <Toolbar 
+                    openDrawer={this.drawerOpenHandler} 
+                    className={classes.Header} 
+                    auth={this.props.isAuthenticated} 
+                    onLogout={this.props.onLogout} 
+                    onLogin={this.props.onLogin} 
+                    showLogin={this.props.showLogin}>Event Map</Toolbar>
+                    <SideDrawer 
+                    open={this.state.showDrawer} 
+                    closeDrawer={this.drawerClosedHandler} 
+                    auth={this.props.isAuthenticated}/>
                     <main className={classes.Content}>
                         {this.props.children}
                     </main>
