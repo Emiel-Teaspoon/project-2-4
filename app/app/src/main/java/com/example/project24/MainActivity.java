@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     JSONArray result = response.getJSONArray("result");
                     for (int i = 0; i < result.length(); i++) {
                         JSONObject eventObject = result.getJSONObject(i);
-                        LatLng position = new LatLng(eventObject.getLong("latitude"), eventObject.getLong("longitude"));
+                        LatLng position = new LatLng(eventObject.getDouble("latitude"), eventObject.getDouble("longitude"));
                         String markerInfo = "Description: " + eventObject.getString("description") + "\n" +
                                 "Starting date: " + eventObject.getString("eventStartDT") + "\n" +
                                 "End date: " + eventObject.getString("eventEndDT");
