@@ -1,7 +1,6 @@
 package com.example.project24;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -18,7 +17,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -32,13 +30,11 @@ import android.view.Menu;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.android.gms.common.api.Api;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -229,22 +225,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                marker.hideInfoWindow();
+            }
+        });
+
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(final LatLng latLng) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                dialogBuilder.setTitle("Maak nieuw event.");
+                dialogBuilder.setTitle("Maak nieuw event");
                 dialogBuilder.setCancelable(false);
 
                 initPopUpViewControls();
-
                 dialogBuilder.setView(popupWindowView);
-
                 final AlertDialog dialog = dialogBuilder.create();
                 dialog.show();
-
-                initPopupOnClick(dialog, latLng);
-
+                initPopupOnClickListeners(dialog, latLng);
             }
         });
 
@@ -329,14 +328,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return valid;
     }
 
-    private void initPopupOnClick(final AlertDialog dialog, final LatLng latLng) {
+    private void initPopupOnClickListeners(final AlertDialog dialog, final LatLng latLng) {
         eventCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!verifyEventInput()){
                     return;
                 }
-
                 String title = eventTitle.getText().toString();
                 String desc = eventDesc.getText().toString();
                 String startDT = eventStart.getText().toString();
