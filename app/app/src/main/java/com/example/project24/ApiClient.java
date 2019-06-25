@@ -93,7 +93,6 @@ class ApiClient {
         sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
     }
 
-
     // Nog niet getest of het werkt
     static void loginAccount(final Context context, String username,String password, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
         String action = "login";
@@ -115,5 +114,12 @@ class ApiClient {
     static void getUserByUsername(final Context context, final String username, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
         String action = "findUserByUsername/" + username;
         sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
+    }
+
+    static void createEvent(Context context, String title, String description, Double latitude, Double longitude, String startDT, String endDT,
+                            int owner, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+        String action = "addEvent/" + title + "/" + description + "/img/" + latitude + "/" + longitude + "/" + 0 + "/" + startDT + "/" + endDT + "/" + owner;
+        action = action.replaceAll(" ", "%20");
+        sendObjectRequest(context, Request.Method.POST, action, null, responseListener, errorListener);
     }
 }

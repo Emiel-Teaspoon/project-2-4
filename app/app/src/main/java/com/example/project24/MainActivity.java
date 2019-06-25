@@ -13,8 +13,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,12 +28,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.common.api.Api;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -49,6 +56,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public final static EventmapApp app = new EventmapApp();
     private GoogleMap map;
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private View popupWindowView;
+    private EditText eventTitle;
+    private EditText eventDesc;
+    private EditText eventStart;
+    private EditText eventEnd;
+    private Button eventCancelButton;
+    private Button eventCreateButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,6 +225,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(final LatLng latLng) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                dialogBuilder.setTitle("Maak nieuw event.");
+                dialogBuilder.setCancelable(false);
+
+                initPopUpViewControls();
+
+                dialogBuilder.setView(popupWindowView);
+
+                final AlertDialog dialog = dialogBuilder.create();
+                dialog.show();
+
+                eventCreateButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String title = eventTitle.getText().toString();
+                        String desc = eventDesc.getText().toString();
+                        String startDT = eventStart.getText().toString();
+                        String endDT = eventStart.getText().toString();
+
+                        Log.d("Event Create Test", title + " " + desc + " " + startDT + " " + endDT + " " + latLng.latitude + " " + latLng.longitude);
+
+                        ApiClient.createEvent(MainActivity.this, title, desc, latLng.latitude, latLng.longitude, startDT, endDT, app.getUser_id(), new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.d("Event Create Test", response.toString());
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d("Event create error", error.toString());
+                            }
+                        });
+                        dialog.cancel();
+                    }
+                });
+
+                eventCancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.cancel();
+                    }
+                });
+            }
+        });
+
         try {
             boolean success = map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
 
@@ -236,5 +299,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
         }
+    }
+
+    private void eventCreationWindow(View view) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.popup_window, null);
+
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                popupWindow.dismiss();
+                return true;
+            }
+        });
+    }
+
+    private void initPopUpViewControls() {
+        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+        popupWindowView = inflater.inflate(R.layout.popup_window, null);
+
+        eventTitle = popupWindowView.findViewById(R.id.eventTitle);
+        eventDesc = popupWindowView.findViewById(R.id.eventDesc);
+        eventStart = popupWindowView.findViewById(R.id.eventStartTime);
+        eventEnd = popupWindowView.findViewById(R.id.eventEndTime);
+
+        eventCancelButton = popupWindowView.findViewById(R.id.eventPopupCancel);
+        eventCreateButton = popupWindowView.findViewById(R.id.eventCreate);
     }
 }
