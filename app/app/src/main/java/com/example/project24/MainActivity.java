@@ -14,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -50,6 +51,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -239,37 +243,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 final AlertDialog dialog = dialogBuilder.create();
                 dialog.show();
 
-                eventCreateButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String title = eventTitle.getText().toString();
-                        String desc = eventDesc.getText().toString();
-                        String startDT = eventStart.getText().toString();
-                        String endDT = eventStart.getText().toString();
+                initPopupOnClick(dialog, latLng);
 
-                        Log.d("Event Create Test", title + " " + desc + " " + startDT + " " + endDT + " " + latLng.latitude + " " + latLng.longitude);
-
-                        ApiClient.createEvent(MainActivity.this, title, desc, latLng.latitude, latLng.longitude, startDT, endDT, app.getUser_id(), new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Log.d("Event Create Test", response.toString());
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("Event create error", error.toString());
-                            }
-                        });
-                        dialog.cancel();
-                    }
-                });
-
-                eventCancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
             }
         });
 
@@ -301,25 +276,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void eventCreationWindow(View view) {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.popup_window, null);
-
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
-
-        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-
-        popupView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                popupWindow.dismiss();
-                return true;
-            }
-        });
-    }
-
     private void initPopUpViewControls() {
         LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
         popupWindowView = inflater.inflate(R.layout.popup_window, null);
@@ -332,4 +288,81 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         eventCancelButton = popupWindowView.findViewById(R.id.eventPopupCancel);
         eventCreateButton = popupWindowView.findViewById(R.id.eventCreate);
     }
+
+    private boolean verifyEventInput() {
+        boolean valid = true;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd hh:mm:SS");
+
+        if (TextUtils.isEmpty(eventTitle.getText())) {
+            Toast.makeText(MainActivity.this, "Geen event titel ingevoerd", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+        if (TextUtils.isEmpty(eventDesc.getText())) {
+            Toast.makeText(MainActivity.this, "Geen omschrijving ingevoerd.", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+        if (TextUtils.isEmpty(eventStart.getText())) {
+            Toast.makeText(MainActivity.this, "Geen start datum en tijd ingeveord.", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+        if (TextUtils.isEmpty(eventEnd.getText())) {
+            Toast.makeText(MainActivity.this,"Geen eind datum en tijd ingevoerd.", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+        if (!TextUtils.isEmpty(eventStart.getText())) {
+            try {
+                format.parse(eventStart.getText().toString());
+            } catch (ParseException e) {
+                Toast.makeText(MainActivity.this, "Voer AUB een geldige start datum en tijd in", Toast.LENGTH_SHORT).show();
+                valid = false;
+            }
+        }
+
+        if (!TextUtils.isEmpty(eventEnd.getText())) {
+            try {
+                format.parse(eventEnd.getText().toString());
+            } catch (ParseException e) {
+                Toast.makeText(MainActivity.this, "Voer AUB een geldige eind datum en tijd in", Toast.LENGTH_SHORT).show();
+                valid = false;
+            }
+        }
+        return valid;
+    }
+
+    private void initPopupOnClick(final AlertDialog dialog, final LatLng latLng) {
+        eventCreateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!verifyEventInput()){
+                    return;
+                }
+
+                String title = eventTitle.getText().toString();
+                String desc = eventDesc.getText().toString();
+                String startDT = eventStart.getText().toString();
+                String endDT = eventStart.getText().toString();
+
+                ApiClient.createEvent(MainActivity.this, title, desc, latLng.latitude, latLng.longitude, startDT, endDT, app.getUser_id(), new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Event Create Test", response.toString());
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Event create error", error.toString());
+                    }
+                });
+                dialog.cancel();
+            }
+        });
+
+        eventCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+    }
+
 }

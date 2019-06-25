@@ -35,6 +35,8 @@
 
         <EditText
             android:id="@+id/eventDesc"
+            android:paddingStart="1dp"
+            android:paddingEnd="1dp"
             android:hint="Omschrijf het event"
             android:inputType="textMultiLine" />
     </TableRow>
