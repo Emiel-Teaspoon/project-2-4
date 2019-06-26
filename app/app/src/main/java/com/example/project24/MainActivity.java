@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(friendsActivity);
                 break;
             case R.id.nav_logout:
-                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT);
+                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_login:
                 Intent loginActivity = new Intent(MainActivity.this, LoginActivity.class);

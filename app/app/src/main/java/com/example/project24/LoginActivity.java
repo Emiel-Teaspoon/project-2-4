@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
                             message = response.get("Message").toString();
                         }
                         catch (JSONException ex){}
-                        Toast.makeText(getBaseContext(),message,Toast.LENGTH_SHORT);
+                        Toast.makeText(getBaseContext(),message,Toast.LENGTH_SHORT).show();
                         Log.d("Login Response", response.toString());
 
                     }

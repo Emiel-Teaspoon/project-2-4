@@ -70,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
                             message = response.get("Message").toString();
                         }
                         catch (JSONException ex){}
-                        Toast.makeText(getBaseContext(),message,Toast.LENGTH_SHORT);
+                        Toast.makeText(getBaseContext(),message,Toast.LENGTH_SHORT).show();
                         Log.d("Register Response", response.toString());
                     }
                 }, new Response.ErrorListener() {
