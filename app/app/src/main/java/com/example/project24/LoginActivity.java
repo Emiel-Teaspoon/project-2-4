@@ -8,6 +8,7 @@ import android.content.*;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -20,6 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private TextInputLayout usernameText;
     private TextInputLayout passwordText;
+    private String message;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -35,7 +37,13 @@ public class LoginActivity extends AppCompatActivity {
                 ApiClient.loginAccount(getBaseContext(), usernameText.getEditText().getText().toString(), passwordText.getEditText().getText().toString(), new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        try {
+                            message = response.get("Message").toString();
+                        }
+                        catch (JSONException ex){}
+                        Toast.makeText(getBaseContext(),message,Toast.LENGTH_SHORT);
                         Log.d("Login Response", response.toString());
+
                     }
                 }, new Response.ErrorListener() {
                     @Override

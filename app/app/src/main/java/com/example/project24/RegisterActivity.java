@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.regex.Pattern;
@@ -39,6 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String password;
     private String passwordRepeat;
     private String email;
+    private String message;
 
 
     @Override
@@ -63,6 +66,11 @@ public class RegisterActivity extends AppCompatActivity {
                 ApiClient.registerAccount(getBaseContext(), username, password,email, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        try {
+                            message = response.get("Message").toString();
+                        }
+                        catch (JSONException ex){}
+                        Toast.makeText(getBaseContext(),message,Toast.LENGTH_SHORT);
                         Log.d("Register Response", response.toString());
                     }
                 }, new Response.ErrorListener() {

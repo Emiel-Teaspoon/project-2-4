@@ -15,6 +15,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.project24.MainActivity.app;
+
 class ApiClient {
 
     private static final String API_CALL = "https://spicymemes.app/eventmap/public/";
@@ -119,8 +121,19 @@ class ApiClient {
 
     static void createEvent(Context context, String title, String description, Double latitude, Double longitude, String startDT, String endDT,
                             int owner, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
-        String action = "addEvent/" + title + "/" + description + "/img/" + latitude + "/" + longitude + "/" + 0 + "/" + startDT + "/" + endDT + "/" + owner;
-        action = action.replaceAll(" ", "%20");
-        sendObjectRequest(context, Request.Method.POST, action, null, responseListener, errorListener);
+        String action = "addEvent";
+        HashMap<String, String> hmap = new HashMap<>();
+        hmap.put("title",title);
+        hmap.put("description",description);
+        hmap.put("image","/img/");
+        hmap.put("latitude",latitude.toString());
+        hmap.put("longitude",longitude.toString());
+        hmap.put("attendees","0");
+        hmap.put("eventStartDT",startDT);
+        hmap.put("eventEndDT",endDT);
+        hmap.put("event_owner",Integer.toString(owner));
+        JSONObject parameters = new JSONObject(hmap);
+//        action = action.replaceAll(" ", "%20");
+        sendObjectRequest(context, Request.Method.POST, action, parameters, responseListener, errorListener);
     }
 }
