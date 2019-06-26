@@ -16,27 +16,27 @@ return function (App $app) {
     });
 
     $app->post('/user', function (Request $request, Response $response) {
-	$data = $request->getParsedBody();
+        $data = $request->getParsedBody();
         $username = $data['username'];
         $password = $data['password'];
-
         $email = $data['email'];
+
         $api = new EventMapAPI();
         $result = $api->registerUser($this->db, $username, $password, $email);
         return $response->withJSON($result);
     });
 
     $app->put('/user/password', function (Request $request, Response $response) {
-	$data = $request->getParsedBody();
+	      $data = $request->getParsedBody();
         $username = $data['username'];
         $oldPassword = $data['oldPassword'];
         $newPassword = $data['newPassword'];
-        
+
         $api = new EventMapAPI();
         $result = $api->changePassword($this->db, $username, $oldPassword, $newPassword);
         return $response->withJSON($result);
     });
-    
+
     $app->post('/login', function (Request $request, Response $response) {
 	$data = $request->getParsedBody();
         $username = $data['username'];
@@ -134,7 +134,7 @@ return function (App $app) {
 	$data = $request->getParsedBody();
         $user_id = $data['user_id'];
         $follower_id = $data['follower_id'];
-        
+
         $api = new EventMapAPI();
         $result = $api->followUser($this->db, $user_id, $follower_id);
         return $response->withJson($result);
@@ -144,7 +144,7 @@ return function (App $app) {
 	$data = $request->getParsedBody();
         $user_id = $data['user_id'];
         $follower_id = $data['follower_id'];
-        
+
         $api = new EventMapAPI();
         $result = $api->unfollowUser($this->db, $user_id, $follower_id);
         return $response->withJson($result);
