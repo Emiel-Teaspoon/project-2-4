@@ -21,19 +21,18 @@ class ApiClient {
     private static final String TAG = ApiClient.class.getSimpleName();
     private static final int MY_SOCKET_TIMEOUT_MS = 60000;
 
-    private static void sendObjectRequest(final Context context, int method, String action, final HashMap<String, String> params, Response.Listener<JSONObject> response, final Response.ErrorListener errorListener) {
+    private static void sendObjectRequest(final Context context, int method, String action, final JSONObject object, Response.Listener<JSONObject> response, final Response.ErrorListener errorListener) {
         Log.i(TAG, "Class is JSONObject");
         final EventmapApp app = (EventmapApp)context.getApplicationContext();
 
         Log.i(TAG, API_CALL + action);
-
-        Request<JSONObject> request = new JsonObjectRequest(method, API_CALL + action, null, response, errorListener)
+        Request<JSONObject> request = new JsonObjectRequest(method, API_CALL + action, object, response, errorListener)
         {
-            @Override
-            protected Map<String, String> getParams()
-            {
-                return params;
-            }
+//            @Override
+//            protected Map<String, String> getParams()
+//            {
+//                return params;
+//            }
 
             public Map<String, String> getHeaders()
             {
@@ -99,7 +98,8 @@ class ApiClient {
         HashMap<String, String> hmap = new HashMap<>();
         hmap.put("username",username);
         hmap.put("password",password);
-        sendObjectRequest(context, Request.Method.POST, action,hmap, responseListener, errorListener);
+        JSONObject parameters = new JSONObject(hmap);
+        sendObjectRequest(context, Request.Method.POST, action,parameters, responseListener, errorListener);
     }
     // ook nog niet getest
     static void registerAccount(final Context context, String username,String password,String email, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
@@ -108,7 +108,8 @@ class ApiClient {
         hmap.put("username",username);
         hmap.put("password",password);
         hmap.put("email",email);
-        sendObjectRequest(context, Request.Method.POST, action,hmap, responseListener, errorListener);
+        JSONObject parameters = new JSONObject(hmap);
+        sendObjectRequest(context, Request.Method.POST, action,parameters, responseListener, errorListener);
     }
 
     static void getUserByUsername(final Context context, final String username, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {

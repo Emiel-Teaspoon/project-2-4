@@ -113,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (usernameInput.isEmpty()){
             usernameText.setError("Username can't be empty");
             return false;
-        } else if (usernameInput.length()>4){
+        } else if (usernameInput.length()<4){
             usernameText.setError("Username is too short");
             return false;
         } else  {
