@@ -25,8 +25,8 @@
             $this->setConnection(null);
         }
 
-        function addEvent($title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT) {
-            $sql = "INSERT INTO events VALUES (null, :title, :description, :img, :latd, :lotd, :attendees, :eventStartDT, :eventEndDT, CURRENT_TIMESTAMP)";
+        function addEvent($title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT, $owner) {
+            $sql = "INSERT INTO events VALUES (null, :title, :description, :img, :latd, :lotd, :attendees, :eventStartDT, :eventEndDT, :owner, CURRENT_TIMESTAMP)";
             $stmt = $this->conn->prepare($sql);
 
             $stmt->bindValue(':title', $title);
@@ -37,6 +37,7 @@
             $stmt->bindValue(':attendees', $attendees);
             $stmt->bindValue(':eventStartDT', $eventStartDT);
             $stmt->bindValue(':eventEndDT', $eventEndDT);
+            $stmt->bindvalue(':owner', $owner);
 
             $result = $stmt->execute();
 

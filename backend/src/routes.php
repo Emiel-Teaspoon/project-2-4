@@ -53,7 +53,7 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->post('/addEvent/{title}/{description}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
+    $app->post('/addEvent/{title}/{description}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}/{owner}', function (Request $request, Response $response, $args) {
         $title = $args['title'];
         $description = $args['description'];
         $img = $args['img'];
@@ -62,9 +62,10 @@ return function (App $app) {
         $attendees = $args['attendees'];
         $eventStartDT = $args['eventStartDT'];
         $eventEndDT = $args['eventEndDT'];
+        $owner = $args['owner'];
 
         $api = new EventMapAPI();
-        $result = $api->addEvent($this->db, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
+        $result = $api->addEvent($this->db, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT, $owner);
         return $response->withJSON($result);
     });
 

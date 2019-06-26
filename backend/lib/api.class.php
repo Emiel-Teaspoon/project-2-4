@@ -46,10 +46,10 @@
         }
 
         // Event functions
-        function addEvent($dbo, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT) {
+        function addEvent($dbo, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT, $owner) {
             $db = new EventDB($dbo);
 
-            $stmt = $db->addEvent($title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
+            $stmt = $db->addEvent($title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT, $owner);
             $db->closeConnection();
             return $stmt;
         }

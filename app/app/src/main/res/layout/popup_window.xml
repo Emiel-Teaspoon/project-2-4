@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:paddingTop="20dp"
+    android:background="#ffffff">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:gravity="start"
+            android:text="Titel : " />
+
+        <EditText
+            android:id="@+id/eventTitle"
+            android:hint="Titel van het event"
+            android:inputType="text" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:gravity="start"
+            android:text="Omschrijving: " />
+
+        <EditText
+            android:id="@+id/eventDesc"
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:hint="Omschrijf het event"
+            android:inputType="textMultiLine" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:gravity="start"
+            android:text="Starttijd : " />
+
+        <EditText
+            android:id="@+id/eventStartTime"
+            android:hint="yyyy-mm-dd hh:mm:ss"
+            android:inputType="text|datetime" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:gravity="start"
+            android:text="Eindtijd : " />
+
+        <EditText
+            android:id="@+id/eventEndTime"
+            android:hint="yyyy-mm-dd hh:mm:ss"
+            android:inputType="text|datetime" />
+    </TableRow>
+
+    <TableRow android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/eventPopupCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Annuleer"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="20dp"/>
+
+
+        <Button
+            android:id="@+id/eventCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Maak Event"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="20dp"/>
+    </TableRow>
+</TableLayout>

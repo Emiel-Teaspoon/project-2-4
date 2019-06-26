@@ -1,7 +1,6 @@
 package com.example.project24;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -13,8 +12,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,6 +27,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,11 +48,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
     public final static EventmapApp app = new EventmapApp();
     private GoogleMap map;
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private View popupWindowView;
+    private EditText eventTitle;
+    private EditText eventDesc;
+    private EditText eventStart;
+    private EditText eventEnd;
+    private Button eventCancelButton;
+    private Button eventCreateButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,6 +225,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                marker.hideInfoWindow();
+            }
+        });
+
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(final LatLng latLng) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                dialogBuilder.setTitle("Maak nieuw event");
+                dialogBuilder.setCancelable(false);
+
+                initPopUpViewControls();
+                dialogBuilder.setView(popupWindowView);
+                final AlertDialog dialog = dialogBuilder.create();
+                dialog.show();
+                initPopupOnClickListeners(dialog, latLng);
+            }
+        });
+
         try {
             boolean success = map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
 
@@ -237,4 +274,93 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
         }
     }
+
+    private void initPopUpViewControls() {
+        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+        popupWindowView = inflater.inflate(R.layout.popup_window, null);
+
+        eventTitle = popupWindowView.findViewById(R.id.eventTitle);
+        eventDesc = popupWindowView.findViewById(R.id.eventDesc);
+        eventStart = popupWindowView.findViewById(R.id.eventStartTime);
+        eventEnd = popupWindowView.findViewById(R.id.eventEndTime);
+
+        eventCancelButton = popupWindowView.findViewById(R.id.eventPopupCancel);
+        eventCreateButton = popupWindowView.findViewById(R.id.eventCreate);
+    }
+
+    private boolean verifyEventInput() {
+        boolean valid = true;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd hh:mm:SS");
+
+        if (TextUtils.isEmpty(eventTitle.getText())) {
+            Toast.makeText(MainActivity.this, "Geen event titel ingevoerd", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+        if (TextUtils.isEmpty(eventDesc.getText())) {
+            Toast.makeText(MainActivity.this, "Geen omschrijving ingevoerd.", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+        if (TextUtils.isEmpty(eventStart.getText())) {
+            Toast.makeText(MainActivity.this, "Geen start datum en tijd ingeveord.", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+        if (TextUtils.isEmpty(eventEnd.getText())) {
+            Toast.makeText(MainActivity.this,"Geen eind datum en tijd ingevoerd.", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+        if (!TextUtils.isEmpty(eventStart.getText())) {
+            try {
+                format.parse(eventStart.getText().toString());
+            } catch (ParseException e) {
+                Toast.makeText(MainActivity.this, "Voer AUB een geldige start datum en tijd in", Toast.LENGTH_SHORT).show();
+                valid = false;
+            }
+        }
+
+        if (!TextUtils.isEmpty(eventEnd.getText())) {
+            try {
+                format.parse(eventEnd.getText().toString());
+            } catch (ParseException e) {
+                Toast.makeText(MainActivity.this, "Voer AUB een geldige eind datum en tijd in", Toast.LENGTH_SHORT).show();
+                valid = false;
+            }
+        }
+        return valid;
+    }
+
+    private void initPopupOnClickListeners(final AlertDialog dialog, final LatLng latLng) {
+        eventCreateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!verifyEventInput()){
+                    return;
+                }
+                String title = eventTitle.getText().toString();
+                String desc = eventDesc.getText().toString();
+                String startDT = eventStart.getText().toString();
+                String endDT = eventStart.getText().toString();
+
+                ApiClient.createEvent(MainActivity.this, title, desc, latLng.latitude, latLng.longitude, startDT, endDT, app.getUser_id(), new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Event Create Test", response.toString());
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Event create error", error.toString());
+                    }
+                });
+                dialog.cancel();
+            }
+        });
+
+        eventCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+    }
+
 }
