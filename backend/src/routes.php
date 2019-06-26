@@ -15,11 +15,12 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->post('/user/{username}/{password}/{email}', function (Request $request, Response $response, $args) {
-        $username = $args['username'];
-        $password = $args['password'];
-
-        $email = $args['email'];
+    $app->post('/user', function (Request $request, Response $response) {
+        $data = $request->getParsedBody();
+        $username = $data['username'];
+        $password = $data['password'];
+        $email = $data['email'];
+        
         $api = new EventMapAPI();
         $result = $api->registerUser($this->db, $username, $password, $email);
         return $response->withJSON($result);
