@@ -47,6 +47,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -86,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // Device location
     private Location mLastKnownLocation;
+
+    private Polyline polyline;
 
     // Controls for the event creation popup
     private View popupWindowView;
@@ -490,7 +493,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String parameters = str_origin + "&" + str_destination + "&" + "sensor=false";
         String output = "json";
 
-        return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
+        return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&" + "key=AIzaSyDv-X6mjYHdmyAXyoF2st-GKpQn-lyyt8Y";
     }
 
     private String downloadUrl(String inputUrl) throws IOException {
@@ -564,10 +567,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
 
                 polylineOptions.addAll(points);
-                polylineOptions.width(2);
-                polylineOptions.color(Color.RED);
+                polylineOptions.width(12);
+                polylineOptions.color(ContextCompat.getColor(MainActivity.this, R.color.primaryColor));
             }
-            mMap.addPolyline(polylineOptions);
+            if (polyline != null) {
+                polyline.remove();
+            }
+            polyline = mMap.addPolyline(polylineOptions);
         }
     }
 
