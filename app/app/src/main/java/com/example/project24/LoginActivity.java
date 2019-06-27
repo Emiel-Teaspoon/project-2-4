@@ -42,12 +42,14 @@ public class LoginActivity extends Fragment {
                     public void onResponse(JSONObject response) {
                         try {
                             message = response.getString("Message");
-//                            user_id = response.getString();
                         }
                         catch (JSONException ex){}
                         Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
                         Log.d("Login Response", response.toString());
-
+                        if (message.equals("Success")){
+                            MapFragment mapFragment = new MapFragment();
+                            getFragmentManager().beginTransaction().replace(R.id.fragment_container,mapFragment).commit();
+                        }
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -57,6 +59,7 @@ public class LoginActivity extends Fragment {
                 });
             }
         });
+
 
 
     }

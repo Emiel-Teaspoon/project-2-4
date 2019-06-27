@@ -77,6 +77,11 @@ public class RegisterActivity extends Fragment {
                         catch (JSONException ex){}
                         Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
                         Log.d("Register Response", response.toString());
+                        if (message.equals("Success")){
+                            LoginActivity loginActivity = new LoginActivity();
+                            getFragmentManager().beginTransaction().replace(R.id.fragment_container,loginActivity).commit();
+                        }
+
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -138,7 +143,6 @@ public class RegisterActivity extends Fragment {
         if(!validateEmail(email) | !validateUsername(username) | !validatePassword(password,passwordRepeat)){
             return false;
         }
-        Toast.makeText(getContext(), "confirmed", Toast.LENGTH_SHORT).show();
         return true;
     }
 
