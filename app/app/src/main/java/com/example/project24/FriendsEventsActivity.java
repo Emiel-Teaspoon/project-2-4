@@ -79,8 +79,11 @@ public class FriendsEventsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 String eventnaam= listView.getItemAtPosition(pos).toString();
+                String[] firstStep = eventnaam.split(",");
+                String[] secondStep = firstStep[0].split("=");
+                String eventId= secondStep[1];
                 Intent intent = new Intent(FriendsEventsActivity.this, EventActivity.class);
-                intent.putExtra(EXTRA_EVENTNAAM, eventnaam);
+                intent.putExtra(EXTRA_EVENTNAAM, eventId);
                 startActivity(intent);
             }
         });

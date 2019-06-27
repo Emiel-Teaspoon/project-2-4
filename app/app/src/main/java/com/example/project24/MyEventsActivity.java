@@ -3,33 +3,70 @@ package com.example.project24;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class MyEventsActivity extends AppCompatActivity {
     public static final String EXTRA_MYEVENT = "com.example.project2.4.MYEVENTNAAM";
+    public ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
+    private SimpleAdapter sa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_events);
         final ListView listView = findViewById(R.id.MyEventList);
-        String[] resultaten = new String[]{};
 
-        final List<String> res_list = new ArrayList<String>(Arrays.asList(resultaten));
+        ApiClient.getEventsById(this, 1, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("response", response.toString());
+                try {
+                    JSONArray result = response.getJSONArray("result");
+                    for (int i = 0; i < result.length(); i++) {
+                        JSONObject friendsEventsObject = result.getJSONObject(i);
+                        HashMap<String,String> item = new HashMap<String,String>();
+                        item.put("naam",friendsEventsObject.getString("title"));
+                        item.put("event_ID",friendsEventsObject.getString("event_ID"));
+                        list.add(item);
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
-                (this, android.R.layout.simple_list_item_1, res_list);
-        listView.setAdapter(arrayAdapter);
-        res_list.add("Mc Donalds");
-        res_list.add("KFC");
-        res_list.add("SUBWAY");
+
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                sa = new SimpleAdapter(MyEventsActivity.this, list,
+                        R.layout.twolines,
+                        new String[] { "naam","event_ID"},
+                        new int[] {R.id.line_one, R.id.line_two});
+
+                listView.setAdapter(sa);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error", "Things did not work");
+            }
+        });
+
+
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
