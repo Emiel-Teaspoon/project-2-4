@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -35,6 +36,8 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -43,6 +46,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,9 +59,24 @@ import java.text.SimpleDateFormat;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
     public final static EventmapApp app = new EventmapApp();
-    private GoogleMap map;
+    private GoogleMap mMap;
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    // Provides location data
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+
+    //Default settings for location (Groningen) and zoom level
+    private final LatLng mDefaultLocation = new LatLng(53.2314884, 6.5677468);
+    private static final int DEFAULT_ZOOM = 10;
+
+    // Location access permission
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private Boolean mLocationPermissionGranted;
+
+    // Device location
+    private Location mLastKnownLocation;
+
+    // Controls for the event creation popup
     private View popupWindowView;
     private EditText eventTitle;
     private EditText eventDesc;
@@ -83,6 +103,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
@@ -169,70 +192,110 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onMapReady(final GoogleMap map) {
-        LatLng groningen = new LatLng(53.2314884, 6.5677468);
-        map.addMarker(new MarkerOptions().position(groningen).title("Groningen"));
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(groningen, 11));
+        mMap = map;
 
-        ApiClient.getAllEvents(this, 100, new Response.Listener<JSONObject>() {
+        // Create a custom info window
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
-            public void onResponse(JSONObject response) {
-                Log.d("All events response", response.toString());
-                try {
-                    JSONArray result = response.getJSONArray("result");
-                    for (int i = 0; i < result.length(); i++) {
-                        JSONObject eventObject = result.getJSONObject(i);
-                        LatLng position = new LatLng(eventObject.getDouble("latitude"), eventObject.getDouble("longitude"));
-                        String markerInfo = "Description: " + eventObject.getString("description") + "\n" +
-                                "Starting date: " + eventObject.getString("eventStartDT") + "\n" +
-                                "End date: " + eventObject.getString("eventEndDT");
-                        map.addMarker(new MarkerOptions().position(position).title(eventObject.getString("title")).snippet(markerInfo));
-                    }
-                    map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                        @Override
-                        public View getInfoWindow(Marker marker) {
-                            return null;
-                        }
-
-                        @Override
-                        public View getInfoContents(Marker marker) {
-                            LinearLayout info = new LinearLayout(MainActivity.this);
-                            info.setOrientation(LinearLayout.VERTICAL);
-
-                            TextView title = new TextView(MainActivity.this);
-                            title.setTextColor(Color.BLACK);
-                            title.setGravity(Gravity.CENTER);
-                            title.setTypeface(null, Typeface.BOLD);
-                            title.setText(marker.getTitle());
-
-                            TextView snippet = new TextView(MainActivity.this);
-                            snippet.setTextColor(Color.GRAY);
-                            snippet.setText(marker.getSnippet());
-
-                            info.addView(title);
-                            info.addView(snippet);
-
-                            return info;
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            public View getInfoWindow(Marker marker) {
+                return null;
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("All events error", error.toString());
+            public View getInfoContents(Marker marker) {
+                LinearLayout info = new LinearLayout(MainActivity.this);
+                info.setOrientation(LinearLayout.VERTICAL);
+
+                TextView title = new TextView(MainActivity.this);
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());
+
+                TextView snippet = new TextView(MainActivity.this);
+                snippet.setTextColor(Color.GRAY);
+                snippet.setText(marker.getSnippet());
+
+                info.addView(title);
+                info.addView(snippet);
+
+                return info;
             }
         });
 
-        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+        // Prepare map for use
+        getLocationPermission();
+        updateLocationUI();
+        initMapOnClickListeners();
+        getDeviceLocation();
+        loadMarkers();
+
+        // Set map style
+        try {
+            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
+    }
+
+    // Verify's if the app has the location permission, requests it otherwise.
+    private void getLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    // Sets the variables after a permission request.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            // Sets the location permission variable after location request
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                }
+            }
+        }
+        updateLocationUI();
+    }
+
+    // Update the UI after a location permission request.
+    private void updateLocationUI() {
+        if (mMap == null) {
+            return;
+        }
+        try {
+            if (mLocationPermissionGranted) {
+                mMap.setMyLocationEnabled(true);
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            } else {
+                mMap.setMyLocationEnabled(false);
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                mLastKnownLocation = null;
+                getLocationPermission();
+            }
+        } catch (SecurityException e) {
+            Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
+    // Initialize the on click listeners for the map.
+    private void initMapOnClickListeners() {
+        // Hides info windows on click.
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 marker.hideInfoWindow();
             }
         });
 
-        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        // Opens event creation window.
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(final LatLng latLng) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -246,35 +309,66 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 initPopupOnClickListeners(dialog, latLng);
             }
         });
+    }
 
+    // Checks if permissions are granted then sets camera to current location
+    // If current location is NULL moves camera to default location
+    private void getDeviceLocation() {
         try {
-            boolean success = map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
-
-            if (!success) {
-                Log.e(TAG, "Style parsing failed.");
+            if (mLocationPermissionGranted) {
+                Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()&& task.getResult() != null) {
+                            mLastKnownLocation = task.getResult();
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    new LatLng(mLastKnownLocation.getLatitude(),
+                                            mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                        } else {
+                            Log.d(TAG, "Current location is null. Using defaults");
+                            Log.e(TAG, "Exception: %s", task.getException());
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+                            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                        }
+                    }
+                });
             }
-        } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Can't find style. Error: ", e);
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            map.setMyLocationEnabled(true);
-        } else {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
+        } catch (SecurityException e) {
+            Log.e("Exception: %s", e.getMessage());
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.i("dasdadf", "asdfadsfasdfa");
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            map.setMyLocationEnabled(true);
-        } else {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
-        }
+    // Retrieves event info from backend, places them on the map as markers.
+    private void loadMarkers() {
+        ApiClient.getAllEvents(this, 100, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("All events response", response.toString());
+                try {
+                    JSONArray result = response.getJSONArray("result");
+                    for (int i = 0; i < result.length(); i++) {
+                        JSONObject eventObject = result.getJSONObject(i);
+                        LatLng position = new LatLng(eventObject.getDouble("latitude"), eventObject.getDouble("longitude"));
+                        String markerInfo = "Description: " + eventObject.getString("description") + "\n" +
+                                "Starting date: " + eventObject.getString("eventStartDT") + "\n" +
+                                "End date: " + eventObject.getString("eventEndDT");
+                        mMap.addMarker(new MarkerOptions().position(position).title(eventObject.getString("title")).snippet(markerInfo));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("All events error", error.toString());
+            }
+        });
     }
 
+    // Initializes the controls for the event creation window.
     private void initPopUpViewControls() {
         LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
         popupWindowView = inflater.inflate(R.layout.popup_window, null);
@@ -288,6 +382,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         eventCreateButton = popupWindowView.findViewById(R.id.eventCreate);
     }
 
+    // Verify's that the input in the event creation window is valid.
     private boolean verifyEventInput() {
         boolean valid = true;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd hh:mm:SS");
@@ -328,7 +423,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return valid;
     }
 
+    // Initialize the on click listeners for the event creation window
     private void initPopupOnClickListeners(final AlertDialog dialog, final LatLng latLng) {
+        // Takes data from input controls and sends the new event to the backend.
         eventCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -355,6 +452,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        // Close the event creation window.
         eventCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
