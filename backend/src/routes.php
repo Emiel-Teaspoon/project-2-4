@@ -97,6 +97,14 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
+    $app->get('/EventsByEventID/{event_id}', function ($request, $response, $args) {
+        $event_id = $args['event_id'];
+
+        $api = new EventMapAPI();
+        $result = $api->getEventsByEventID($this->db, $event_id);
+        return $response->withJson($result);
+    });
+
     $app->get('/EventsByUsername/{username}', function ($request, $response, $args) {
         $username = $args['username'];
 
