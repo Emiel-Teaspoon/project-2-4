@@ -136,4 +136,8 @@ class ApiClient {
 
         sendObjectRequest(context, Request.Method.POST, action, parameters, responseListener, errorListener);
     }
+    static void getEventsById(final Context context, final int userID,final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+        String action = "EventsByUserID/" + userID;
+        sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
+    }
 }
