@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.regex.Pattern;
@@ -33,10 +35,13 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registerButton;
     private TextInputLayout usernameText;
     private TextInputLayout passwordText;
+    private TextInputLayout passwordRepeatText;
     private TextInputLayout emailText;
     private String username;
     private String password;
+    private String passwordRepeat;
     private String email;
+    private String message;
 
 
     @Override
@@ -46,19 +51,26 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.registerButton);
         usernameText = findViewById(R.id.registerUsernameText);
         passwordText = findViewById(R.id.registerPasswordText);
+        passwordRepeatText = findViewById(R.id.registerPasswordRepeatText);
         emailText = findViewById(R.id.registerEmailText);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                username = usernameText.getEditText().toString();
-                password = passwordText.getEditText().toString();
-                email = emailText.getEditText().toString();
+                username = usernameText.getEditText().getText().toString();
+                password = passwordText.getEditText().getText().toString();
+                passwordRepeat = passwordRepeatText.getEditText().getText().toString();
+                email = emailText.getEditText().getText().toString();
 
                 if (confirmInput()){
                 ApiClient.registerAccount(getBaseContext(), username, password,email, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        try {
+                            message = response.getString("Message");
+                        }
+                        catch (JSONException ex){}
+                        Toast.makeText(getBaseContext(),message,Toast.LENGTH_SHORT).show();
                         Log.d("Register Response", response.toString());
                     }
                 }, new Response.ErrorListener() {
@@ -73,11 +85,14 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private boolean validatePassword(String passwordInput)
+    private boolean validatePassword(String passwordInput, String passwordRepeatInput)
     {
-        if (passwordInput.isEmpty()){
+        if (passwordInput.isEmpty()) {
             passwordText.setError("Password can't be empty");
             return false;
+//        } else if (passwordInput != passwordRepeatInput){
+//            passwordRepeatText.setError("Passwords do not match");
+//            return false;
         } else if (!PASSWORD_PATTERN.matcher(passwordInput).matches()){
             passwordText.setError("Password is weak");
             return false;
@@ -106,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (usernameInput.isEmpty()){
             usernameText.setError("Username can't be empty");
             return false;
-        } else if (usernameInput.length()>4){
+        } else if (usernameInput.length()<4){
             usernameText.setError("Username is too short");
             return false;
         } else  {
@@ -115,7 +130,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
     private boolean confirmInput(){
-        if(!validateEmail(email) | !validateUsername(username) | !validatePassword(password)){
+        if(!validateEmail(email) | !validateUsername(username) | !validatePassword(password,passwordRepeat)){
             return false;
         }
         Toast.makeText(this, "confirmed", Toast.LENGTH_SHORT).show();

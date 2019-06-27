@@ -46,10 +46,10 @@
         }
 
         // Event functions
-        function addEvent($dbo, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT) {
+        function addEvent($dbo, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT, $owner) {
             $db = new EventDB($dbo);
 
-            $stmt = $db->addEvent($title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
+            $stmt = $db->addEvent($title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT, $owner);
             $db->closeConnection();
             return $stmt;
         }
@@ -66,6 +66,14 @@
             $db = new EventDB($dbo);
 
             $stmt = $db->getEventsByUserID($user_id);
+            $db->closeConnection();
+            return $stmt;
+        }
+
+        function getEventsByEventID($dbo, $event_id) {
+            $db = new EventDB($dbo);
+
+            $stmt = $db->getEventsByEventID($event_id);
             $db->closeConnection();
             return $stmt;
         }

@@ -15,29 +15,32 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->post('/user/{username}/{password}/{email}', function (Request $request, Response $response, $args) {
-        $username = $args['username'];
-        $password = $args['password'];
+    $app->post('/user', function (Request $request, Response $response) {
+        $data = $request->getParsedBody();
+        $username = $data['username'];
+        $password = $data['password'];
+        $email = $data['email'];
 
-        $email = $args['email'];
         $api = new EventMapAPI();
         $result = $api->registerUser($this->db, $username, $password, $email);
         return $response->withJSON($result);
     });
 
-    $app->put('/password/{username}/{oldPassword}/{newPassword}', function (Request $request, Response $response, $args) {
-        $username = $args['username'];
-        $oldPassword = $args['oldPassword'];
-        $newPassword = $args['newPassword'];
-        
+    $app->put('/user/password', function (Request $request, Response $response) {
+	      $data = $request->getParsedBody();
+        $username = $data['username'];
+        $oldPassword = $data['oldPassword'];
+        $newPassword = $data['newPassword'];
+
         $api = new EventMapAPI();
         $result = $api->changePassword($this->db, $username, $oldPassword, $newPassword);
         return $response->withJSON($result);
     });
-    
-    $app->get('/login/{username}/{password}', function (Request $request, Response $response, $args) {
-        $username = $args['username'];
-        $password = $args['password'];
+
+    $app->post('/login', function (Request $request, Response $response) {
+	$data = $request->getParsedBody();
+        $username = $data['username'];
+        $password = $data['password'];
 
         $api = new EventMapAPI();
         $result = $api->login($this->db, $username, $password);
@@ -52,31 +55,34 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->post('/addEvent/{title}/{description}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
-        $title = $args['title'];
-        $description = $args['description'];
-        $img = $args['img'];
-        $latd = $args['latd'];
-        $lotd = $args['lotd'];
-        $attendees = $args['attendees'];
-        $eventStartDT = $args['eventStartDT'];
-        $eventEndDT = $args['eventEndDT'];
+    $app->post('/addEvent', function (Request $request, Response $response) {
+	$data = $request->getParsedBody();
+        $title = $data['title'];
+        $description = $data['description'];
+        $img = $data['img'];
+        $latd = $data['latd'];
+        $lotd = $data['lotd'];
+        $attendees = $data['attendees'];
+        $eventStartDT = $data['eventStartDT'];
+        $eventEndDT = $data['eventEndDT'];
+        $owner = $data['owner'];
 
         $api = new EventMapAPI();
-        $result = $api->addEvent($this->db, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
+        $result = $api->addEvent($this->db, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT, $owner);
         return $response->withJSON($result);
     });
 
-    $app->put('/event/{event_ID}/{title}/{desc}/{img}/{latd}/{lotd}/{attendees}/{eventStartDT}/{eventEndDT}', function (Request $request, Response $response, $args) {
-        $event_ID = $args['event_ID'];
-        $title = $args['title'];
-        $desc = $args['desc'];
-        $img = $args['img'];
-        $latd = $args['latd'];
-        $lotd = $args['lotd'];
-        $attendees = $args['attendees'];
-        $eventStartDT = $args['eventStartDT'];
-        $eventEndDT = $args['eventEndDT'];
+    $app->put('/event', function (Request $request, Response $response) {
+	$data = $request->getParsedBody();
+        $event_ID = $data['event_ID'];
+        $title = $data['title'];
+        $desc = $data['desc'];
+        $img = $data['img'];
+        $latd = $data['latd'];
+        $lotd = $data['lotd'];
+        $attendees = $data['attendees'];
+        $eventStartDT = $data['eventStartDT'];
+        $eventEndDT = $data['eventEndDT'];
 
         $api = new EventMapAPI();
         $result = $api->updateEvent($this->db, $event_ID, $title, $desc, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT);
@@ -88,6 +94,14 @@ return function (App $app) {
 
         $api = new EventMapAPI();
         $result = $api->getEventsByUserID($this->db, $user_id);
+        return $response->withJson($result);
+    });
+
+    $app->get('/EventsByEventID/{event_id}', function ($request, $response, $args) {
+        $event_id = $args['event_id'];
+
+        $api = new EventMapAPI();
+        $result = $api->getEventsByEventID($this->db, $event_id);
         return $response->withJson($result);
     });
 
@@ -115,27 +129,30 @@ return function (App $app) {
         return $response->withJSON($result);
     });
 
-    $app->delete('/event/{event_ID}', function (Request $request, Response $response, $args) {
-        $event_ID = $args['event_ID'];
+    $app->delete('/event', function (Request $request, Response $response) {
+	$data = $request->getParsedBody();
+        $event_ID = $data['event_ID'];
 
         $api = new EventMapAPI();
         $result = $api->removeEvent($this->db, $event_ID);
         return $response->withJSON($result);
     });
 
-    $app->post('/followUser/{user_id}/{follower_id}', function (Request $request, Response $response, $args) {
-        $user_id = $args['user_id'];
-        $follower_id = $args['follower_id'];
-        
+    $app->post('/followUser', function (Request $request, Response $response) {
+	$data = $request->getParsedBody();
+        $user_id = $data['user_id'];
+        $follower_id = $data['follower_id'];
+
         $api = new EventMapAPI();
         $result = $api->followUser($this->db, $user_id, $follower_id);
         return $response->withJson($result);
     });
 
-    $app->delete('/unfollowUser/{user_id}/{follower_id}', function (Request $request, Response $response, $args) {
-        $user_id = $args['user_id'];
-        $follower_id = $args['follower_id'];
-        
+    $app->delete('/unfollowUser', function (Request $request, Response $response) {
+	$data = $request->getParsedBody();
+        $user_id = $data['user_id'];
+        $follower_id = $data['follower_id'];
+
         $api = new EventMapAPI();
         $result = $api->unfollowUser($this->db, $user_id, $follower_id);
         return $response->withJson($result);

@@ -8,6 +8,7 @@ import android.content.*;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -20,6 +21,10 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private TextInputLayout usernameText;
     private TextInputLayout passwordText;
+    private String message;
+    private int UserID;
+    private String Username;
+    private String APIKey;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -32,10 +37,20 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApiClient.loginAccount(getBaseContext(), usernameText.getEditText().toString(), passwordText.getEditText().toString(), new Response.Listener<JSONObject>() {
+                ApiClient.loginAccount(getBaseContext(), usernameText.getEditText().getText().toString(), passwordText.getEditText().getText().toString(), new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        try {
+                            message = response.getString("Message");
+                            UserID = Integer.parseInt(response.getString("UserID"));
+                            Username = response.getString("Username");
+                            APIKey = response.getString("APIKey");
+                        }
+                        catch (JSONException ex){}
+                        Toast.makeText(getBaseContext(),message,Toast.LENGTH_SHORT).show();
                         Log.d("Login Response", response.toString());
+                        MainActivity.app.setUser(UserID,Username,APIKey);
+
                     }
                 }, new Response.ErrorListener() {
                     @Override

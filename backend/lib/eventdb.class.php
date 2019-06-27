@@ -25,8 +25,8 @@
             $this->setConnection(null);
         }
 
-        function addEvent($title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT) {
-            $sql = "INSERT INTO events VALUES (null, :title, :description, :img, :latd, :lotd, :attendees, :eventStartDT, :eventEndDT, CURRENT_TIMESTAMP)";
+        function addEvent($title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT, $owner) {
+            $sql = "INSERT INTO events VALUES (null, :title, :description, :img, :latd, :lotd, :attendees, :eventStartDT, :eventEndDT, :owner, CURRENT_TIMESTAMP)";
             $stmt = $this->conn->prepare($sql);
 
             $stmt->bindValue(':title', $title);
@@ -37,6 +37,7 @@
             $stmt->bindValue(':attendees', $attendees);
             $stmt->bindValue(':eventStartDT', $eventStartDT);
             $stmt->bindValue(':eventEndDT', $eventEndDT);
+            $stmt->bindvalue(':owner', $owner);
 
             $result = $stmt->execute();
 
@@ -75,6 +76,37 @@
             $stmt = $this->conn->prepare($sql);
 
             $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);           
+
+            $result = $stmt->execute();
+            
+            while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
+                $results[] = array(
+                    'event_ID' => $fetch->event_id,
+                    'title' => $fetch->title,
+                    'description' => $fetch->description,
+                    'image' => $fetch->image,
+                    'latitude' => $fetch->latitude,
+                    'longitude' => $fetch->longitude,
+                    'attendees' => $fetch->attendees,
+                    'eventStartDT' => $fetch->event_start_datetime,
+                    'eventEndDT' => $fetch->event_end_datetime,
+                    'event_owner' => $fetch->event_owner,
+                    'creation_datetime' => $fetch->creation_datetime
+                );
+            }
+
+            if($result) {
+                return array('Code' => 200, 'Message' => 'Success', 'result' => $results);
+            }
+            return array('Code' => 403, 'Message' => 'Error');
+        }
+
+        function getEventsByEventID($event_id) {
+            $sql = "SELECT event_id, title, description, image, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner, creation_datetime
+                    FROM events WHERE event_id = :event_id";
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bindValue(':event_id', $event_id, PDO::PARAM_INT);           
 
             $result = $stmt->execute();
             
