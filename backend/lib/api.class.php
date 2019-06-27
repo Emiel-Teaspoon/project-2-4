@@ -70,6 +70,14 @@
             return $stmt;
         }
 
+        function getEventsByEventID($dbo, $event_id) {
+            $db = new EventDB($dbo);
+
+            $stmt = $db->getEventsByEventID($event_id);
+            $db->closeConnection();
+            return $stmt;
+        }
+
         function getEventsByUsername($dbo, $Username) {
             $db = new EventDB($dbo);
 
