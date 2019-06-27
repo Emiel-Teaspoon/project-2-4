@@ -123,17 +123,17 @@ class ApiClient {
                             int owner, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
         String action = "addEvent";
         HashMap<String, String> hmap = new HashMap<>();
-        hmap.put("title",title);
-        hmap.put("desc",description);
-        hmap.put("img","/img/");
-        hmap.put("latd",latitude.toString());
-        hmap.put("lotd",longitude.toString());
-        hmap.put("attendees","0");
-        hmap.put("eventStartDT",startDT);
-        hmap.put("eventEndDT",endDT);
-        hmap.put("owner",Integer.toString(owner));
+        hmap.put("title", title);
+        hmap.put("description", description);
+        hmap.put("img", "/img/");
+        hmap.put("latd", latitude.toString());
+        hmap.put("lotd", longitude.toString());
+        hmap.put("attendees", "0");
+        hmap.put("eventStartDT", startDT);
+        hmap.put("eventEndDT", endDT);
+        hmap.put("owner", Integer.toString(owner));
         JSONObject parameters = new JSONObject(hmap);
-//        action = action.replaceAll(" ", "%20");
+
         sendObjectRequest(context, Request.Method.POST, action, parameters, responseListener, errorListener);
     }
 }
