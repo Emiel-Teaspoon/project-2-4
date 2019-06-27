@@ -298,7 +298,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Initialize the on click listeners for the map.
     private void initMapOnClickListeners() {
         // Hides info windows on click.
-
+        mMap.setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {
+            @Override
+            public void onInfoWindowLongClick(Marker marker) {
+                LatLng origin = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                LatLng destination = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+                String url = getDirectionsUrl(origin, destination);
+                DownloadTask downloadTask = new DownloadTask();
+                downloadTask.execute(url);
+            }
+        });
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
@@ -518,6 +527,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+            Log.d("Routes return", jsonData[0]);
             JSONObject jsonObject;
             List<List<HashMap<String, String>>> routes = null;
 
@@ -529,6 +539,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            Log.d("Routes return", routes.toString());
             return routes;
         }
 
