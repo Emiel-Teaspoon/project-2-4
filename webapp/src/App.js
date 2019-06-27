@@ -78,7 +78,13 @@ class App extends React.Component {
       else {
         this.setState({isLoading: false, isError:true, isUserError:false, logError:data.Message});
       }
-    });
+    })
+    .catch(
+      err => {
+        console.log(err.response);
+        this.setState({isLoading: false, isError:true, isUserError:true, logError:"Error " + err.response.status + " " + err.response.data.message});
+      }
+    );
   }
 
   async register (params) {
