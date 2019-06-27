@@ -22,6 +22,9 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout usernameText;
     private TextInputLayout passwordText;
     private String message;
+    private int UserID;
+    private String Username;
+    private String APIKey;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -39,10 +42,14 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             message = response.getString("Message");
+                            UserID = Integer.parseInt(response.getString("UserID"));
+                            Username = response.getString("Username");
+                            APIKey = response.getString("APIKey");
                         }
                         catch (JSONException ex){}
                         Toast.makeText(getBaseContext(),message,Toast.LENGTH_SHORT).show();
                         Log.d("Login Response", response.toString());
+                        MainActivity.app.setUser(UserID,Username,APIKey);
 
                     }
                 }, new Response.ErrorListener() {
