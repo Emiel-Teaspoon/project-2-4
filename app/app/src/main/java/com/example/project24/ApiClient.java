@@ -124,7 +124,7 @@ class ApiClient {
         String action = "addEvent";
         HashMap<String, String> hmap = new HashMap<>();
         hmap.put("title",title);
-        hmap.put("desc",description);
+        hmap.put("description",description);
         hmap.put("img","/img/");
         hmap.put("latd",latitude.toString());
         hmap.put("lotd",longitude.toString());
