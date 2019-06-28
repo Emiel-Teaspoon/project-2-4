@@ -29,8 +29,4 @@ public class AccountActivity extends Fragment {
         usernameField.setText(username);
     }
 
-    public void back(View view) {
-        Intent mainActivity = new Intent(getContext(), MainActivity.class);
-        startActivity(mainActivity);
-    }
 }

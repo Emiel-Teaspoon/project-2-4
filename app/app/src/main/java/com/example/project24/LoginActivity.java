@@ -55,7 +55,7 @@ public class LoginActivity extends Fragment {
                         MainActivity.app.setUser(UserID,Username,APIKey);
                         if (message.equals("Success")){
                             MapFragment mapFragment = new MapFragment();
-                            getFragmentManager().beginTransaction().replace(R.id.fragment_container,mapFragment).commit();
+                            getFragmentManager().beginTransaction().replace(R.id.fragment_container,mapFragment).addToBackStack(null).commit();
                         }
                     }
                 }, new Response.ErrorListener() {

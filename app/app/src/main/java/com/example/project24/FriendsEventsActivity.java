@@ -84,7 +84,7 @@ public class FriendsEventsActivity extends Fragment {
                 bundle.putString("event_naam",eventnaam);
                 bundle.putString("event_id",eventId);
                 eventActivity.setArguments(bundle);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,eventActivity).commit();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,eventActivity).addToBackStack(null).commit();
             }
         });
 

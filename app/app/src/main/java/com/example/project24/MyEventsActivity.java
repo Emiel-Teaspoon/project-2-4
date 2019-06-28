@@ -83,7 +83,7 @@ public class MyEventsActivity extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("event_naam",eventnaam);
                 eventActivity.setArguments(bundle);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,eventActivity).commit();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,eventActivity).addToBackStack(null).commit();
                     }
             });
     }

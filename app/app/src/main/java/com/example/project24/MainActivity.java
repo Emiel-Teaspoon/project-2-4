@@ -66,10 +66,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         } else {
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                Log.i("MainActivity", "popping backstack");
+                Log.i("Backbutton", "popping backstack");
                 getSupportFragmentManager().popBackStack();
             } else {
-                Log.i("MainActivity", "nothing on backstack, calling super");
+                Log.i("Backbutton", "nothing on backstack, calling super");
                 super.onBackPressed();
             }
         }

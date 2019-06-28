@@ -73,7 +73,7 @@ public class FriendsActivity extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("friend_name",friend);
                 friendDetailActivity.setArguments(bundle);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,friendDetailActivity).commit();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,friendDetailActivity).addToBackStack(null).commit();
 
             }
         });

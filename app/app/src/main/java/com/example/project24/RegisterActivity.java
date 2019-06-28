@@ -79,7 +79,7 @@ public class RegisterActivity extends Fragment {
                         Log.d("Register Response", response.toString());
                         if (message.equals("Success")){
                             LoginActivity loginActivity = new LoginActivity();
-                            getFragmentManager().beginTransaction().replace(R.id.fragment_container,loginActivity).commit();
+                            getFragmentManager().beginTransaction().replace(R.id.fragment_container,loginActivity).addToBackStack(null).commit();
                         }
 
                     }
