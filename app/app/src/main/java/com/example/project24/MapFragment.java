@@ -54,6 +54,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -280,13 +281,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
                     JSONArray result = response.getJSONArray("result");
                     for (int i = 0; i < result.length(); i++) {
                         JSONObject eventObject = result.getJSONObject(i);
-                        LatLng position = new LatLng(eventObject.getDouble("latitude"), eventObject.getDouble("longitude"));
-                        String markerInfo = "Description: " + eventObject.getString("description") + "\n" +
-                                "Starting date: " + eventObject.getString("eventStartDT") + "\n" +
-                                "End date: " + eventObject.getString("eventEndDT");
-                        mMap.addMarker(new MarkerOptions().position(position).title(eventObject.getString("title")).snippet(markerInfo));
+                        try {
+                            SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                            Date endDate = dateformat.parse(eventObject.getString("eventEndDT"));
+                            Date now = dateformat.parse(dateformat.format(new Date()));
+                            Log.d("Enddate", endDate.toString());
+                            Log.d("now", now.toString());
+                            if (now.compareTo(endDate) <= 0) {
+                                LatLng position = new LatLng(eventObject.getDouble("latitude"), eventObject.getDouble("longitude"));
+                                String markerInfo = "Description: " + eventObject.getString("description") + "\n" +
+                                        "Starting date: " + eventObject.getString("eventStartDT") + "\n" +
+                                        "End date: " + eventObject.getString("eventEndDT");
+                                mMap.addMarker(new MarkerOptions().position(position).title(eventObject.getString("title")).snippet(markerInfo));
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
