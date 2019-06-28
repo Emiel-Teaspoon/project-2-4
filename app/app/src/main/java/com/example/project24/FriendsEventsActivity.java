@@ -1,12 +1,15 @@
 package com.example.project24;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -18,26 +21,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
-public class FriendsEventsActivity extends AppCompatActivity {
+public class FriendsEventsActivity extends Fragment {
     public static final String EXTRA_EVENTNAAM = "com.example.project2.4.EVENTNAAM";
     public ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
     private SimpleAdapter sa;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friends_events);
-        final ListView listView = findViewById(R.id.friendsEvents);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_friends_events, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        final ListView listView = getView().findViewById(R.id.friendsEvents);
 
 
-
-
-
-        ApiClient.getFriendsEvents(this, 1, new Response.Listener<JSONObject>() {
+        ApiClient.getFriendsEvents(getContext(), 1, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("response", response.toString());
@@ -50,13 +52,11 @@ public class FriendsEventsActivity extends AppCompatActivity {
                         item.put("event_ID",friendsEventsObject.getString("event_ID"));
                         list.add(item);
 
-
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                sa = new SimpleAdapter(FriendsEventsActivity.this, list,
+                sa = new SimpleAdapter(getContext(), list,
                         R.layout.twolines,
                         new String[] { "naam","event_ID"},
                         new int[] {R.id.line_one, R.id.line_two});
@@ -72,9 +72,6 @@ public class FriendsEventsActivity extends AppCompatActivity {
 
 
 
-
-
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
@@ -82,9 +79,12 @@ public class FriendsEventsActivity extends AppCompatActivity {
                 String[] firstStep = eventnaam.split(",");
                 String[] secondStep = firstStep[0].split("=");
                 String eventId= secondStep[1];
-                Intent intent = new Intent(FriendsEventsActivity.this, EventActivity.class);
-                intent.putExtra(EXTRA_EVENTNAAM, eventId);
-                startActivity(intent);
+                EventActivity eventActivity = new EventActivity();
+                Bundle bundle = new Bundle();
+                bundle.putString("event_naam",eventnaam);
+                bundle.putString("event_id",eventId);
+                eventActivity.setArguments(bundle);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,eventActivity).commit();
             }
         });
 

@@ -1,26 +1,39 @@
 package com.example.project24;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class EventActivity extends AppCompatActivity {
-
+public class EventActivity extends Fragment {
+    String naam;
+    int id;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event);
-        TextView eventnaam = findViewById(R.id.textView28);
-        TextView eventadres = findViewById(R.id.textView30);
-        TextView eventbegin = findViewById(R.id.textView32);
-        TextView eventeinde = findViewById(R.id.textView34);
-        TextView eventmaker = findViewById(R.id.textView36);
-        TextView eventbeschrijvig = findViewById(R.id.textView26);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_event, container, false);
+    }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        TextView eventnaam = getView().findViewById(R.id.textView28);
+        TextView eventadres = getView().findViewById(R.id.textView30);
+        TextView eventbegin = getView().findViewById(R.id.textView32);
+        TextView eventeinde = getView().findViewById(R.id.textView34);
+        TextView eventmaker = getView().findViewById(R.id.textView36);
+        TextView eventbeschrijvig = getView().findViewById(R.id.textView26);
 
 
-        Intent intent = getIntent();
-        String naam = intent.getStringExtra(FriendsEventsActivity.EXTRA_EVENTNAAM);
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            naam = bundle.getString("event_naam");
+            id = bundle.getInt("event_id");
+        }
         eventnaam.setText(naam);
         eventadres.setText("in Groningen");
         eventbegin.setText("Gister");

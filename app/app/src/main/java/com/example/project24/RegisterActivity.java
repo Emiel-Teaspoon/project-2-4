@@ -1,25 +1,27 @@
 package com.example.project24;
 
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.regex.Pattern;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends Fragment {
     private static final Pattern PASSWORD_PATTERN =
             Pattern.compile("^" +
                     //"(?=.*[0-9])" +         //at least 1 digit
@@ -45,14 +47,17 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-        registerButton = findViewById(R.id.registerButton);
-        usernameText = findViewById(R.id.registerUsernameText);
-        passwordText = findViewById(R.id.registerPasswordText);
-        passwordRepeatText = findViewById(R.id.registerPasswordRepeatText);
-        emailText = findViewById(R.id.registerEmailText);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_register, container, false);
+    }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        registerButton = getView().findViewById(R.id.registerButton);
+        usernameText = getView().findViewById(R.id.registerUsernameText);
+        passwordText = getView().findViewById(R.id.registerPasswordText);
+        passwordRepeatText = getView().findViewById(R.id.registerPasswordRepeatText);
+        emailText = getView().findViewById(R.id.registerEmailText);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,15 +68,20 @@ public class RegisterActivity extends AppCompatActivity {
                 email = emailText.getEditText().getText().toString();
 
                 if (confirmInput()){
-                ApiClient.registerAccount(getBaseContext(), username, password,email, new Response.Listener<JSONObject>() {
+                ApiClient.registerAccount(getContext(), username, password,email, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             message = response.getString("Message");
                         }
                         catch (JSONException ex){}
-                        Toast.makeText(getBaseContext(),message,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
                         Log.d("Register Response", response.toString());
+                        if (message.equals("Success")){
+                            LoginActivity loginActivity = new LoginActivity();
+                            getFragmentManager().beginTransaction().replace(R.id.fragment_container,loginActivity).commit();
+                        }
+
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -133,7 +143,6 @@ public class RegisterActivity extends AppCompatActivity {
         if(!validateEmail(email) | !validateUsername(username) | !validatePassword(password,passwordRepeat)){
             return false;
         }
-        Toast.makeText(this, "confirmed", Toast.LENGTH_SHORT).show();
         return true;
     }
 
