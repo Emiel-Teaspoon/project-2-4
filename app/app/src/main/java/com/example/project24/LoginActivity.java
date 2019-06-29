@@ -1,5 +1,6 @@
 package com.example.project24;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -21,11 +23,14 @@ public class LoginActivity extends Fragment {
     private Button loginButton;
     private TextInputLayout usernameText;
     private TextInputLayout passwordText;
+    private TextView header_title;
+    private TextView header_subtitle;
     private String username;
     private String password;
     private String message;
     private int UserID;
     private String Username;
+    private String Email;
     private String APIKey;
     private String JWT;
 
@@ -53,6 +58,7 @@ public class LoginActivity extends Fragment {
                             message = response.getString("Message");
                             UserID = Integer.parseInt(response.getString("UserID"));
                             Username = response.getString("Username");
+                            Email = response.getString("Email");
                             APIKey = response.getString("APIKey");
                         }
                         catch (JSONException ex){}
@@ -60,6 +66,12 @@ public class LoginActivity extends Fragment {
                         Log.d("Login Response", response.toString());
                         MainActivity.app.setJWT(JWT);
                         MainActivity.app.setUser(UserID,Username,APIKey);
+                        NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
+                        View headerView = navigationView.getHeaderView(0);
+                        TextView navUsername = headerView.findViewById(R.id.nav_header_title);
+                        TextView navEmail = headerView.findViewById(R.id.nav_header_subtitle);
+                        navUsername.setText(Username);
+                        navEmail.setText(Email);
                         if (message.equals("Success")){
                             MapFragment mapFragment = new MapFragment();
                             getFragmentManager().beginTransaction().replace(R.id.fragment_container,mapFragment).addToBackStack(null).commit();

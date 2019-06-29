@@ -67,7 +67,6 @@ import java.util.ArrayList;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
-    public final static EventmapApp app = new EventmapApp();
     private GoogleMap mMap;
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -377,7 +376,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
                 String startDT = eventStart.getText().toString();
                 String endDT = eventStart.getText().toString();
 
-                ApiClient.createEvent(getContext(), title, desc, latLng.latitude, latLng.longitude, startDT, endDT, app.getUser_id(), new Response.Listener<JSONObject>() {
+                ApiClient.createEvent(getContext(), title, desc, latLng.latitude, latLng.longitude, startDT, endDT, MainActivity.app.getUser_id(), new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("Event Create Test", response.toString());

@@ -41,7 +41,7 @@ public class MyEventsActivity extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final ListView listView = getView().findViewById(R.id.MyEventList);
 
-        ApiClient.getEventsById(getContext(), 1, new Response.Listener<JSONObject>() {
+        ApiClient.getEventsById(getContext(), MainActivity.app.getUser_id(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("response", response.toString());

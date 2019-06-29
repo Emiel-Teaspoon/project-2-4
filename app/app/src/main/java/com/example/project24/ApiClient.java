@@ -26,7 +26,6 @@ class ApiClient {
 
     private static void sendObjectRequest(final Context context, int method, String action, final JSONObject object, Response.Listener<JSONObject> response, final Response.ErrorListener errorListener) {
         Log.i(TAG, "Class is JSONObject");
-        final EventmapApp app = (EventmapApp) context.getApplicationContext();
         Log.i(TAG, API_CALL + action);
         Request<JSONObject> request = new JsonObjectRequest(method, API_CALL + action, object, response, errorListener) {
 //            @Override
@@ -37,8 +36,8 @@ class ApiClient {
 
             public Map<String, String> getHeaders() {
                 HashMap<String, String> headers = new HashMap<>();
-                headers.put("ApiKey", app.getApiKey());
-                headers.put("Authorization","Bearer "+ app.getJWT());
+                headers.put("ApiKey", MainActivity.app.getApiKey());
+                headers.put("Authorization","Bearer "+ MainActivity.app.getJWT());
                 headers.put("Content-Type", "application/json; charset=UTF-8");
                 return headers;
             }

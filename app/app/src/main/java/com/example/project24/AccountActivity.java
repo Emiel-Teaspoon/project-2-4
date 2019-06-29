@@ -26,8 +26,6 @@ public class AccountActivity extends Fragment {
 
     private View mView;
 
-    private EventmapApp app = MainActivity.app;
-
     private View passwordResetView;
     private EditText currentPW;
     private EditText newPWOne;
@@ -52,10 +50,10 @@ public class AccountActivity extends Fragment {
 
     private void loadUserData() {
         TextView usernameField = mView.findViewById(R.id.accountUsername);
-        usernameField.setText(app.getUserName());
+        usernameField.setText(MainActivity.app.getUserName());
 
         final TextView emailField = mView.findViewById(R.id.accountEmail);
-        ApiClient.getUserByUsername(getContext(), app.getUserName(), new Response.Listener<JSONObject>() {
+        ApiClient.getUserByUsername(getContext(), MainActivity.app.getUserName(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("Friend Detail response", response.toString());
@@ -114,7 +112,7 @@ public class AccountActivity extends Fragment {
                 String newTwo = newPWTwo.getText().toString();
 
                 if (validPasswordCheck(current, newOne, newTwo)) {
-                    ApiClient.changeUserPassword(getContext(), app.getUserName(), current, newOne, new Response.Listener<JSONObject>() {
+                    ApiClient.changeUserPassword(getContext(), MainActivity.app.getUserName(), current, newOne, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.d("Password Change success", response.toString());

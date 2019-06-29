@@ -39,7 +39,7 @@ public class FriendsEventsActivity extends Fragment {
         final ListView listView = getView().findViewById(R.id.friendsEvents);
 
 
-        ApiClient.getFriendsEvents(getContext(), 1, new Response.Listener<JSONObject>() {
+        ApiClient.getFriendsEvents(getContext(), MainActivity.app.getUser_id(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("response", response.toString());
