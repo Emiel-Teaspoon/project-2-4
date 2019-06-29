@@ -41,9 +41,10 @@ return function (App $app) {
 	$data = $request->getParsedBody();
         $username = $data['username'];
         $password = $data['password'];
-
+        $settings = $this->get('settings');
+        $jwt = $settings['jwt']['secret'];
         $api = new EventMapAPI();
-        $result = $api->login($this->db, $username, $password);
+        $result = $api->login($this->db, $jwt, $username, $password);
         return $response->withJson($result);
     });
 

@@ -41,7 +41,7 @@ class ApiClient {
             {
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("ApiKey", app.getApiKey());
-                headers.put("Authorization","Bearer "+ app.getJWT());
+//                headers.put("Authorization","Bearer "+ app.getJWT());
                 headers.put("Content-Type", "application/json; charset=UTF-8");
                 return headers;
             }
@@ -102,6 +102,7 @@ class ApiClient {
         HashMap<String, String> hmap = new HashMap<>();
         hmap.put("username",username);
         hmap.put("password",password);
+
         JSONObject parameters = new JSONObject(hmap);
         sendObjectRequest(context, Request.Method.POST, action,parameters, responseListener, errorListener);
     }

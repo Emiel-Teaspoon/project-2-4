@@ -21,6 +21,8 @@ public class LoginActivity extends Fragment {
     private Button loginButton;
     private TextInputLayout usernameText;
     private TextInputLayout passwordText;
+    private String username;
+    private String password;
     private String message;
     private int UserID;
     private String Username;
@@ -41,11 +43,13 @@ public class LoginActivity extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApiClient.loginAccount(getContext(), usernameText.getEditText().getText().toString(), passwordText.getEditText().getText().toString(), new Response.Listener<JSONObject>() {
+                username = usernameText.getEditText().getText().toString();
+                password = passwordText.getEditText().getText().toString();
+                ApiClient.loginAccount(getContext(), username, password, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JWT = response.getString("jwt");
+                            JWT = response.getString("token");
                             message = response.getString("Message");
                             UserID = Integer.parseInt(response.getString("UserID"));
                             Username = response.getString("Username");
@@ -64,7 +68,8 @@ public class LoginActivity extends Fragment {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("Error", "Things did not work");
+                        Log.e("Error", "Things did not work in login");
+                        Log.e("Error", username+" " + password );
                     }
                 });
             }

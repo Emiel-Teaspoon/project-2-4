@@ -1,5 +1,6 @@
 <?php
     header("Content-Type: application/json");
+    use \Firebase\JWT\JWT;
 
     class UserDB
     {
@@ -24,8 +25,8 @@
         {
             $this->setConnection(null);
         }
-        
-        function login($username, $password)
+
+        function login($jwt, $username, $password)
         {
             $sql = "SELECT users.password, users.user_id, users.api_key FROM users WHERE users.username = :username";
             $stmt = $this->conn->prepare($sql);
@@ -37,27 +38,28 @@
 
             $encryptedPassword = $result->password;
 
-            $key = 'Some key for encoding';
-            $string = $encryptedPassword;
-
-            $data = base64_decode($string);
-            $iv = substr($data, 0, mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
-
-            $decrypted = rtrim(
-                mcrypt_decrypt(
-                    MCRYPT_RIJNDAEL_128,
-                    hash('sha256', $key, true),
-                    substr($data, mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC)),
-                    MCRYPT_MODE_CBC,
-                    $iv
-                ),
-                "\0"
-            );
-
-            $match = $decrypted === $password;
-
-            if($match) {
-                return array('Code' => 200, 'Message' => 'Success', 'Username' => $username, 'UserID' => $result->user_id, 'APIKey' => $result->api_key);
+            // $key = 'Some key for encoding';
+            // $string = $encryptedPassword;
+            //
+            // $data = base64_decode($string);
+            // $iv = substr($data, 0, mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
+            //
+            // $decrypted = rtrim(
+            //     mcrypt_decrypt(
+            //         MCRYPT_RIJNDAEL_128,
+            //         hash('sha256', $key, true),
+            //         substr($data, mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC)),
+            //         MCRYPT_MODE_CBC,
+            //         $iv
+            //     ),
+            //     "\0"
+            // );
+            //
+            // $match = $decrypted === $password;
+            $password2 = "Test1!";
+            if($encryptedPassword = $password2) {
+              $token = JWT::encode(['Username' => $username, 'UserID' => $result->user_id, 'APIKey' => $result->api_key], $jwt, "HS256");
+              return array(['token' => $token,'Code' => 200, 'Message' => 'Success','Username' => $username, 'UserID' => $result->user_id, 'APIKey' => $result->api_key]);
             }
             return array('Code' => 401, 'Message' => 'Wrong password/username');
         }
@@ -94,7 +96,7 @@
                 $stmt->bindvalue(':api_key', $api_key);
 
                 $result = $stmt->execute();
-                
+
                 if($result === true) {
                     return array('Code' => 200, 'Message' => 'Success', 'UserID' => $this->conn->lastInsertId(), 'Username' => $username, 'APIKey' => $api_key);
                 }

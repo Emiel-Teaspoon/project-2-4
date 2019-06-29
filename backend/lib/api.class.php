@@ -21,10 +21,10 @@
             return $stmt;
         }
 
-        function login($dbo, $username, $password) {
+        function login($dbo,$jwt, $username, $password) {
             $db = new UserDB($dbo);
 
-            $stmt = $db->login($username, $password);
+            $stmt = $db->login($jwt, $username, $password);
             $db->closeConnection();
             return $stmt;
         }
@@ -61,7 +61,7 @@
             $db->closeConnection();
             return $stmt;
         }
-        
+
         function getEventsByUserID($dbo, $user_id) {
             $db = new EventDB($dbo);
 

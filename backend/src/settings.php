@@ -22,5 +22,9 @@ return [
             'host' => 'localhost',
             'name' => 'eventmap',
         ],
+        // jwt settings
+        "jwt" => [
+            'secret' => 'supersecretkeyyoushouldnotcommittogithub'
+        ]
     ],
 ];
