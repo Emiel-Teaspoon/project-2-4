@@ -38,7 +38,7 @@ class ApiClient {
             public Map<String, String> getHeaders() {
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("ApiKey", app.getApiKey());
-                headers.put("Authorization","Bearer "+ "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJVc2VybmFtZSI6InRlc3QiLCJVc2VySUQiOiIxMSIsIkFQSUtleSI6IllUUXpaakF3TURabVpqWTJZekk1WlRZMFltUTNOamMxWVdNd056UTRaalU9In0.xEqdhG19iZMxH0V9TZ6atnKgieG_BR2DpaBGlPHO1yU");
+                headers.put("Authorization","Bearer "+ app.getJWT());
                 headers.put("Content-Type", "application/json; charset=UTF-8");
                 return headers;
             }
