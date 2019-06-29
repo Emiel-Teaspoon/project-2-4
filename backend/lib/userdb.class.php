@@ -38,26 +38,25 @@
 
             $encryptedPassword = $result->password;
 
-            // $key = 'Some key for encoding';
-            // $string = $encryptedPassword;
-            //
-            // $data = base64_decode($string);
-            // $iv = substr($data, 0, mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
-            //
-            // $decrypted = rtrim(
-            //     mcrypt_decrypt(
-            //         MCRYPT_RIJNDAEL_128,
-            //         hash('sha256', $key, true),
-            //         substr($data, mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC)),
-            //         MCRYPT_MODE_CBC,
-            //         $iv
-            //     ),
-            //     "\0"
-            // );
-            //
-            // $match = $decrypted === $password;
-            $password2 = "Test1!";
-            if($encryptedPassword = $password2) {
+            $key = 'Some key for encoding';
+            $string = $encryptedPassword;
+
+            $data = base64_decode($string);
+            $iv = substr($data, 0, mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
+
+            $decrypted = rtrim(
+                mcrypt_decrypt(
+                    MCRYPT_RIJNDAEL_128,
+                    hash('sha256', $key, true),
+                    substr($data, mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC)),
+                    MCRYPT_MODE_CBC,
+                    $iv
+                ),
+                "\0"
+            );
+
+            $match = $decrypted === $password;
+            if($match) {
               $token = JWT::encode(['Username' => $username, 'UserID' => $result->user_id, 'APIKey' => $result->api_key], $jwt, "HS256");
               return array(['token' => $token,'Code' => 200, 'Message' => 'Success','Username' => $username, 'UserID' => $result->user_id, 'APIKey' => $result->api_key]);
             }

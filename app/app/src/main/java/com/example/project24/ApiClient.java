@@ -26,22 +26,19 @@ class ApiClient {
 
     private static void sendObjectRequest(final Context context, int method, String action, final JSONObject object, Response.Listener<JSONObject> response, final Response.ErrorListener errorListener) {
         Log.i(TAG, "Class is JSONObject");
-        final EventmapApp app = (EventmapApp)context.getApplicationContext();
-
+        final EventmapApp app = (EventmapApp) context.getApplicationContext();
         Log.i(TAG, API_CALL + action);
-        Request<JSONObject> request = new JsonObjectRequest(method, API_CALL + action, object, response, errorListener)
-        {
-//            @Override
-//            protected Map<String, String> getParams()
-//            {
-//                return params;
-//            }
+        Request<JSONObject> request = new JsonObjectRequest(method, API_CALL + action, object, response, errorListener) {
+            @Override
+            protected Map<String, String> getParams() {
+                HashMap<String, String> params = new HashMap<>();
+                return params;
+            }
 
-            public Map<String, String> getHeaders()
-            {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("ApiKey", app.getApiKey());
-//                headers.put("Authorization","Bearer "+ app.getJWT());
+                //headers.put("Authorization","Bearer "+ "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJVc2VybmFtZSI6InRlc3QiLCJVc2VySUQiOiIxMSIsIkFQSUtleSI6IllUUXpaakF3TURabVpqWTJZekk1WlRZMFltUTNOamMxWVdNd056UTRaalU9In0.xEqdhG19iZMxH0V9TZ6atnKgieG_BR2DpaBGlPHO1yU");
                 headers.put("Content-Type", "application/json; charset=UTF-8");
                 return headers;
             }
@@ -55,8 +52,7 @@ class ApiClient {
         MySingleton.getInstance(context).addToRequestQueue(request);
     }
 
-    static void getVersion(final Context context)
-    {
+    static void getVersion(final Context context) {
         String action = "version";
 
         sendObjectRequest(context, Request.Method.GET, action, null, new com.android.volley.Response.Listener<JSONObject>() {
@@ -81,7 +77,8 @@ class ApiClient {
         String action = "getFollowers/" + userID;
         sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
     }
-    static void getFriendsEvents(final Context context, final int userID,final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+
+    static void getFriendsEvents(final Context context, final int userID, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
         String action = "FollowerEvents/" + userID;
         sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
     }
@@ -97,24 +94,24 @@ class ApiClient {
     }
 
     // Nog niet getest of het werkt
-    static void loginAccount(final Context context, String username,String password, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+    static void loginAccount(final Context context, String username, String password, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
         String action = "login";
         HashMap<String, String> hmap = new HashMap<>();
-        hmap.put("username",username);
-        hmap.put("password",password);
-
+        hmap.put("username", username);
+        hmap.put("password", password);
         JSONObject parameters = new JSONObject(hmap);
-        sendObjectRequest(context, Request.Method.POST, action,parameters, responseListener, errorListener);
+        sendObjectRequest(context, Request.Method.POST, action, parameters, responseListener, errorListener);
     }
+
     // ook nog niet getest
-    static void registerAccount(final Context context, String username,String password,String email, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
-        String action = "user" ;
+    static void registerAccount(final Context context, String username, String password, String email, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+        String action = "user";
         HashMap<String, String> hmap = new HashMap<>();
-        hmap.put("username",username);
-        hmap.put("password",password);
-        hmap.put("email",email);
+        hmap.put("username", username);
+        hmap.put("password", password);
+        hmap.put("email", email);
         JSONObject parameters = new JSONObject(hmap);
-        sendObjectRequest(context, Request.Method.POST, action,parameters, responseListener, errorListener);
+        sendObjectRequest(context, Request.Method.POST, action, parameters, responseListener, errorListener);
     }
 
     static void getUserByUsername(final Context context, final String username, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
@@ -139,7 +136,8 @@ class ApiClient {
 
         sendObjectRequest(context, Request.Method.POST, action, parameters, responseListener, errorListener);
     }
-    static void getEventsById(final Context context, final int userID,final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+
+    static void getEventsById(final Context context, final int userID, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
         String action = "EventsByUserID/" + userID;
         sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
     }

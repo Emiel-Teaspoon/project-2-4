@@ -86,6 +86,7 @@ public class RegisterActivity extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("Error", "Things did not work");
+                        Log.e("Error", "Things did not work");
                     }
                 });
                 }
