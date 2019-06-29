@@ -29,11 +29,11 @@ class ApiClient {
         final EventmapApp app = (EventmapApp) context.getApplicationContext();
         Log.i(TAG, API_CALL + action);
         Request<JSONObject> request = new JsonObjectRequest(method, API_CALL + action, object, response, errorListener) {
-            @Override
-            protected Map<String, String> getParams() {
-                HashMap<String, String> params = new HashMap<>();
-                return params;
-            }
+//            @Override
+//            protected Map<String, String> getParams() {
+//                HashMap<String, String> params = new HashMap<>();
+//                return params;
+//            }
 
             public Map<String, String> getHeaders() {
                 HashMap<String, String> headers = new HashMap<>();
