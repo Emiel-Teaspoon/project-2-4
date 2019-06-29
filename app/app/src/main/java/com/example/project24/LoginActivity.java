@@ -68,7 +68,7 @@ public class LoginActivity extends Fragment {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("Error", "Things did not work in login");
+                        Log.e("Error", "" + error);
                     }
                 });
             }
