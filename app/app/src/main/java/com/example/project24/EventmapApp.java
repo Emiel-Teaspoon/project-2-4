@@ -7,6 +7,7 @@ public class EventmapApp extends Application {
     private int user_id = 1;
     private String userName;
     private String ApiKey;
+    private String JWT = "jsonWebToken";
 
     public EventmapApp(){
 
@@ -23,5 +24,12 @@ public class EventmapApp extends Application {
     }
 
     public int getUser_id() {return user_id;}
+
+    public void setJWT(String jwt){
+        JWT = jwt;
+    }
+    public String getJWT(){
+        return JWT;
+    }
 
 }

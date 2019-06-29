@@ -25,6 +25,7 @@ public class LoginActivity extends Fragment {
     private int UserID;
     private String Username;
     private String APIKey;
+    private String JWT;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class LoginActivity extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            JWT = response.getString("jwt");
                             message = response.getString("Message");
                             UserID = Integer.parseInt(response.getString("UserID"));
                             Username = response.getString("Username");
@@ -52,6 +54,7 @@ public class LoginActivity extends Fragment {
                         catch (JSONException ex){}
                         Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
                         Log.d("Login Response", response.toString());
+                        MainActivity.app.setJWT(JWT);
                         MainActivity.app.setUser(UserID,Username,APIKey);
                         if (message.equals("Success")){
                             MapFragment mapFragment = new MapFragment();
