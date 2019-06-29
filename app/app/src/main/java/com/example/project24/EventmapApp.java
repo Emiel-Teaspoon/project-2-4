@@ -18,10 +18,10 @@ public class EventmapApp extends Application {
         ApiKey = key;
     }
 
-    public String getApiKey() {
-        return "The Key";
-    }
+    public String getApiKey() {return "The Key";}
 
     public int getUser_id() {return user_id;}
+
+    public String getUserName() {return userName;}
 
 }

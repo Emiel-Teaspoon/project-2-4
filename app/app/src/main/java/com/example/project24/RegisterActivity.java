@@ -22,7 +22,7 @@ import org.json.JSONObject;
 import java.util.regex.Pattern;
 
 public class RegisterActivity extends Fragment {
-    private static final Pattern PASSWORD_PATTERN =
+    static final Pattern PASSWORD_PATTERN =
             Pattern.compile("^" +
                     //"(?=.*[0-9])" +         //at least 1 digit
                     //"(?=.*[a-z])" +         //at least 1 lower case letter
@@ -81,7 +81,6 @@ public class RegisterActivity extends Fragment {
                             LoginActivity loginActivity = new LoginActivity();
                             getFragmentManager().beginTransaction().replace(R.id.fragment_container,loginActivity).addToBackStack(null).commit();
                         }
-
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -92,7 +91,6 @@ public class RegisterActivity extends Fragment {
                 }
             }
         });
-
     }
 
     private boolean validatePassword(String passwordInput, String passwordRepeatInput)

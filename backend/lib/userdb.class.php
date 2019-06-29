@@ -113,7 +113,24 @@
             $sql = "UPDATE users SET password = :newPassword WHERE username = :username AND password = :oldPassword";
             $stmt = $this->conn->prepare($sql);
 
-            $stmt->bindvalue(':newPassword', $newPassword);
+            $key = 'Some key for encoding';
+            $iv = mcrypt_create_iv(
+                mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC),
+                MCRYPT_DEV_URANDOM
+            );
+
+            $encrypted = base64_encode(
+                $iv .
+                mcrypt_encrypt(
+                    MCRYPT_RIJNDAEL_128,
+                    hash('sha256', $key, true),
+                    $newPassword,
+                    MCRYPT_MODE_CBC,
+                    $iv
+                )
+            );
+
+            $stmt->bindvalue(':newPassword', $encrypted);
             $stmt->bindvalue(':username', $username);
             $stmt->bindvalue(':oldPassword', $oldPassword);
 
