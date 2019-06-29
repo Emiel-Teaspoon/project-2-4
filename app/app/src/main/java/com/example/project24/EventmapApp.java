@@ -19,11 +19,10 @@ public class EventmapApp extends Application {
         ApiKey = key;
     }
 
-    public String getApiKey() {
-        return "The Key";
-    }
+    public String getApiKey() {return "The Key";}
 
     public int getUser_id() {return user_id;}
+
 
     public void setJWT(String jwt){
         JWT = jwt;
@@ -31,5 +30,8 @@ public class EventmapApp extends Application {
     public String getJWT(){
         return JWT;
     }
+
+    public String getUserName() {return userName;}
+
 
 }

@@ -85,6 +85,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
     // Device location
     private Location mLastKnownLocation;
 
+    // Hold the route-line for later removal
     private Polyline polyline;
 
     // Controls for the event creation popup
@@ -276,7 +277,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
         ApiClient.getAllEvents(getContext(), 100, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("All events response", response.toString());
                 try {
                     JSONArray result = response.getJSONArray("result");
                     for (int i = 0; i < result.length(); i++) {
@@ -285,8 +285,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
                             SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                             Date endDate = dateformat.parse(eventObject.getString("eventEndDT"));
                             Date now = dateformat.parse(dateformat.format(new Date()));
-                            Log.d("Enddate", endDate.toString());
-                            Log.d("now", now.toString());
                             if (now.compareTo(endDate) <= 0) {
                                 LatLng position = new LatLng(eventObject.getDouble("latitude"), eventObject.getDouble("longitude"));
                                 String markerInfo = "Description: " + eventObject.getString("description") + "\n" +
@@ -448,7 +446,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
 
         @Override
         protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
-            Log.d("Routes return", jsonData[0]);
             JSONObject jsonObject;
             List<List<HashMap<String, String>>> routes = null;
 
@@ -460,7 +457,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.d("Routes return", routes.toString());
             return routes;
         }
 

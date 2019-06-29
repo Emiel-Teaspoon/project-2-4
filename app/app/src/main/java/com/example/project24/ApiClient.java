@@ -142,4 +142,15 @@ class ApiClient {
         String action = "EventsByUserID/" + userID;
         sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
     }
+
+    static void changeUserPassword(Context context, String username, String oldPassword, String newPassword, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+        String action = "user/password";
+        HashMap<String, String> hmap = new HashMap<>();
+        hmap.put("username", username);
+        hmap.put("oldPassword", oldPassword);
+        hmap.put("newPassword", newPassword);
+        JSONObject parameters = new JSONObject(hmap);
+
+        sendObjectRequest(context, Request.Method.PUT, action, parameters, responseListener, errorListener);
+    }
 }

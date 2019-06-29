@@ -58,10 +58,8 @@ public class FriendDetailActivity extends Fragment {
                 Log.d("Friend Detail response", response.toString());
                 try {
                     JSONArray result = response.getJSONArray("result");
-                    for (int i = 0; i < result.length(); i++) {
-                        JSONObject friendObject = result.getJSONObject(i);
-                        friendEmail.setText(friendObject.getString("email"));
-                    }
+                    JSONObject friendObject = result.getJSONObject(0);
+                    friendEmail.setText(friendObject.getString("email"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
