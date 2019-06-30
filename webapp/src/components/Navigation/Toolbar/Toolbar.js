@@ -87,7 +87,7 @@ class MenuAppBar extends React.Component {
       </Button>
 
       let drawerToggle = <div/>;
-      if(!this.props.showLogin) {
+      if(!this.props.showLogin && this.props.auth) {
         drawerToggle = 
         <IconButton className={classes.MenuButton} color="inherit" aria-label="Menu" onClick={() => this.props.openDrawer()}>
           <MenuIcon />

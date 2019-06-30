@@ -150,7 +150,7 @@ class App extends React.Component {
 
     return (
       <Aux>
-        <Modal open={this.state.createEvent} onClose={this.handleClose}><EventMaker/></Modal>
+        <Modal open={this.state.createEvent} onClose={this.handleClose}><EventMaker userID={this.state.user.userId} token={this.state.token} apiKey={this.state.user.apiKey} closeHandler={this.handleClose}/></Modal>
         <Layout onLogin={this.handleLoginClick} onLogout={this.handleLogoutClick} showLogin={this.state.showLogin} isAuthenticated={this.state.isAuthenticated} onAdd={this.handleAddClick}>
           {this.state.showLogin ? 
           <Login username={this.state.username} 

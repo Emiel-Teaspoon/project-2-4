@@ -9,6 +9,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import NavigationItems from '../NavigationItems/NavigationItems';
 import Aux from '../../../hoc/Aux';
 import Backdrop from '../../UI/Backdrop/Backdrop';
+import { InputBase, Switch, FormControlLabel } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
 
 const drawerWidth = 240;
 
@@ -29,6 +31,18 @@ const styles = theme => ({
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
+  },
+  searchroot: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  input: {
+    marginLeft: 8,
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
   },
   menuButton: {
     marginLeft: 12,
@@ -67,9 +81,20 @@ const styles = theme => ({
     }),
     marginLeft: 0,
   },
+  switch: {
+    marginLeft: 12,
+  }
 });
 
 class SideDrawer extends Component {
+
+    state = {
+      friendSwitch: false,
+    }
+
+    handleChange = name => event => {
+      this.setState({ ...this.state, [name]: event.target.checked });
+    };
 
     render() {
     const { classes, theme } = this.props;
@@ -92,6 +117,29 @@ class SideDrawer extends Component {
                 </IconButton>
             </div>
             <Divider />
+            <div className={classes.searchroot}>
+            <InputBase
+              className={classes.input}
+              placeholder="Find User"
+              inputProps={{ 'aria-label': 'Search Google Maps' }}
+            />
+            <IconButton className={classes.iconButton} aria-label="Search">
+              <SearchIcon />
+            </IconButton>
+            </div>
+            <Divider />
+            <FormControlLabel
+            className={classes.switch}
+            label="Friend events only"
+            control={
+              <Switch
+                checked={this.state.friendSwitch}
+                onChange={this.handleChange('friendSwitch')}
+                value="friendSwitch"
+                color="secondary"
+              />
+            }
+            />
             {this.props.auth ? 
                 <NavigationItems/>
             :

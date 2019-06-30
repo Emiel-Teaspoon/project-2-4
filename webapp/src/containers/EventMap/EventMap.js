@@ -77,10 +77,13 @@ class EventMap extends Component {
                         details: {
                             title: event.title, 
                             description: event.description, 
-                            img:event.image
+                            img: event.image,
+                            startDate: event.eventStartDT,
+                            username: event.event_owner,
                         }
                     };
                     events.push(eventObject);
+                    return eventObject;
                 })
                 this.setState({events: events})
             }
@@ -100,7 +103,18 @@ class EventMap extends Component {
                         click={this.openEventHandler} 
                         closeHandler={this.closeEventHandler} 
                         size={event.size} 
-                        open={event.open}/>
+                        open={event.open}
+                        event={
+                            {
+                                details: {
+                                    username: event.details.username,
+                                    startDate: new Date(event.details.startDate).toUTCString(),
+                                    title: event.details.title, 
+                                    description: event.details.description, 
+                                    img:event.details.img
+                                },
+                            }
+                        }/>
                 );
             }
         );

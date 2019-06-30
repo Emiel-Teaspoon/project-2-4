@@ -5,14 +5,19 @@ import EventInformationBox from './EventInformationBox/EventInformationBox';
 
 class Event extends Component {
 
-    render() {
+    constructor(props) {
+        super(props);
+        this.state = {
+            event: props.event,
+        }
+    }
 
-        const margins = null;//{'margin-left' : }
+    render() {
 
         return (
             <div>
                 <EventMarker clickHandler={this.props.click} id={this.props.id} size={this.props.size}/>
-                {this.props.open ? <EventInformationBox style={margins} close={this.props.closeHandler}/> : <div/>}
+                {this.props.open ? <EventInformationBox close={this.props.closeHandler} details={this.state.event.details}/> : <div/>}
             </div>
         )
     }

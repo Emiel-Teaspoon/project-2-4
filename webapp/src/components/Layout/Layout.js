@@ -21,8 +21,6 @@ class Layout extends Component {
         this.handleClose = this.handleClose.bind(this);
     }
 
-    
-
     drawerClosedHandler = () => {
         this.setState({showDrawer: false})
     }
@@ -48,7 +46,7 @@ class Layout extends Component {
             this.setState({isAuthenticated: this.props.isAuthenticated});
             if(this.props.isAuthenticated === false) {
                 this.openSnackbar();
-                console.log("asdfsadfsdaf");
+                console.log("logged out!");
             }
         }
     }
@@ -71,8 +69,9 @@ class Layout extends Component {
                     closeDrawer={this.drawerClosedHandler} 
                     auth={this.props.isAuthenticated}/>
                     <div className={classes.Fab} hidden={!this.props.isAuthenticated}>
-                        <Fab color="secondary" onClick={() => this.props.onAdd()}>
+                        <Fab variant="extended" color="secondary" onClick={() => this.props.onAdd()}>
                             <Add/>
+                            Add event
                         </Fab>
                     </div>
                     <Snackbar
@@ -81,7 +80,7 @@ class Layout extends Component {
                         horizontal: 'left',
                     }}
                     open={this.state.showSnackbar}
-                    autoHideDuration={2000}
+                    autoHideDuration={5000}
                     onClose={this.handleClose}> 
                         <SnackbarContent message="Logged out succesfully!" onClose={this.handleClose}/>
                     </Snackbar>
