@@ -8,10 +8,10 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import AddCircle from '@material-ui/icons/AddCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
-import { throwStatement } from '@babel/types';
 
 class MenuAppBar extends React.Component {
     state = {
@@ -31,6 +31,11 @@ class MenuAppBar extends React.Component {
       this.props.onLogout();
     }
 
+    handleAdd = () => {
+      this.setState({ anchorEl: null });
+      this.props.onAdd();
+    }
+
     render() {
 
       const { anchorEl } = this.state;
@@ -41,11 +46,21 @@ class MenuAppBar extends React.Component {
         <IconButton
           aria-owns={open ? 'menu-appbar' : undefined}
           aria-haspopup="true"
+          onClick={this.handleAdd}
+          color="inherit"
+        >
+          <AddCircle />
+        </IconButton>
+
+        <IconButton
+          aria-owns={open ? 'menu-appbar' : undefined}
+          aria-haspopup="true"
           onClick={this.handleMenu}
           color="inherit"
         >
           <AccountCircle />
         </IconButton>
+
         <Menu
           id="menu-appbar"
           anchorEl={anchorEl}

@@ -6,6 +6,9 @@ import Login from './form/login/Login';
 import Cookies from 'universal-cookie';
 
 import axios from 'axios';
+import { Modal } from '@material-ui/core';
+import Aux from './hoc/Aux';
+import EventMaker from './components/Event/EventMaker/EventMaker';
 
 const cookies = new Cookies();
 
@@ -13,23 +16,26 @@ class App extends React.Component {
 
   state = {
     isAuthenticated: false,
+    token: "",
     showLogin: false,
     isError: false,
     isUserError: false,
     logError: "",
+    createEvent: false,
     user: [],
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const autoLogin = true;
     if(autoLogin) {
-      if(cookies.get('loggedIn') === 1) {
+      if(parseInt(cookies.get('loggedIn')) === 1) {
+          const tokenVar = cookies.get('token');
           const user = {
               userId: cookies.get('userId'), 
               username: cookies.get('username'),
               apiKey: cookies.get('apiKey'),
           }
-          this.setState({isLoading: false, isAuthenticated: true, user: user, showLogin:false, isError:false, logError:""});
+          this.setState({isLoading: false, token: tokenVar, isAuthenticated: true, user: user, showLogin:false, isError:false, logError:""});
       }
       else {
         this.setState({isLoading: false, isAuthenticated: false, user: []});
@@ -60,7 +66,10 @@ class App extends React.Component {
   }
 
   async login (params) {
-    axios.get('https://spicymemes.app/eventmap/public/login/' + params.username + '/' + params.password)
+    axios.post('https://spicymemes.app/eventmap/public/login', {
+        username: params.username,
+        password: params.password
+    })
     .then(res => {
       const data = res.data;
       if(data.Code === 200) {
@@ -69,11 +78,12 @@ class App extends React.Component {
           username: data.Username,
           apiKey: data.APIKey,
         }
-        this.setState({isLoading: false, isAuthenticated: true, user: user, showLogin:false, isError:false, logError:""});
         cookies.set('userId', user.userId);
         cookies.set('apiKey', user.apiKey);
         cookies.set('username', user.username);
+        cookies.set('token', data.token);
         cookies.set('loggedIn', 1);
+        this.setState({isLoading: false, token: data.token, isAuthenticated: true, user: user, showLogin:false, isError:false, logError:""});
       }
       else {
         this.setState({isLoading: false, isError:true, isUserError:false, logError:data.Message});
@@ -88,7 +98,11 @@ class App extends React.Component {
   }
 
   async register (params) {
-    axios.post('https://spicymemes.app/eventmap/public/user/' + params.username + '/' + params.password + '/' + params.email)
+    axios.post('https://spicymemes.app/eventmap/public/user', {
+      username: params.username,
+      password: params.password,
+      email: params.email
+    })
     .then(res => {
       const data = res.data;
       if(data.Code === 200) {
@@ -97,16 +111,22 @@ class App extends React.Component {
           username: data.Username,
           apiKey: data.APIKey,
         }
-        this.setState({isLoading: false, isAuthenticated: true, user: user, showLogin:false, isError:false, logError:""});
+        this.setState({isLoading: false, token: data.token, isAuthenticated: true, user: user, showLogin:false, isError:false, logError:""});
         cookies.set('userId', user.userId);
         cookies.set('apiKey', user.apiKey);
         cookies.set('username', user.username);
+        cookies.set('token', data.token);
         cookies.set('loggedIn', 1);
       }
       else {
         this.setState({isLoading: false, isUserError:true, isError:false, logError:data.Message});
       }
     });
+  }
+
+  handleAddClick = () => {
+    const createEvent = !this.state.createEvent;
+    this.setState({createEvent: createEvent});
   }
 
   handleLoginClick = () => {
@@ -119,12 +139,19 @@ class App extends React.Component {
     cookies.set('apiKey', "");
     cookies.set('username', "");
     cookies.set('loggedIn', 0);
+    cookies.set('token', "");
+  };
+
+  handleClose = () => {
+    this.setState({createEvent: false});
   };
 
   render() {
+
     return (
-      <div>
-        <Layout onLogin={this.handleLoginClick} onLogout={this.handleLogoutClick} showLogin={this.state.showLogin} isAuthenticated={this.state.isAuthenticated}>
+      <Aux>
+        <Modal open={this.state.createEvent} onClose={this.handleClose}><EventMaker/></Modal>
+        <Layout onLogin={this.handleLoginClick} onLogout={this.handleLogoutClick} showLogin={this.state.showLogin} isAuthenticated={this.state.isAuthenticated} onAdd={this.handleAddClick}>
           {this.state.showLogin ? 
           <Login username={this.state.username} 
             password={this.state.password} 
@@ -133,9 +160,11 @@ class App extends React.Component {
             onRegister={this.registerHandler} 
             isError={this.state.isError} 
             isUserError={this.state.isUserError} 
-            logError={this.state.logError}/> : <EventMap/>}
+            logError={this.state.logError}/> : 
+            <EventMap token={this.state.token}/>
+          }
         </Layout>
-      </div>
+      </Aux>
     )
   }
 }

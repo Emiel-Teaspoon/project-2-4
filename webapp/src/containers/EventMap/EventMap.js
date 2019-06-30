@@ -5,8 +5,6 @@ import Map from '../../components/Map/Map'
 import Event from '../../components/Event/Event';
 
 import axios from 'axios';
-import { array } from 'prop-types';
-import eventMarker from '../../components/Event/EventMarker/EventMarker';
 
 class EventMap extends Component {
 
@@ -15,19 +13,21 @@ class EventMap extends Component {
     state = {
         map: null,
         openEventId: -1,
+        token: "",
         events: [],
     }
-    
+
     componentDidMount() {
+        this.setState({token: this.props.token});
         this.getEvents();
     }
-
+    
     addEventHandler = () => {
 
     }
 
     getIdFromKey = (id) => {
-        return( this.state.events.findIndex(event => event.id === id) );
+        return(this.state.events.findIndex(event => event.id === id));
     }
 
     openEventHandler = (id) => {
@@ -60,8 +60,9 @@ class EventMap extends Component {
     }
 
     async getEvents () {
-        axios.get("https://spicymemes.app/eventmap/public/Events/50", { crossdomain: true })
+        axios.get("https://spicymemes.app/eventmap/public/Events/50", { headers: { Authorization: 'Bearer ' + this.props.token }})
         .then(response => {
+            console.log(response.data.result);
             if(response.data.Code === 200) {
                 let events = [];
                 response.data.result.map((event, index) => {
@@ -81,7 +82,6 @@ class EventMap extends Component {
                     };
                     events.push(eventObject);
                 })
-                console.log(events);
                 this.setState({events: events})
             }
         });

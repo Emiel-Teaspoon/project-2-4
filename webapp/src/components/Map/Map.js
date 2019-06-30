@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
 import classes from './Map.css';
 import * as data from './Style.json';
+import Fab from '@material-ui/core/Fab';
 
 function createMapOptions(maps) {
     // next props are exposed at maps
