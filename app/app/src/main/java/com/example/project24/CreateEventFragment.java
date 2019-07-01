@@ -156,7 +156,6 @@ public class CreateEventFragment extends DialogFragment  {
                     }
                 });
                 dialog.cancel();
-                Log.d("closeFrame ",""+ latLng );
             }
         });
 

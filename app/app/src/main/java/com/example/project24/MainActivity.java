@@ -36,13 +36,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace this.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-//            }
-//        });
 
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -127,6 +120,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new MyEventsActivity()).addToBackStack(null).commit();
                 } else{
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new LoginActivity()).addToBackStack(null).commit();
                     Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -135,6 +130,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new FriendsEventsActivity()).addToBackStack(null).commit();
                 } else{
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new LoginActivity()).addToBackStack(null).commit();
                     Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -143,12 +140,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new FriendsActivity()).addToBackStack(null).commit();
                 } else{
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new LoginActivity()).addToBackStack(null).commit();
                     Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.nav_addfriends:
+                if(app.isLoggedIn()) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new AddFriend()).addToBackStack(null).commit();
+                } else{
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new LoginActivity()).addToBackStack(null).commit();
+                    Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.nav_logout:
                 app.setLoggedIn(false);

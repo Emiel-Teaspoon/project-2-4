@@ -72,6 +72,8 @@ import java.util.List;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -116,7 +118,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        FloatingActionButton refresh = getView().findViewById(R.id.fab);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadMarkers();
+            }
+        });
     }
+
 
     @Override
     public void onMapReady(final GoogleMap map) {
@@ -237,9 +247,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
                 if (MainActivity.app.isLoggedIn()) {
                     CreateEventFragment createEventFragment = CreateEventFragment.newInstance(latLng);
                     createEventFragment.show(getFragmentManager(),"fragment_create_event");
-
                 }
-                loadMarkers();
+
             }
         });
     }
