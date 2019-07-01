@@ -140,6 +140,10 @@ class ApiClient {
         String action = "EventsByUserID/" + userID;
         sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
     }
+    static void getEventByEventID(final Context context, final int eventID,final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+        String action = "EventsByEventID/" + eventID;
+        sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
+    }
 
     static void changeUserPassword(Context context, String username, String oldPassword, String newPassword, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
         String action = "user/password";

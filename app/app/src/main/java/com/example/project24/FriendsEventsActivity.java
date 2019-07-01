@@ -81,7 +81,6 @@ public class FriendsEventsActivity extends Fragment {
                 String eventId= secondStep[1];
                 EventActivity eventActivity = new EventActivity();
                 Bundle bundle = new Bundle();
-                bundle.putString("event_naam",eventnaam);
                 bundle.putString("event_id",eventId);
                 eventActivity.setArguments(bundle);
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container,eventActivity).addToBackStack(null).commit();
