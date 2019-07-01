@@ -26,7 +26,7 @@
         }
 
         function followUser($user_id, $follower_id) {
-            $sql = "INSERT INTO followers VALUES (:user_id, :follower_id)";
+            $sql = "INSERT INTO followers (user, follower) VALUES (:user_id, :follower_id)";
             $stmt = $this->conn->prepare($sql);
 
             $stmt->bindValue(':user_id', $user_id);
@@ -41,10 +41,10 @@
         }
 
         function unfollowUser($user_id, $follower_id) {
-            $sql = "DELETE FROM followers WHERE user = :user_id AND follower = :follower_id";
+            $sql = "DELETE FROM followers WHERE user = :id AND follower = :follower_id";
             $stmt = $this->conn->prepare($sql);
 
-            $stmt->bindValue(':user_id', $user_id);
+            $stmt->bindValue(':id', $user_id);
             $stmt->bindValue(':follower_id', $follower_id);
 
             $result = $stmt->execute();

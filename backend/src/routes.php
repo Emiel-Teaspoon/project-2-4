@@ -48,11 +48,12 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->get('/findUserByUsername/{username}', function (Request $request, Response $response, $args) {
+    $app->get('/findUserByUsername/{username}/{userid}', function (Request $request, Response $response, $args) {
         $username = $args['username'];
+        $userid = $args['userid'];
 
         $api = new EventMapAPI();
-        $result = $api->findUserByUsername($this->db, $username);
+        $result = $api->findUserByUsername($this->db, $username, $userid);
         return $response->withJson($result);
     });
 
@@ -158,6 +159,16 @@ return function (App $app) {
         $result = $api->unfollowUser($this->db, $user_id, $follower_id);
         return $response->withJson($result);
     });
+    
+    $app->delete('/unfollowUser/{user_id}/{follower_id}', function (Request $request, Response $response) {
+        $data = $request->getParsedBody();
+            $user_id = $args['user_id'];
+            $follower_id = $args['follower_id'];
+    
+            $api = new EventMapAPI();
+            $result = $api->unfollowUser($this->db, $user_id, $follower_id);
+            return $response->withJson($result);
+        });
 
     $app->get('/getFollowers/{user_id}', function (Request $request, Response $response, $args) {
         $user_id = $args['user_id'];

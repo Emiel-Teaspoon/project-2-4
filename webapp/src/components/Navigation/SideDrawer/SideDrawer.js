@@ -9,8 +9,13 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import NavigationItems from '../NavigationItems/NavigationItems';
 import Aux from '../../../hoc/Aux';
 import Backdrop from '../../UI/Backdrop/Backdrop';
-import { InputBase, Switch, FormControlLabel } from '@material-ui/core';
+import { InputBase, Switch, FormControlLabel, CardActionArea } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import axios from 'axios';
+import Icon from '@material-ui/icons/Person';
+import AddIcon from '@material-ui/icons/Add';
+import NavigationItem from '../NavigationItems/NavigationItem/NavigationItem';
+import { thisTypeAnnotation } from '@babel/types';
 
 const drawerWidth = 240;
 
@@ -67,7 +72,7 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -82,70 +87,173 @@ const styles = theme => ({
     marginLeft: 0,
   },
   switch: {
-    marginLeft: 12,
+    margin: 8,
   }
 });
 
 class SideDrawer extends Component {
 
-    state = {
+  constructor(props) {
+    super(props)
+    this.state = {
       friendSwitch: false,
+      findText: "",
+      foundUsers: [],
+      user: props.user,
     }
 
-    handleChange = name => event => {
-      this.setState({ ...this.state, [name]: event.target.checked });
-    };
+    this.onChangeListener = this.onChangeListener.bind(this);
+    this.clickUser = this.clickUser.bind(this);
+  }
 
-    render() {
+  clickUser = (id) => {
+    console.log("Remove " + id);
+    console.log(this.state.user);
+    axios.delete('https://spicymemes.app/eventmap/public/unfollowUser/' + this.state.user.user_id + '/' + id, { headers: { Authorization: 'Bearer ' + this.state.user.token }})
+    .then(res => {
+      console.log(res);
+    })
+    .catch(
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  addUser = (id) => {
+    const newFriends = [...this.state.foundUsers];
+    for(var i = 0; i < newFriends.length; i++)
+    {
+      if(newFriends[i].user_id === id)
+      {
+        newFriends[i].isFollowing = true;
+      }
+    }
+    this.setState({foundUsers: newFriends});
+    console.log("Add " + id);
+    axios.post('https://spicymemes.app/eventmap/public/follow', {user_id: this.state.user.userId, follower_id: id}, { headers: { Authorization: 'Bearer ' + this.state.user.token }})
+    .then(res => {
+      console.log(res);
+    })
+    .catch(
+      err => {
+        console.log(err);
+      }
+    );
+  }
+ 
+  handleChange = () => event => {
+    this.setState({friendSwitch: event.target.checked });
+    console.log(event.target.checked);
+    this.props.toggleHandler(event.target.checked);
+  };
+
+  onChangeListener(event) {
+    this.setState({findText: event.target.value});
+  }
+
+  handleSearch = () => {
+    this.findUser(this.state.findText, this.props.user.token);
+  }
+
+  findUser = (username, token) => {
+    axios.get('https://spicymemes.app/eventmap/public/findUserByUsername/' + username + '/' + this.props.user.userId, { headers: { Authorization: 'Bearer ' + token }})
+    .then(res => {
+      console.log(res);
+      if(res.data.Code === 200) {
+            if(res.data.result) {
+                this.setState({foundUsers: res.data.result});
+            }
+            else {
+              this.setState({foundUsers: []});
+            }
+        }
+        else {
+            console.log(res);
+        }
+    })
+    .catch(
+      err => {
+        console.log(err);
+        this.setState({isLoading: false, isError:true, isUserError:true, logError:"Error " + err.response.status + " " + err.response.data.message});
+      }
+    );
+  }
+
+  render() {
     const { classes, theme } = this.props;
 
+    const users = this.state.foundUsers.map(
+      friend => {
+        return (
+            <NavigationItem 
+              key={friend.user_id} 
+              text={friend.username}
+              icon={<Icon/>}
+              sideIcon={friend.isFollowing ? null : <AddIcon color="primary"/>}
+              click={() => this.addUser(friend.user_id)}/>
+        );
+      }
+    );
+
     return (
-        <Aux>
-            <Backdrop show={this.props.open} clicked={this.props.closeDrawer}/>
-            <Drawer
-            className={classes.drawer}
-            variant="persistent"
-            anchor="left"
-            open={this.props.open}
-            classes={{
-                paper: classes.drawerPaper,
-            }}
-            >
-            <div className={classes.drawerHeader}>
-                <IconButton onClick={() => this.props.closeDrawer()}>
-                {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                </IconButton>
+      <Aux>
+          <Backdrop show={this.props.open} clicked={this.props.closeDrawer}/>
+          <Drawer
+          className={classes.drawer}
+          variant="persistent"
+          anchor="left"
+          open={this.props.open}
+          classes={{
+              paper: classes.drawerPaper,
+          }}
+          >
+          <div className={classes.drawerHeader}>
+              <IconButton onClick={() => this.props.closeDrawer()}>
+              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              </IconButton>
+          </div>
+          <Divider />
+          <div className={classes.searchroot}>
+          <InputBase
+            className={classes.input}
+            placeholder="Find User"
+            onChange={this.onChangeListener}
+            inputProps={{ 'aria-label': 'Search Google Maps' }}
+          />
+          <IconButton className={classes.iconButton} aria-label="Search" onClick={this.handleSearch}>
+            <SearchIcon />
+          </IconButton>
+          </div>
+          <Divider />
+            {users.length > 0 ? 
+            <div>
+              {users}
+              <Divider/>
             </div>
-            <Divider />
-            <div className={classes.searchroot}>
-            <InputBase
-              className={classes.input}
-              placeholder="Find User"
-              inputProps={{ 'aria-label': 'Search Google Maps' }}
-            />
-            <IconButton className={classes.iconButton} aria-label="Search">
-              <SearchIcon />
-            </IconButton>
-            </div>
-            <Divider />
-            <FormControlLabel
-            className={classes.switch}
-            label="Friend events only"
-            control={
-              <Switch
-                checked={this.state.friendSwitch}
-                onChange={this.handleChange('friendSwitch')}
-                value="friendSwitch"
-                color="secondary"
-              />
-            }
-            />
-            {this.props.auth ? 
-                <NavigationItems/>
             :
-            <div></div>}
-            </Drawer>
-        </Aux>
+            null}
+          <CardActionArea>
+          <FormControlLabel
+          className={classes.switch}
+          label="Friend events only"
+          control={
+            <Switch
+              checked={this.state.friendSwitch}
+              onChange={this.handleChange('friendSwitch')}
+              value="friendSwitch"
+              color="secondary"
+            />
+          }
+          />
+          </CardActionArea>
+          <Divider />
+          {this.props.auth ? 
+            <NavigationItems user={this.props.user} clicked={this.clickUser}/>
+          :
+          <div></div>}
+          </Drawer>
+      </Aux>
     );
   }
 }

@@ -21,7 +21,7 @@
             return $stmt;
         }
 
-        function login($dbo,$jwt, $username, $password) {
+        function login($dbo, $jwt, $username, $password) {
             $db = new UserDB($dbo);
 
             $stmt = $db->login($jwt, $username, $password);
@@ -37,10 +37,10 @@
             return $stmt;
         }
 
-        function findUserByUsername($dbo, $username) {
+        function findUserByUsername($dbo, $username, $userid) {
             $db = new UserDB($dbo);
 
-            $stmt = $db->findUserByUsername($username);
+            $stmt = $db->findUserByUsername($username, $userid);
             $db->closeConnection();
             return $stmt;
         }

@@ -13,12 +13,19 @@ class EventMap extends Component {
     state = {
         map: null,
         openEventId: -1,
-        token: "",
+        user: null,
         events: [],
+        onlyFriends: false,
+    }
+
+    shouldComponentUpdate(prevProps, nextProps)
+    {
+        return this.props.onlyFriends !== nextProps.onlyFriends;
     }
 
     componentDidMount() {
-        this.setState({token: this.props.token});
+        this.setState({token: this.props.user.token});
+        this.setState({onlyFriends: this.props.onlyFriends});
         this.getEvents();
     }
     
@@ -38,6 +45,7 @@ class EventMap extends Component {
         newEvents[this.getIdFromKey(id)].open = true;
         this.setState({openEventId: id, events: newEvents});
         this.moveMapTo(newEvents[this.getIdFromKey(id)].position);
+        console.log(id);
     }
 
     closeEventHandler = () => {
@@ -60,14 +68,13 @@ class EventMap extends Component {
     }
 
     async getEvents () {
-        axios.get("https://spicymemes.app/eventmap/public/Events/50", { headers: { Authorization: 'Bearer ' + this.props.token }})
+        axios.get(this.state.onlyFriends ? "https://spicymemes.app/eventmap/public/FollowerEvents/" + this.props.user.userId : "https://spicymemes.app/eventmap/public/Events/50", { headers: { Authorization: 'Bearer ' + this.props.user.token }})
         .then(response => {
-            console.log(response.data.result);
-            if(response.data.Code === 200) {
-                let events = [];
-                response.data.result.map((event, index) => {
+            console.log(response.data);
+            if(response.data.Code === 200 && response.data.result) {
+                const newEvent = response.data.result.map((event, index) => {
                     const eventObject = {
-                        id: index, 
+                        id: event.event_ID, 
                         open: false, 
                         size: Number(event.attendees), 
                         position: {
@@ -79,16 +86,15 @@ class EventMap extends Component {
                             description: event.description, 
                             img: event.image,
                             startDate: event.eventStartDT,
-                            username: event.event_owner,
+                            username: event.username,
                         }
                     };
-                    events.push(eventObject);
                     return eventObject;
                 })
-                this.setState({events: events})
+                this.setState({events: newEvent})
             }
         });
-      }
+    }
 
     render () 
     {

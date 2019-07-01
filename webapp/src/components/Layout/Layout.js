@@ -67,7 +67,9 @@ class Layout extends Component {
                     <SideDrawer 
                     open={this.state.showDrawer} 
                     closeDrawer={this.drawerClosedHandler} 
-                    auth={this.props.isAuthenticated}/>
+                    auth={this.props.isAuthenticated}
+                    user={this.props.user}
+                    toggleHandler={this.props.toggleHandler}/>
                     <div className={classes.Fab} hidden={!this.props.isAuthenticated}>
                         <Fab variant="extended" color="secondary" onClick={() => this.props.onAdd()}>
                             <Add/>

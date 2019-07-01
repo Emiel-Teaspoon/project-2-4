@@ -26,12 +26,11 @@
         }
 
         function addEvent($title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT, $owner) {
-            $sql = "INSERT INTO events VALUES (null, :title, :description, :img, :latd, :lotd, :attendees, :eventStartDT, :eventEndDT, :owner, CURRENT_TIMESTAMP)";
+            $sql = "INSERT INTO events (title, description, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner) VALUES (:title, :description, :latd, :lotd, :attendees, :eventStartDT, :eventEndDT, :owner)";
             $stmt = $this->conn->prepare($sql);
 
             $stmt->bindValue(':title', $title);
             $stmt->bindValue(':description', $description);
-            $stmt->bindValue(':img', $img);
             $stmt->bindValue(':latd', $latd);
             $stmt->bindValue(':lotd', $lotd);
             $stmt->bindValue(':attendees', $attendees);

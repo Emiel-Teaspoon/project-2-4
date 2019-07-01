@@ -16,7 +16,6 @@ class App extends React.Component {
 
   state = {
     isAuthenticated: false,
-    token: "",
     showLogin: false,
     isError: false,
     isUserError: false,
@@ -29,13 +28,13 @@ class App extends React.Component {
     const autoLogin = true;
     if(autoLogin) {
       if(parseInt(cookies.get('loggedIn')) === 1) {
-          const tokenVar = cookies.get('token');
           const user = {
               userId: cookies.get('userId'), 
               username: cookies.get('username'),
               apiKey: cookies.get('apiKey'),
+              token: cookies.get('token'),
           }
-          this.setState({isLoading: false, token: tokenVar, isAuthenticated: true, user: user, showLogin:false, isError:false, logError:""});
+        this.setState({isLoading: false, isAuthenticated: true, user: user, showLogin:false, isError:false, logError:""});
       }
       else {
         this.setState({isLoading: false, isAuthenticated: false, user: []});
@@ -77,6 +76,7 @@ class App extends React.Component {
           userId: data.UserID, 
           username: data.Username,
           apiKey: data.APIKey,
+          token: data.token,
         }
         cookies.set('userId', user.userId);
         cookies.set('apiKey', user.apiKey);
@@ -87,10 +87,12 @@ class App extends React.Component {
       }
       else {
         this.setState({isLoading: false, isError:true, isUserError:false, logError:data.Message});
+        console.log(res);
       }
     })
     .catch(
       err => {
+        console.log(err);
         console.log(err.response);
         this.setState({isLoading: false, isError:true, isUserError:true, logError:"Error " + err.response.status + " " + err.response.data.message});
       }
@@ -110,8 +112,9 @@ class App extends React.Component {
           userId: data.UserID, 
           username: data.Username,
           apiKey: data.APIKey,
+          token: data.token,
         }
-        this.setState({isLoading: false, token: data.token, isAuthenticated: true, user: user, showLogin:false, isError:false, logError:""});
+        this.setState({isLoading: false, isAuthenticated: true, user: user, showLogin:false, isError:false, logError:""});
         cookies.set('userId', user.userId);
         cookies.set('apiKey', user.apiKey);
         cookies.set('username', user.username);
@@ -142,6 +145,10 @@ class App extends React.Component {
     cookies.set('token', "");
   };
 
+  handleFriendsOnly = (value) => {
+    this.setState({onlyFriends: value});
+  }
+
   handleClose = () => {
     this.setState({createEvent: false});
   };
@@ -150,8 +157,8 @@ class App extends React.Component {
 
     return (
       <Aux>
-        <Modal open={this.state.createEvent} onClose={this.handleClose}><EventMaker userID={this.state.user.userId} token={this.state.token} apiKey={this.state.user.apiKey} closeHandler={this.handleClose}/></Modal>
-        <Layout onLogin={this.handleLoginClick} onLogout={this.handleLogoutClick} showLogin={this.state.showLogin} isAuthenticated={this.state.isAuthenticated} onAdd={this.handleAddClick}>
+        <Modal open={this.state.createEvent} onClose={this.handleClose}><EventMaker userID={this.state.user.userId} token={this.state.user.token} apiKey={this.state.user.apiKey} closeHandler={this.handleClose}/></Modal>
+        <Layout onLogin={this.handleLoginClick} onLogout={this.handleLogoutClick} showLogin={this.state.showLogin} isAuthenticated={this.state.isAuthenticated} onAdd={this.handleAddClick} user={this.state.user} toggleHandler={this.handleFriendsOnly}>
           {this.state.showLogin ? 
           <Login username={this.state.username} 
             password={this.state.password} 
@@ -161,7 +168,7 @@ class App extends React.Component {
             isError={this.state.isError} 
             isUserError={this.state.isUserError} 
             logError={this.state.logError}/> : 
-            <EventMap token={this.state.token}/>
+            <EventMap user={this.state.user} onlyFriends={this.state.onlyFriends}/>
           }
         </Layout>
       </Aux>

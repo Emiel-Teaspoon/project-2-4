@@ -58,7 +58,7 @@
             $match = $decrypted === $password;
             if($match) {
               $token = JWT::encode(['Username' => $username, 'UserID' => $result->user_id, 'APIKey' => $result->api_key], $jwt, "HS256");
-              return array(['token' => $token,'Code' => 200, 'Message' => 'Success','Username' => $username, 'UserID' => $result->user_id, 'APIKey' => $result->api_key]);
+              return array('token' => $token,'Code' => 200, 'Message' => 'Success','Username' => $username, 'UserID' => $result->user_id, 'APIKey' => $result->api_key);
             }
             return array('Code' => 401, 'Message' => 'Wrong password/username');
         }
@@ -142,19 +142,26 @@
             }
         }
 
-        function findUserByUsername($username) {
-            $sql = "SELECT user_id, email from users WHERE username = :username";
+        function findUserByUsername($username, $userid) {
+            $sql = "SELECT DISTINCT users.user_id, users.email, users.username, followers.user, followers.follower from users 
+                LEFT JOIN followers ON users.user_id = followers.follower
+                WHERE users.username LIKE :username
+                GROUP BY users.user_id";
             $stmt = $this->conn->prepare($sql);
 
-            $stmt->bindvalue(':username', $username);
+            $stmt->bindvalue(':username', '%'.$username.'%');
 
             $Result = $stmt->execute();
 
             while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
-                $results[] = array(
-                    'user_id' => $fetch->user_id,
-                    'email' => $fetch->email
-                );
+                if(!in_array($fetch->user_id, $results['user_id'], true)){
+                    $results[] = array(
+                        'user_id' => $fetch->user_id,
+                        'email' => $fetch->email,
+                        'username' => $fetch->username,
+                        'isFollowing' => ($fetch->user === $userid && $fetch->follower === $fetch->user_id),
+                    );
+                }
             }
 
             if ($Result === true) {
