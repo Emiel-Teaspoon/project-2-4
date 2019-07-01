@@ -79,9 +79,12 @@ public class MyEventsActivity extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 String eventnaam= listView.getItemAtPosition(pos).toString();
+                String[] firstStep= eventnaam.split(",");
+                String[] secondStep = firstStep[0].split("=");
+                String eventId= secondStep[1];
                 EventActivity eventActivity = new EventActivity();
                 Bundle bundle = new Bundle();
-                bundle.putString("event_naam",eventnaam);
+                bundle.putString("event_id",eventId);
                 eventActivity.setArguments(bundle);
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container,eventActivity).addToBackStack(null).commit();
                     }

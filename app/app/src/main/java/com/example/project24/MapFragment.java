@@ -1,10 +1,14 @@
 package com.example.project24;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,6 +38,8 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -230,15 +236,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(final LatLng latLng) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-                dialogBuilder.setTitle("Maak nieuw event");
-                dialogBuilder.setCancelable(false);
+                if (MainActivity.app.isLoggedIn()) {
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+                    dialogBuilder.setTitle("Maak nieuw event");
+                    dialogBuilder.setCancelable(false);
 
-                initPopUpViewControls();
-                dialogBuilder.setView(popupWindowView);
-                final AlertDialog dialog = dialogBuilder.create();
-                dialog.show();
-                initPopupOnClickListeners(dialog, latLng);
+                    initPopUpViewControls();
+                    dialogBuilder.setView(popupWindowView);
+                    final AlertDialog dialog = dialogBuilder.create();
+                    dialog.show();
+                    initPopupOnClickListeners(dialog, latLng);
+                }
             }
         });
     }
@@ -289,7 +297,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
                                 String markerInfo = "Description: " + eventObject.getString("description") + "\n" +
                                         "Starting date: " + eventObject.getString("eventStartDT") + "\n" +
                                         "End date: " + eventObject.getString("eventEndDT");
-                                mMap.addMarker(new MarkerOptions().position(position).title(eventObject.getString("title")).snippet(markerInfo));
+                                MarkerOptions marker = new MarkerOptions().position(position).title(eventObject.getString("title")).snippet(markerInfo).icon(bitmapDescriptorFromVector(getContext(),R.drawable.ic_icon));
+                                mMap.addMarker(marker);
                             }
                         } catch (ParseException e) {
                             e.printStackTrace();
@@ -439,6 +448,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
         }
 
         return data;
+    }
+
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>> > {

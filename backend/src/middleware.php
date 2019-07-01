@@ -5,7 +5,7 @@ use Slim\App;
 return function (App $app) {
   $app->add(new \Tuupola\Middleware\JwtAuthentication([
   "path" => "/", /* or ["/api", "/admin"] */
-  "ignore" => ["/login","/user","/Events"],
+  "ignore" => ["/login","/user","/Events","/version"],
   "attribute" => "decoded_token_data",
   "secret" => "supersecretkeyyoushouldnotcommittogithub",
   "algorithm" => ["HS256"],

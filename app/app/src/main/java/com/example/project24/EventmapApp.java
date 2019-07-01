@@ -9,9 +9,18 @@ public class EventmapApp extends Application {
     private String userName;
     private String ApiKey;
     private String JWT;
+    private boolean loggedIn =false;
 
     public EventmapApp(){
 
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+
+    public boolean isLoggedIn() {
+        return loggedIn;
     }
 
     public void setUser(int id, String name, String key) {

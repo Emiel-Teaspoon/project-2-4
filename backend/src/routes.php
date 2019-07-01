@@ -139,7 +139,7 @@ return function (App $app) {
         return $response->withJSON($result);
     });
 
-    $app->post('/followUser', function (Request $request, Response $response) {
+    $app->post('/follow', function (Request $request, Response $response) {
 	$data = $request->getParsedBody();
         $user_id = $data['user_id'];
         $follower_id = $data['follower_id'];

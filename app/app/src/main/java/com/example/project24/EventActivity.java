@@ -4,15 +4,36 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class EventActivity extends Fragment {
     String naam;
     int id;
+    int event_ID;
+    TextView eventnaam;
+    TextView eventadres;
+    TextView eventbegin;
+    TextView eventeinde;
+    TextView eventmaker;
+    TextView eventbeschrijvig;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activity_event, container, false);
@@ -21,29 +42,55 @@ public class EventActivity extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView eventnaam = getView().findViewById(R.id.textView28);
-        TextView eventadres = getView().findViewById(R.id.textView30);
-        TextView eventbegin = getView().findViewById(R.id.textView32);
-        TextView eventeinde = getView().findViewById(R.id.textView34);
-        TextView eventmaker = getView().findViewById(R.id.textView36);
-        TextView eventbeschrijvig = getView().findViewById(R.id.textView26);
+        eventnaam = getView().findViewById(R.id.textView28);
+        eventadres = getView().findViewById(R.id.textView30);
+        eventbegin = getView().findViewById(R.id.textView32);
+        eventeinde = getView().findViewById(R.id.textView34);
+        eventmaker = getView().findViewById(R.id.textView36);
+        eventbeschrijvig = getView().findViewById(R.id.textView26);
 
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            naam = bundle.getString("event_naam");
-            id = bundle.getInt("event_id");
-        }
-        eventnaam.setText(naam);
-        eventadres.setText("in Groningen");
-        eventbegin.setText("Gister");
-        eventeinde.setText("Vandaag");
-        eventmaker.setText("niet jij");
-        eventbeschrijvig.setText("ahsdf ahsdf hasdf hasdf asdhf asfh asjkdfh asjdf hasdf asdfasdf asdhf ahsdfjh asjdfja sdfha sdfj asdfj sadhf as" +
-                "ahfsd jasdfkj ashdf ahksdfk sahdf k");
+            event_ID = Integer.valueOf(bundle.getString("event_id"));
+
+            ApiClient.getEventByEventID(getContext(),event_ID, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d("response", response.toString());
+                    try {
+                        JSONArray result = response.getJSONArray("result");
+                        JSONObject EventInfoObject = result.getJSONObject(0);
+                        Log.d("result",EventInfoObject.toString());
+                        eventnaam.setText(EventInfoObject.getString("title"));
+                        eventbegin.setText(EventInfoObject.getString("eventStartDT"));
+                        eventeinde.setText(EventInfoObject.getString("eventEndDT"));
+                        eventmaker.setText(EventInfoObject.getString("event_owner"));
+                        eventbeschrijvig.setText(EventInfoObject.getString("description"));
+                        double langi = Double.parseDouble(EventInfoObject.getString("latitude"));
+                        double longi = Double.parseDouble(EventInfoObject.getString("longitude"));
+                        Geocoder coder;
+                        List<Address> address;
+                        coder = new Geocoder(getContext(), Locale.getDefault());
+                        address = coder.getFromLocation(langi,longi,1);
+                        String adres = address.get(0).getAddressLine(0);
+                        eventadres.setText(adres);
 
 
 
 
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("Error", "Things did not work");
+                }
+            });
     }
+}
 }
