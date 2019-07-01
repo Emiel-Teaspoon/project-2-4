@@ -143,7 +143,7 @@
         }
 
         function findUserByUsername($username) {
-            $sql = "SELECT email from users WHERE username = :username";
+            $sql = "SELECT user_id, email from users WHERE username = :username";
             $stmt = $this->conn->prepare($sql);
 
             $stmt->bindvalue(':username', $username);
@@ -152,6 +152,7 @@
 
             while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
                 $results[] = array(
+                    'user_id' => $fetch->user_id,
                     'email' => $fetch->email
                 );
             }
