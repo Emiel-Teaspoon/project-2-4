@@ -44,7 +44,7 @@ public class FriendsActivity extends Fragment {
         );
         listView.setAdapter(adapter);
 
-        ApiClient.getFriends(getContext(), MainActivity.app.getUser_id(), new Response.Listener<JSONObject>() {
+        ApiClient.getFriends(getContext(),MainActivity.app.getUser_id(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("FriendList Response", response.toString());

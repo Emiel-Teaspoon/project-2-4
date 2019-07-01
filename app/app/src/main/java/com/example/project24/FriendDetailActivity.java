@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -21,10 +23,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FriendDetailActivity extends Fragment {
 
     String friend;
+    public ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
+    private SimpleAdapter sa;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,13 +81,6 @@ public class FriendDetailActivity extends Fragment {
         friendEventLabel.setText(eventLabel);
 
         final ListView listView = getView().findViewById(R.id.detailEvents);
-        ArrayList<String> eventList = new ArrayList<>();
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                getContext(),
-                android.R.layout.simple_list_item_1,
-                eventList
-        );
-        listView.setAdapter(adapter);
 
         ApiClient.getFriendEvents(getContext(), friend, new Response.Listener<JSONObject>() {
             @Override
@@ -92,11 +90,20 @@ public class FriendDetailActivity extends Fragment {
                     JSONArray result = response.getJSONArray("result");
                     for (int i = 0; i < result.length(); i++) {
                         JSONObject eventObject = result.getJSONObject(i);
-                        adapter.add(eventObject.getString("title") + "#" + eventObject.getString("event_ID"));
+                        HashMap<String,String> item = new HashMap<String,String>();
+                        item.put("naam",eventObject.getString("title"));
+                        item.put("event_ID",eventObject.getString("event_ID"));
+                        list.add(item);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                sa = new SimpleAdapter(getContext(), list,
+                        R.layout.twolines,
+                        new String[] { "naam","event_ID"},
+                        new int[] {R.id.line_one, R.id.line_two});
+
+                listView.setAdapter(sa);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -105,6 +112,19 @@ public class FriendDetailActivity extends Fragment {
             }
         });
 
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                String eventnaam= listView.getItemAtPosition(pos).toString();
+                String[] firstStep= eventnaam.split(",");
+                String[] secondStep = firstStep[0].split("=");
+                String eventId= secondStep[1];
+                EventActivity eventActivity = new EventActivity();
+                Bundle bundle = new Bundle();
+                bundle.putString("event_id",eventId);
+                eventActivity.setArguments(bundle);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,eventActivity).addToBackStack(null).commit();
+            }
+        });
     }
 }
