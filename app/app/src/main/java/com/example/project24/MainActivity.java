@@ -1,8 +1,7 @@
 package com.example.project24;
 
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+
 import androidx.core.app.ActivityCompat;
 
 import android.util.Log;
@@ -49,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             new AccountActivity()).addToBackStack(null).commit();
                     drawer.closeDrawer(GravityCompat.START);
                 } else{
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new LoginActivity()).addToBackStack(null).commit();
                     Toast.makeText(getBaseContext(), "Not logged in", Toast.LENGTH_SHORT).show();
                     drawer.closeDrawer(GravityCompat.START);
                 }
@@ -139,16 +140,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if(app.isLoggedIn()) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new FriendsActivity()).addToBackStack(null).commit();
-                } else{
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new LoginActivity()).addToBackStack(null).commit();
-                    Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.nav_addfriends:
-                if(app.isLoggedIn()) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new AddFriend()).addToBackStack(null).commit();
                 } else{
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             new LoginActivity()).addToBackStack(null).commit();

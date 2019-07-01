@@ -20,10 +20,6 @@
             android:id="@+id/nav_friends"
             android:icon="@drawable/ic_menu_friends"
             android:title="@string/menu_friends" />
-        <item
-            android:id="@+id/nav_addfriends"
-            android:icon="@drawable/ic_menu_send"
-            android:title="@string/menu_addfriends" />
     </group>
 
     <item android:title="Communicate">

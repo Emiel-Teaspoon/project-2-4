@@ -26,9 +26,10 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AddFriend extends Fragment {
+public class AddFriendFragment extends Fragment {
     public ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
     private SimpleAdapter sa;
+    private ListView listView;
     private TextView text;
     private Button btn;
     private String messageResponse;
@@ -41,14 +42,14 @@ public class AddFriend extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final ListView listView = getView().findViewById(R.id.listView);
-        text = getView().findViewById(R.id.editText);
+        listView = getView().findViewById(R.id.addFriendsListView);
+        text = getView().findViewById(R.id.addFriendsEditText);
 
-        btn = getView().findViewById(R.id.button3);
+        btn = getView().findViewById(R.id.addFriendsButton3);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String zoekopdracht = text.getText().toString();
+                final String zoekopdracht = text.getText().toString() +"/" +MainActivity.app.getUser_id();
                 Log.d("zoekopdracht", zoekopdracht);
 
                 ApiClient.getUserByUsername(getContext(), zoekopdracht, new Response.Listener<JSONObject>() {
@@ -61,7 +62,7 @@ public class AddFriend extends Fragment {
                             JSONArray result = response.getJSONArray("result");
                             JSONObject friendsEventsObject = result.getJSONObject(0);
                             HashMap<String, String> item = new HashMap<String, String>();
-                            item.put("naam", naam);
+                            item.put("naam", friendsEventsObject.getString("username"));
                             item.put("user_id", friendsEventsObject.getString("user_id"));
                             list.add(item);
 
@@ -102,7 +103,8 @@ public class AddFriend extends Fragment {
                         } catch (JSONException ex) {
                         }
                         if (messageResponse.equals("Success")){
-                            getFragmentManager().popBackStack();
+                            getFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                    new FriendsActivity()).addToBackStack(null).commit();
                         }
                     }
                 }, new Response.ErrorListener() {

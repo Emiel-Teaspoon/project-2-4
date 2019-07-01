@@ -98,7 +98,7 @@ public class RegisterActivity extends Fragment {
         if (passwordInput.isEmpty()) {
             passwordText.setError("Password can't be empty");
             return false;
-        } else if (passwordInput != passwordRepeatInput){
+        } else if (!passwordInput.equals(passwordRepeatInput)){
             passwordRepeatText.setError("Passwords do not match");
             return false;
         } else if (!PASSWORD_PATTERN.matcher(passwordInput).matches()){

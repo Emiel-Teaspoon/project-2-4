@@ -77,8 +77,6 @@ public class EventActivity extends Fragment {
                         eventadres.setText(adres);
 
 
-
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
