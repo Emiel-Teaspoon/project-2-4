@@ -77,9 +77,8 @@ public class RegisterActivity extends Fragment {
                         catch (JSONException ex){}
                         Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
                         Log.d("Register Response", response.toString());
-                        if (message.equals("Success")){
-                            LoginActivity loginActivity = new LoginActivity();
-                            getFragmentManager().beginTransaction().replace(R.id.fragment_container,loginActivity).addToBackStack(null).commit();
+                            if (message.equals("Success")){
+                                getFragmentManager().popBackStack();
                         }
                     }
                 }, new Response.ErrorListener() {

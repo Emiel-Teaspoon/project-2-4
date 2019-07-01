@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,18 +23,17 @@ import org.json.JSONObject;
 
 public class LoginActivity extends Fragment {
     private Button loginButton;
+    private Button registerButton;
     private TextInputLayout usernameText;
     private TextInputLayout passwordText;
-    private TextView header_title;
-    private TextView header_subtitle;
     private String username;
     private String password;
-    private String message;
-    private int UserID;
-    private String Username;
-    private String Email;
-    private String APIKey;
-    private String JWT;
+    private String messageResponse;
+    private int userIDResponse;
+    private String usernameResponse;
+    private String emailResponse;
+    private String APIKeyResponse;
+    private String JWTResponse;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class LoginActivity extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         loginButton = getView().findViewById(R.id.loginButton);
+        registerButton = getView().findViewById(R.id.loginRegisterButton);
         usernameText = getView().findViewById(R.id.loginUsernameText);
         passwordText = getView().findViewById(R.id.loginPasswordText);
 
@@ -54,27 +56,24 @@ public class LoginActivity extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JWT = response.getString("token");
-                            message = response.getString("Message");
-                            UserID = Integer.parseInt(response.getString("UserID"));
-                            Username = response.getString("Username");
-                            Email = response.getString("Email");
-                            APIKey = response.getString("APIKey");
+                            JWTResponse = response.getString("token");
+                            messageResponse = response.getString("Message");
+                            userIDResponse = Integer.parseInt(response.getString("UserID"));
+                            usernameResponse = response.getString("Username");
+                            emailResponse = response.getString("Email");
+                            APIKeyResponse = response.getString("APIKey");
                         }
                         catch (JSONException ex){}
-                        Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),messageResponse,Toast.LENGTH_SHORT).show();
                         Log.d("Login Response", response.toString());
-                        MainActivity.app.setJWT(JWT);
-                        MainActivity.app.setUser(UserID,Username,APIKey);
-                        NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
-                        View headerView = navigationView.getHeaderView(0);
-                        TextView navUsername = headerView.findViewById(R.id.nav_header_title);
-                        TextView navEmail = headerView.findViewById(R.id.nav_header_subtitle);
-                        navUsername.setText(Username);
-                        navEmail.setText(Email);
-                        if (message.equals("Success")){
-                            MapFragment mapFragment = new MapFragment();
-                            getFragmentManager().beginTransaction().replace(R.id.fragment_container,mapFragment).addToBackStack(null).commit();
+                        MainActivity.app.setJWT(JWTResponse);
+                        MainActivity.app.setUser(userIDResponse,usernameResponse,APIKeyResponse);
+                        MainActivity.app.setLoggedIn(true);
+                        updateNavHeader(usernameResponse,emailResponse);
+                        updateNavItems();
+
+                        if (messageResponse.equals("Success")){
+                            getFragmentManager().popBackStack();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -85,8 +84,31 @@ public class LoginActivity extends Fragment {
                 });
             }
         });
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RegisterActivity registerActivity = new RegisterActivity();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,registerActivity).addToBackStack(null).commit();
+            }
+        });
 
 
 
+    }
+    public void updateNavHeader(String title, String subtitle){
+        NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = headerView.findViewById(R.id.nav_header_title);
+        TextView navEmail = headerView.findViewById(R.id.nav_header_subtitle);
+        navUsername.setText(title);
+        navEmail.setText(subtitle);
+    }
+    public void updateNavItems(){
+        NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
+        Menu menuView = navigationView.getMenu();
+        MenuItem navLogin = menuView.findItem(R.id.nav_login);
+        MenuItem navLogout = menuView.findItem(R.id.nav_logout);
+        navLogout.setVisible(true);
+        navLogin.setVisible(false);
     }
 }
