@@ -28,7 +28,7 @@
 
         function login($jwt, $username, $password)
         {
-            $sql = "SELECT users.password, users.user_id, users.api_key FROM users WHERE users.username = :username";
+            $sql = "SELECT users.* FROM users WHERE users.username = :username";
             $stmt = $this->conn->prepare($sql);
 
             $stmt->bindValue(':username', $username);
@@ -58,7 +58,7 @@
             $match = $decrypted === $password;
             if($match) {
               $token = JWT::encode(['Username' => $username, 'UserID' => $result->user_id, 'APIKey' => $result->api_key], $jwt, "HS256");
-              return array('token' => $token,'Code' => 200, 'Message' => 'Success','Username' => $username, 'UserID' => $result->user_id, 'APIKey' => $result->api_key);
+              return array('token' => $token,'Code' => 200, 'Message' => 'Success','Username' => $username, 'UserID' => $result->user_id,'Email' => $result->email, 'APIKey' => $result->api_key);
             }
             return array('Code' => 401, 'Message' => 'Wrong password/username');
         }
@@ -143,7 +143,7 @@
         }
 
         function findUserByUsername($username, $userid) {
-            $sql = "SELECT DISTINCT users.user_id, users.email, users.username, followers.user, followers.follower from users 
+            $sql = "SELECT DISTINCT users.user_id, users.email, users.username, followers.user, followers.follower from users
                 LEFT JOIN followers ON users.user_id = followers.follower
                 WHERE users.username LIKE :username
                 GROUP BY users.user_id";
@@ -170,6 +170,29 @@
                 return array('Code'=> 403);
             }
 
+        }
+	       function getUserByUserID($user_id) {
+            $sql = "SELECT users.*
+                    FROM users
+                    WHERE user_id = :user_id";
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+
+            $result = $stmt->execute();
+
+            while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
+                $results[] = array(
+                  'user_id' => $fetch->user_id,
+                  'email' => $fetch->email,
+                  'username' => $fetch->username
+                );
+            }
+
+            if($result) {
+                return array('Code' => 200, 'Message' => 'Success', 'result' => $results);
+            }
+            return array('Code' => 403, 'Message' => 'Error');
         }
     }
 ?>
