@@ -146,6 +146,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.nav_addfriends:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new AddFriend()).addToBackStack(null).commit();
+                break;
             case R.id.nav_logout:
                 app.setLoggedIn(false);
                 app.setJWT(null);

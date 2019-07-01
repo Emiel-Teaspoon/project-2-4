@@ -155,4 +155,12 @@ class ApiClient {
 
         sendObjectRequest(context, Request.Method.PUT, action, parameters, responseListener, errorListener);
     }
+    static void followFriend(final Context context, int user_ID , int followe_ID, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+        String action = "follow";
+        HashMap<String, String> hmap = new HashMap<>();
+        hmap.put("user_id", Integer.toString(user_ID));
+        hmap.put("follower_id", Integer.toString(followe_ID));
+        JSONObject parameters = new JSONObject(hmap);
+        sendObjectRequest(context, Request.Method.POST, action, parameters, responseListener, errorListener);
+    }
 }
