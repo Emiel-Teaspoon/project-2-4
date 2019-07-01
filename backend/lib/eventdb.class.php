@@ -71,8 +71,10 @@
         }
         
         function getEventsByUserID($user_id) {
-            $sql = "SELECT event_id, title, description, image, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner, creation_datetime
-                    FROM events WHERE event_owner = :user_id";
+            $sql = "SELECT events*, users.username
+                    FROM events 
+                    INNER JOIN users ON events.event_owner = users.user_id
+                    WHERE event_owner = :user_id";
             $stmt = $this->conn->prepare($sql);
 
             $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);           
@@ -91,7 +93,8 @@
                     'eventStartDT' => $fetch->event_start_datetime,
                     'eventEndDT' => $fetch->event_end_datetime,
                     'event_owner' => $fetch->event_owner,
-                    'creation_datetime' => $fetch->creation_datetime
+                    'creation_datetime' => $fetch->creation_datetime,
+                    'username' => $fetch->username
                 );
             }
 
@@ -102,8 +105,10 @@
         }
 
         function getEventsByEventID($event_id) {
-            $sql = "SELECT event_id, title, description, image, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner, creation_datetime
-                    FROM events WHERE event_id = :event_id";
+            $sql = "SELECT events*, users.username
+                    FROM events 
+                    INNER JOIN users ON events.event_owner = users.user_id
+                    WHERE event_id = :event_id";
             $stmt = $this->conn->prepare($sql);
 
             $stmt->bindValue(':event_id', $event_id, PDO::PARAM_INT);           
@@ -122,7 +127,8 @@
                     'eventStartDT' => $fetch->event_start_datetime,
                     'eventEndDT' => $fetch->event_end_datetime,
                     'event_owner' => $fetch->event_owner,
-                    'creation_datetime' => $fetch->creation_datetime
+                    'creation_datetime' => $fetch->creation_datetime,
+                    'username' => $fetch->username
                 );
             }
 
@@ -163,8 +169,10 @@
         }
 
         function getEvents($limit) {
-            $sql = "SELECT event_id, title, description, image, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner, creation_datetime
-                    FROM events LIMIT $limit";
+            $sql = "SELECT events.*, users.username
+                    FROM events 
+                    INNER JOIN users ON events.event_owner = users.user_id
+                    LIMIT $limit";
             $stmt = $this->conn->prepare($sql);          
 
             $result = $stmt->execute();
@@ -181,7 +189,8 @@
                     'eventStartDT' => $fetch->event_start_datetime,
                     'eventEndDT' => $fetch->event_end_datetime,
                     'event_owner' => $fetch->event_owner,
-                    'creation_datetime' => $fetch->creation_datetime
+                    'creation_datetime' => $fetch->creation_datetime,
+                    'username' => $fetch->username
                 );
             }
 
@@ -207,8 +216,10 @@
 
             foreach ($followers as $follower) {
                 foreach ($follower as $key => $value) {
-                    $sql = "SELECT event_id, title, description, image, latitude, longitude, attendees, event_start_datetime, event_end_datetime, event_owner, creation_datetime
-                    FROM events WHERE event_owner = :follower;";
+                    $sql = "SELECT events.*, users.username
+                    FROM events 
+                    INNER JOIN users ON events.event_owner = users.user_id
+                    WHERE event_owner = :follower;";
                     $stmt = $this->conn->prepare($sql);
 
                     $stmt->bindValue('follower', $value);
@@ -227,7 +238,8 @@
                             'eventStartDT' => $fetch->event_start_datetime,
                             'eventEndDT' => $fetch->event_end_datetime,
                             'event_owner' => $fetch->event_owner,
-                            'creation_datetime' => $fetch->creation_datetime
+                            'creation_datetime' => $fetch->creation_datetime,
+                            'username' => $fetch->username
                         );
                     }
 
