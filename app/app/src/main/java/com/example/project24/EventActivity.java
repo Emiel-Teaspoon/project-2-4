@@ -4,6 +4,8 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +19,10 @@ import com.android.volley.VolleyError;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class EventActivity extends Fragment {
     String naam;
@@ -57,16 +63,25 @@ public class EventActivity extends Fragment {
                         JSONObject EventInfoObject = result.getJSONObject(0);
                         Log.d("result",EventInfoObject.toString());
                         eventnaam.setText(EventInfoObject.getString("title"));
-                        eventadres.setText(EventInfoObject.getString("latitude"));
                         eventbegin.setText(EventInfoObject.getString("eventStartDT"));
                         eventeinde.setText(EventInfoObject.getString("eventEndDT"));
                         eventmaker.setText(EventInfoObject.getString("event_owner"));
                         eventbeschrijvig.setText(EventInfoObject.getString("description"));
+                        double langi = Double.parseDouble(EventInfoObject.getString("latitude"));
+                        double longi = Double.parseDouble(EventInfoObject.getString("longitude"));
+                        Geocoder coder;
+                        List<Address> address;
+                        coder = new Geocoder(getContext(), Locale.getDefault());
+                        address = coder.getFromLocation(langi,longi,1);
+                        String adres = address.get(0).getAddressLine(0);
+                        eventadres.setText(adres);
 
 
 
 
                     } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
