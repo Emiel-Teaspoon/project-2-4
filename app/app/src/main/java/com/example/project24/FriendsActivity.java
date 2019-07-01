@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -34,9 +36,10 @@ public class FriendsActivity extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final ListView listView = getView().findViewById(R.id.listView);
+        final ListView listView = getView().findViewById(R.id.friendsListView);
         ArrayList<String> friendsList = new ArrayList<>();
-
+        final TextView textView = getView().findViewById(R.id.noFriendsText);
+        Button addFriendsButton = getView().findViewById(R.id.addFriendsButton);
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getContext(),
                 android.R.layout.simple_list_item_1,
@@ -48,6 +51,7 @@ public class FriendsActivity extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("FriendList Response", response.toString());
+                textView.setVisibility(View.INVISIBLE);
                 try {
                     JSONArray result = response.getJSONArray("result");
                     for (int i = 0; i < result.length(); i++) {
@@ -56,6 +60,7 @@ public class FriendsActivity extends Fragment {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    textView.setVisibility(View.VISIBLE);
                 }
             }
         }, new Response.ErrorListener() {
@@ -75,6 +80,13 @@ public class FriendsActivity extends Fragment {
                 friendDetailActivity.setArguments(bundle);
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container,friendDetailActivity).addToBackStack(null).commit();
 
+            }
+        });
+        addFriendsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new AddFriendFragment()).addToBackStack(null).commit();
             }
         });
     }

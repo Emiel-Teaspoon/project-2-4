@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -36,25 +38,27 @@ public class FriendsEventsActivity extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final ListView listView = getView().findViewById(R.id.friendsEvents);
-
+        final ListView listView = getView().findViewById(R.id.friendsEventsListView);
+        final TextView textView = getView().findViewById(R.id.noFriendsEventsText);
 
         ApiClient.getFriendsEvents(getContext(), MainActivity.app.getUser_id(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("response", response.toString());
+                textView.setVisibility(View.INVISIBLE);
                 try {
                     JSONArray result = response.getJSONArray("result");
-                    for (int i = 0; i < result.length(); i++) {
-                        JSONObject friendsEventsObject = result.getJSONObject(i);
-                        HashMap<String,String> item = new HashMap<String,String>();
-                        item.put("naam",friendsEventsObject.getString("title"));
-                        item.put("event_ID",friendsEventsObject.getString("event_ID"));
-                        list.add(item);
+                        for (int i = 0; i < result.length(); i++) {
+                            JSONObject friendsEventsObject = result.getJSONObject(i);
+                            HashMap<String, String> item = new HashMap<String, String>();
+                            item.put("naam", friendsEventsObject.getString("title"));
+                            item.put("event_ID", friendsEventsObject.getString("event_ID"));
+                            list.add(item);
+                        }
 
-                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    textView.setVisibility(View.VISIBLE);
                 }
                 sa = new SimpleAdapter(getContext(), list,
                         R.layout.twolines,

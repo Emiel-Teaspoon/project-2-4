@@ -77,8 +77,6 @@ public class EventActivity extends Fragment {
                         eventadres.setText(adres);
 
 
-
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -88,7 +86,7 @@ public class EventActivity extends Fragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e("Error", "Things did not work");
+                    Log.e("Error", ""+ error);
                 }
             });
     }

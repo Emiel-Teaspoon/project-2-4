@@ -1,8 +1,7 @@
 package com.example.project24;
 
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+
 import androidx.core.app.ActivityCompat;
 
 import android.util.Log;
@@ -36,13 +35,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace this.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-//            }
-//        });
 
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -56,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             new AccountActivity()).addToBackStack(null).commit();
                     drawer.closeDrawer(GravityCompat.START);
                 } else{
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new LoginActivity()).addToBackStack(null).commit();
                     Toast.makeText(getBaseContext(), "Not logged in", Toast.LENGTH_SHORT).show();
                     drawer.closeDrawer(GravityCompat.START);
                 }
@@ -120,13 +114,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(id) {
             case R.id.nav_home:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            mapFragment).addToBackStack(null).commit();
+                    mapFragment).addToBackStack(null).commit();
                 break;
             case R.id.nav_myEvents:
                 if(app.isLoggedIn()) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new MyEventsActivity()).addToBackStack(null).commit();
                 } else{
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new LoginActivity()).addToBackStack(null).commit();
                     Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -135,6 +131,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new FriendsEventsActivity()).addToBackStack(null).commit();
                 } else{
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new LoginActivity()).addToBackStack(null).commit();
                     Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -143,6 +141,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new FriendsActivity()).addToBackStack(null).commit();
                 } else{
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new LoginActivity()).addToBackStack(null).commit();
                     Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -151,6 +151,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 app.setJWT(null);
                 TextView navUsername = headerView.findViewById(R.id.nav_header_title);
                 TextView navEmail = headerView.findViewById(R.id.nav_header_subtitle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        mapFragment).addToBackStack(null).commit();
                 navUsername.setText("Not logged in");
                 navEmail.setText(null);
                 Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
