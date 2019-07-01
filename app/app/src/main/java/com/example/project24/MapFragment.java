@@ -237,7 +237,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
                 if (MainActivity.app.isLoggedIn()) {
                     CreateEventFragment createEventFragment = CreateEventFragment.newInstance(latLng);
                     createEventFragment.show(getFragmentManager(),"fragment_create_event");
+
                 }
+                loadMarkers();
             }
         });
     }

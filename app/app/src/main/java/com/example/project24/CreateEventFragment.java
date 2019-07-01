@@ -40,10 +40,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-public class CreateEventFragment extends DialogFragment {
-
+public class CreateEventFragment extends DialogFragment  {
 
     Calendar date;
+
     private static final String TAG = MainActivity.class.getSimpleName();
     // Controls for the event creation popup
     private View popupWindowView;
@@ -156,6 +156,7 @@ public class CreateEventFragment extends DialogFragment {
                     }
                 });
                 dialog.cancel();
+                Log.d("closeFrame ",""+ latLng );
             }
         });
 
@@ -169,26 +170,21 @@ public class CreateEventFragment extends DialogFragment {
         eventStart.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDateTimePicker();
-                SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                String selectedDate = dateformat.format(date.getTime());
-                eventStart.getEditText().setText(selectedDate);
+                showDateTimePicker(1);
 
             }
         });
         eventEnd.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDateTimePicker();
-                SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                String selectedDate = dateformat.format(date.getTime());
-                eventEnd.getEditText().setText(selectedDate);
+                showDateTimePicker(2);
+
             }
         });
     }
 
 
-    public void showDateTimePicker() {
+    public void showDateTimePicker(final int number) {
         final Calendar currentDate = Calendar.getInstance();
         date = Calendar.getInstance();
         new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
@@ -200,7 +196,15 @@ public class CreateEventFragment extends DialogFragment {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         date.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         date.set(Calendar.MINUTE, minute);
-                        Log.v(TAG, "The choosen one " + date.getTime());
+                        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                        String selectedDate = dateformat.format(date.getTime());
+                        if (number == 1) {
+                            eventStart.getEditText().setText(selectedDate);
+                            Log.v(TAG, "The choosen one " + date.getTime());
+                        }else {
+                            eventEnd.getEditText().setText(selectedDate);
+                            Log.v(TAG, "The choosen one " + date.getTime());
+                        }
                     }
                 }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), false).show();
             }
