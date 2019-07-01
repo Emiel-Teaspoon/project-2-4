@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(id) {
             case R.id.nav_home:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            mapFragment).addToBackStack(null).commit();
+                    mapFragment).addToBackStack(null).commit();
                 break;
             case R.id.nav_myEvents:
                 if(app.isLoggedIn()) {
@@ -160,6 +160,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 app.setJWT(null);
                 TextView navUsername = headerView.findViewById(R.id.nav_header_title);
                 TextView navEmail = headerView.findViewById(R.id.nav_header_subtitle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        mapFragment).addToBackStack(null).commit();
                 navUsername.setText("Not logged in");
                 navEmail.setText(null);
                 Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();

@@ -70,7 +70,7 @@ public class MyEventsActivity extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Error", "Things did not work");
+                Log.e("Error", ""+ error);
             }
         });
 
