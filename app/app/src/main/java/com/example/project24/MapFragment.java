@@ -1,6 +1,8 @@
 package com.example.project24;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -27,9 +29,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.SupportMapFragment;
@@ -60,6 +64,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -93,19 +98,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
     // Hold the route-line for later removal
     private Polyline polyline;
 
-    // Controls for the event creation popup
-    private View popupWindowView;
-    private EditText eventTitle;
-    private EditText eventDesc;
-    private EditText eventStart;
-    private EditText eventEnd;
-    private Button eventCancelButton;
-    private Button eventCreateButton;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment!= null){
@@ -237,15 +235,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
             @Override
             public void onMapClick(final LatLng latLng) {
                 if (MainActivity.app.isLoggedIn()) {
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-                    dialogBuilder.setTitle("Maak nieuw event");
-                    dialogBuilder.setCancelable(false);
-
-                    initPopUpViewControls();
-                    dialogBuilder.setView(popupWindowView);
-                    final AlertDialog dialog = dialogBuilder.create();
-                    dialog.show();
-                    initPopupOnClickListeners(dialog, latLng);
+                    CreateEventFragment createEventFragment = CreateEventFragment.newInstance(latLng);
+                    createEventFragment.show(getFragmentManager(),"fragment_create_event");
                 }
             }
         });
@@ -316,98 +307,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
         });
     }
 
-    // Initializes the controls for the event creation window.
-    private void initPopUpViewControls() {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        popupWindowView = inflater.inflate(R.layout.popup_window, null);
-
-        eventTitle = popupWindowView.findViewById(R.id.eventTitle);
-        eventDesc = popupWindowView.findViewById(R.id.eventDesc);
-        eventStart = popupWindowView.findViewById(R.id.eventStartTime);
-        eventEnd = popupWindowView.findViewById(R.id.eventEndTime);
-
-        eventCancelButton = popupWindowView.findViewById(R.id.eventPopupCancel);
-        eventCreateButton = popupWindowView.findViewById(R.id.eventCreate);
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    // Verify's that the input in the event creation window is valid.
-    private boolean verifyEventInput() {
-        boolean valid = true;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd hh:mm:SS");
-
-        if (TextUtils.isEmpty(eventTitle.getText())) {
-            Toast.makeText(getContext(), "Geen event titel ingevoerd", Toast.LENGTH_SHORT).show();
-            valid = false;
-        }
-        if (TextUtils.isEmpty(eventDesc.getText())) {
-            Toast.makeText(getContext(), "Geen omschrijving ingevoerd.", Toast.LENGTH_SHORT).show();
-            valid = false;
-        }
-        if (TextUtils.isEmpty(eventStart.getText())) {
-            Toast.makeText(getContext(), "Geen start datum en tijd ingeveord.", Toast.LENGTH_SHORT).show();
-            valid = false;
-        }
-        if (TextUtils.isEmpty(eventEnd.getText())) {
-            Toast.makeText(getContext(),"Geen eind datum en tijd ingevoerd.", Toast.LENGTH_SHORT).show();
-            valid = false;
-        }
-        if (!TextUtils.isEmpty(eventStart.getText())) {
-            try {
-                format.parse(eventStart.getText().toString());
-            } catch (ParseException e) {
-                Toast.makeText(getContext(), "Voer AUB een geldige start datum en tijd in", Toast.LENGTH_SHORT).show();
-                valid = false;
-            }
-        }
-
-        if (!TextUtils.isEmpty(eventEnd.getText())) {
-            try {
-                format.parse(eventEnd.getText().toString());
-            } catch (ParseException e) {
-                Toast.makeText(getContext(), "Voer AUB een geldige eind datum en tijd in", Toast.LENGTH_SHORT).show();
-                valid = false;
-            }
-        }
-        return valid;
-    }
-
-    // Initialize the on click listeners for the event creation window
-    private void initPopupOnClickListeners(final AlertDialog dialog, final LatLng latLng) {
-        // Takes data from input controls and sends the new event to the backend.
-        eventCreateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!verifyEventInput()){
-                    return;
-                }
-                String title = eventTitle.getText().toString();
-                String desc = eventDesc.getText().toString();
-                String startDT = eventStart.getText().toString();
-                String endDT = eventStart.getText().toString();
-
-                ApiClient.createEvent(getContext(), title, desc, latLng.latitude, latLng.longitude, startDT, endDT, MainActivity.app.getUser_id(), new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("Event Create Test", response.toString());
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("Event create error", error.toString());
-                    }
-                });
-                dialog.cancel();
-            }
-        });
-
-        // Close the event creation window.
-        eventCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-    }
 
     // De onderstaande klassen komen van:
     // http://wptrafficanalyzer.in/blog/drawing-driving-route-directions-between-two-locations-using-google-directions-in-google-map-android-api-v2/
@@ -450,14 +358,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
         return data;
     }
 
-    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
-        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        vectorDrawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
 
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>> > {
 
