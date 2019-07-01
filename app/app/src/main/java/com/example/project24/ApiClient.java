@@ -118,6 +118,11 @@ class ApiClient {
         sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
     }
 
+    static void getUserByUserID(final Context context, final int userID, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+        String action = "findUserByUserID/" + userID;
+        sendObjectRequest(context, Request.Method.GET, action, null, responseListener, errorListener);
+    }
+
     static void createEvent(Context context, String title, String description, Double latitude, Double longitude, String startDT, String endDT,
                             int owner, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
         String action = "addEvent";

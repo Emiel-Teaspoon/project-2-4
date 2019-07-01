@@ -53,7 +53,7 @@ public class AccountActivity extends Fragment {
         usernameField.setText(MainActivity.app.getUserName());
 
         final TextView emailField = mView.findViewById(R.id.accountEmail);
-        ApiClient.getUserByUsername(getContext(), MainActivity.app.getUserName(), new Response.Listener<JSONObject>() {
+        ApiClient.getUserByUserID(getContext(), MainActivity.app.getUser_id(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("Friend Detail response", response.toString());

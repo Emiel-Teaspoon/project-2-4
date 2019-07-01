@@ -44,6 +44,13 @@
             $db->closeConnection();
             return $stmt;
         }
+	       function getUserByUserID($dbo, $userid) {
+            $db = new UserDB($dbo);
+
+            $stmt = $db->getUserByUserID($userid);
+            $db->closeConnection();
+            return $stmt;
+        }
 
         // Event functions
         function addEvent($dbo, $title, $description, $img, $latd, $lotd, $attendees, $eventStartDT, $eventEndDT, $owner) {

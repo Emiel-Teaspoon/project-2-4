@@ -57,6 +57,14 @@ return function (App $app) {
         return $response->withJson($result);
     });
 
+    $app->get('/findUserByUserID/{userid}', function (Request $request, Response $response, $args) {
+        $userid = $args['userid'];
+
+        $api = new EventMapAPI();
+        $result = $api->getUserByUserID($this->db, $userid);
+        return $response->withJson($result);
+    });
+
     $app->post('/addEvent', function (Request $request, Response $response) {
 	$data = $request->getParsedBody();
         $title = $data['title'];
@@ -159,12 +167,12 @@ return function (App $app) {
         $result = $api->unfollowUser($this->db, $user_id, $follower_id);
         return $response->withJson($result);
     });
-    
+
     $app->delete('/unfollowUser/{user_id}/{follower_id}', function (Request $request, Response $response) {
         $data = $request->getParsedBody();
             $user_id = $args['user_id'];
             $follower_id = $args['follower_id'];
-    
+
             $api = new EventMapAPI();
             $result = $api->unfollowUser($this->db, $user_id, $follower_id);
             return $response->withJson($result);

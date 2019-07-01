@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MapFragment mapFragment = new MapFragment();
     View headerView;
     DrawerLayout drawer;
+    MenuItem navLogout;
+    MenuItem navLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +58,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         Menu menuView = navigationView.getMenu();
-        MenuItem navLogout = menuView.findItem(R.id.nav_logout);
+        navLogout = menuView.findItem(R.id.nav_logout);
+        navLogin = menuView.findItem(R.id.nav_login);
         navLogout.setVisible(false);
+        navLogin.setVisible(true);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -156,6 +160,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 navUsername.setText("Not logged in");
                 navEmail.setText(null);
                 Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+                navLogout.setVisible(false);
+                navLogin.setVisible(true);
                 break;
             case R.id.nav_login:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
