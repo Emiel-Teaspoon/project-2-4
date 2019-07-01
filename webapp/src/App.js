@@ -22,6 +22,7 @@ class App extends React.Component {
     logError: "",
     createEvent: false,
     user: [],
+    onlyFriends: false,
   }
 
   componentWillMount() {
@@ -154,6 +155,7 @@ class App extends React.Component {
   };
 
   render() {
+    const map = <EventMap user={this.state.user} onlyFriends={this.state.onlyFriends}/>;
 
     return (
       <Aux>
@@ -167,8 +169,8 @@ class App extends React.Component {
             onRegister={this.registerHandler} 
             isError={this.state.isError} 
             isUserError={this.state.isUserError} 
-            logError={this.state.logError}/> : 
-            <EventMap user={this.state.user} onlyFriends={this.state.onlyFriends}/>
+            logError={this.state.logError}/> : map
+            
           }
         </Layout>
       </Aux>

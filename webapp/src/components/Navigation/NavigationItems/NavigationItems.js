@@ -39,10 +39,9 @@ class NavigationItems extends Component {
         })
         .catch(
         err => {
-            console.log(err);
-            console.log(err.response);
-            this.setState({isLoading: false, isError:true, isUserError:true, logError:"Error " + err.response.status + " " + err.response.data.message});
-        }
+                console.log(err);
+                this.setState({isLoading: false, isError:true, isUserError:true, logError:"Error " + err.response.status + " " + err.response.data.message});
+            }
         );
     }
 
@@ -60,11 +59,9 @@ class NavigationItems extends Component {
             }
         )
         return (
-            <div>
             <List>
                 {friends}
             </List>
-            </div>
         )
     }
 }

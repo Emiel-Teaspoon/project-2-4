@@ -18,19 +18,13 @@ class EventMap extends Component {
         onlyFriends: false,
     }
 
-    shouldComponentUpdate(prevProps, nextProps)
-    {
-        return this.props.onlyFriends !== nextProps.onlyFriends;
+    componentDidUpdate() {
+        this.getEvents();
     }
 
     componentDidMount() {
-        this.setState({token: this.props.user.token});
-        this.setState({onlyFriends: this.props.onlyFriends});
+        this.setState({token: this.props.user.token, onlyFriends: true});
         this.getEvents();
-    }
-    
-    addEventHandler = () => {
-
     }
 
     getIdFromKey = (id) => {
@@ -67,12 +61,17 @@ class EventMap extends Component {
         this.setState({map: map});
     }
 
-    async getEvents () {
-        axios.get(this.state.onlyFriends ? "https://spicymemes.app/eventmap/public/FollowerEvents/" + this.props.user.userId : "https://spicymemes.app/eventmap/public/Events/50", { headers: { Authorization: 'Bearer ' + this.props.user.token }})
+    getEvents () {
+        if(this.props.onlyFriends === this.state.onlyFriends) {
+            return;
+        }
+        this.setState({onlyFriends: this.props.onlyFriends});
+        
+        axios.get((this.props.onlyFriends ? ("https://spicymemes.app/eventmap/public/FollowerEvents/" + this.props.user.userId) : ("https://spicymemes.app/eventmap/public/Events/50")), { headers: { Authorization: 'Bearer ' + this.props.user.token }})
         .then(response => {
             console.log(response.data);
             if(response.data.Code === 200 && response.data.result) {
-                const newEvent = response.data.result.map((event, index) => {
+                const newEvents = response.data.result.map((event, index) => {
                     const eventObject = {
                         id: event.event_ID, 
                         open: false, 
@@ -91,7 +90,10 @@ class EventMap extends Component {
                     };
                     return eventObject;
                 })
-                this.setState({events: newEvent})
+                this.setState({events: newEvents})
+            }
+            else {
+                this.setState({events: []})
             }
         });
     }

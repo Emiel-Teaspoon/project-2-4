@@ -15,7 +15,6 @@ import axios from 'axios';
 import Icon from '@material-ui/icons/Person';
 import AddIcon from '@material-ui/icons/Add';
 import NavigationItem from '../NavigationItems/NavigationItem/NavigationItem';
-import { thisTypeAnnotation } from '@babel/types';
 
 const drawerWidth = 240;
 
