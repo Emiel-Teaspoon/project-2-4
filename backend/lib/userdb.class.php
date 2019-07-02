@@ -134,6 +134,7 @@
             $stmt->bindvalue(':newPassword', $encrypted);
             $stmt->bindvalue(':username', $username);
 
+
             $result = $stmt->execute();
 
             if ($result === true) {
@@ -141,7 +142,7 @@
             }
         }
 
-        function findUserByUsername($username, $userid) {
+        function searchUserByUsername($username, $userid) {
             $sql = "SELECT DISTINCT users.user_id, users.email, users.username, followers.user, followers.follower from users
                 LEFT JOIN followers ON users.user_id = followers.follower
                 WHERE users.username LIKE :username
@@ -170,6 +171,29 @@
             }
 
         }
+        function getUserByUsername($username) {
+           $sql = "SELECT users.*
+                   FROM users
+                   WHERE username = :username";
+           $stmt = $this->conn->prepare($sql);
+
+           $stmt->bindValue(':username', $username, PDO::PARAM_INT);
+
+           $result = $stmt->execute();
+
+           while ($fetch = $stmt->fetch(PDO::FETCH_OBJ)) {
+               $results[] = array(
+                 'user_id' => $fetch->user_id,
+                 'email' => $fetch->email,
+                 'username' => $fetch->username
+               );
+           }
+
+           if($result) {
+               return array('Code' => 200, 'Message' => 'Success', 'result' => $results);
+           }
+           return array('Code' => 403, 'Message' => 'Error');
+       }
 	       function getUserByUserID($user_id) {
             $sql = "SELECT users.*
                     FROM users

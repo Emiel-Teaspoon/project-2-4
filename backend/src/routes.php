@@ -38,7 +38,7 @@ return function (App $app) {
     });
 
     $app->post('/login', function (Request $request, Response $response) {
-	$data = $request->getParsedBody();
+	      $data = $request->getParsedBody();
         $username = $data['username'];
         $password = $data['password'];
         $settings = $this->get('settings');
@@ -53,7 +53,14 @@ return function (App $app) {
         $userid = $args['userid'];
 
         $api = new EventMapAPI();
-        $result = $api->findUserByUsername($this->db, $username, $userid);
+        $result = $api->searchUserByUsername($this->db, $username, $userid);
+        return $response->withJson($result);
+    });
+    $app->get('/findUserByUsername/{username}', function (Request $request, Response $response, $args) {
+        $username = $args['username'];
+
+        $api = new EventMapAPI();
+        $result = $api->getUserByUsername($this->db, $username);
         return $response->withJson($result);
     });
 
@@ -66,7 +73,7 @@ return function (App $app) {
     });
 
     $app->post('/addEvent', function (Request $request, Response $response) {
-	$data = $request->getParsedBody();
+	      $data = $request->getParsedBody();
         $title = $data['title'];
         $description = $data['description'];
         $img = $data['img'];

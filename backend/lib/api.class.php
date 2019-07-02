@@ -37,10 +37,17 @@
             return $stmt;
         }
 
-        function findUserByUsername($dbo, $username, $userid) {
+        function searchUserByUsername($dbo, $username, $userid) {
             $db = new UserDB($dbo);
 
-            $stmt = $db->findUserByUsername($username, $userid);
+            $stmt = $db->searchUserByUsername($username, $userid);
+            $db->closeConnection();
+            return $stmt;
+        }
+        function getUserByUsername($dbo, $username) {
+            $db = new UserDB($dbo);
+
+            $stmt = $db->getUserByUsername($username);
             $db->closeConnection();
             return $stmt;
         }

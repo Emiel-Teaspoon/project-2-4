@@ -49,12 +49,11 @@ public class AddFriendFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String zoekopdracht = text.getText().toString() +"/" +MainActivity.app.getUser_id();
+                String zoekopdracht = text.getText().toString();
+                int user_id = MainActivity.app.getUser_id();
                 Log.d("zoekopdracht", zoekopdracht);
 
-                ApiClient.getUserByUsername(getContext(), zoekopdracht, new Response.Listener<JSONObject>() {
-                    String naam = zoekopdracht;
-
+                ApiClient.searchUserByUsername(getContext(), zoekopdracht,user_id, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("response", response.toString());
