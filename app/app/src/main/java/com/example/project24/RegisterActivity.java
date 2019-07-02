@@ -106,6 +106,7 @@ public class RegisterActivity extends Fragment {
             return false;
         } else  {
             passwordText.setError(null);
+            passwordRepeatText.setError(null);
             return true;
         }
     }

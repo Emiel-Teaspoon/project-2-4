@@ -15,10 +15,13 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.regex.Pattern;
 
@@ -27,9 +30,9 @@ public class AccountActivity extends Fragment {
     private View mView;
 
     private View passwordResetView;
-    private EditText currentPW;
-    private EditText newPWOne;
-    private EditText newPWTwo;
+    private TextInputLayout currentPW;
+    private TextInputLayout newPWOne;
+    private TextInputLayout newPWTwo;
     private Button passwordResetCancelButton;
     private Button passwordResetAcceptButton;
 
@@ -79,7 +82,7 @@ public class AccountActivity extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mView.getContext());
-                dialogBuilder.setTitle("Wijzig uw wachtwoord");
+                dialogBuilder.setTitle("Change Password");
                 dialogBuilder.setCancelable(false);
 
                 initPopUpViewControls();
@@ -95,21 +98,21 @@ public class AccountActivity extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         passwordResetView = inflater.inflate(R.layout.password_reset_window, null);
 
-        currentPW = passwordResetView.findViewById(R.id.currentPW);
-        newPWOne = passwordResetView.findViewById(R.id.newPWOne);
-        newPWTwo = passwordResetView.findViewById(R.id.newPWTwo);
+        currentPW = passwordResetView.getRootView().findViewById(R.id.currentPW);
+        newPWOne = passwordResetView.getRootView().findViewById(R.id.newPWOne);
+        newPWTwo = passwordResetView.getRootView().findViewById(R.id.newPWTwo);
 
-        passwordResetCancelButton = passwordResetView.findViewById(R.id.passwordResetCancel);
-        passwordResetAcceptButton = passwordResetView.findViewById(R.id.passwordResetAccept);
+        passwordResetCancelButton = passwordResetView.getRootView().findViewById(R.id.passwordResetCancel);
+        passwordResetAcceptButton = passwordResetView.getRootView().findViewById(R.id.passwordResetAccept);
     }
 
     private void initPopupOnClickListeners(final AlertDialog dialog) {
         passwordResetAcceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String current = currentPW.getText().toString();
-                String newOne = newPWOne.getText().toString();
-                String newTwo = newPWTwo.getText().toString();
+                String current = currentPW.getEditText().getText().toString();
+                String newOne = newPWOne.getEditText().getText().toString();
+                String newTwo = newPWTwo.getEditText().getText().toString();
 
                 if (validPasswordCheck(current, newOne, newTwo)) {
                     ApiClient.changeUserPassword(getContext(), MainActivity.app.getUserName(), current, newOne, new Response.Listener<JSONObject>() {
@@ -138,32 +141,29 @@ public class AccountActivity extends Fragment {
 
     private boolean validPasswordCheck(String current, String pwOne, String pwTwo) {
         Pattern pattern = RegisterActivity.PASSWORD_PATTERN;
-        boolean valid = true;
         if (current.isEmpty()) {
-            toaster("Vul AUB uw huidige wachtwoord in.");
+            currentPW.setError("No current password");
             return false;
-        }
-        if (pwOne.isEmpty()) {
-            toaster("Vul AUB een nieuwe wachtwoord in");
+        } else if (pwOne.isEmpty()) {
+            newPWOne.setError("No new password");
             return false;
-        }
-        if (pwTwo.isEmpty()) {
-            toaster("Herhaal AUB uw nieuwe wachtwoord.");
+        } else if (pwTwo.isEmpty()) {
+            newPWTwo.setError("Repeat new password");
             return false;
-        }
-        if (!pwOne.equals(pwTwo)) {
-            toaster("De wachtwoorden zijn niet gelijk");
-            valid = false;
-        }
-        if (!valid || !pattern.matcher(pwOne).matches()) {
-            toaster("Het wachtwoord voldoet niet aan de eisen");
+        } else if (!pwOne.equals(pwTwo)) {
+            newPWTwo.setError("Passwords are not equal");
             return false;
+        } else if (!pattern.matcher(pwOne).matches()) {
+            newPWOne.setError("Password does not meet criteria");
+            return false;
+        } else {
+            currentPW.setError(null);
+            newPWOne.setError(null);
+            newPWTwo.setError(null);
+            return true;
         }
-        return true;
     }
 
-    private void toaster(String toastText) {
-        Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
-    }
+
 
 }

@@ -104,7 +104,7 @@
         }
 
         function getEventsByEventID($event_id) {
-            $sql = "SELECT events*, users.username
+            $sql = "SELECT events.*, users.username
                     FROM events 
                     INNER JOIN users ON events.event_owner = users.user_id
                     WHERE event_id = :event_id";

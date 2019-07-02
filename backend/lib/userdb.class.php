@@ -111,7 +111,7 @@
         }
 
         function changePassword($username, $oldPassword, $newPassword) {
-            $sql = "UPDATE users SET password = :newPassword WHERE username = :username AND password = :oldPassword";
+            $sql = "UPDATE users SET password = :newPassword WHERE username = :username";
             $stmt = $this->conn->prepare($sql);
 
             $key = 'Some key for encoding';
@@ -133,7 +133,6 @@
 
             $stmt->bindvalue(':newPassword', $encrypted);
             $stmt->bindvalue(':username', $username);
-            $stmt->bindvalue(':oldPassword', $oldPassword);
 
             $result = $stmt->execute();
 

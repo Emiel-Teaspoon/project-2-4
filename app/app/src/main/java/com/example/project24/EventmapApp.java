@@ -1,7 +1,6 @@
 package com.example.project24;
 
 import android.app.Application;
-import android.util.Log;
 
 public class EventmapApp extends Application {
 
@@ -30,12 +29,10 @@ public class EventmapApp extends Application {
     }
 
     public String getApiKey() {
-        Log.d("api",""+ ApiKey);
         return ApiKey;
     }
 
     public int getUser_id() {
-        Log.d("user",""+user_id);
         return user_id;
     }
 
@@ -43,8 +40,8 @@ public class EventmapApp extends Application {
     public void setJWT(String jwt){
         JWT = jwt;
     }
+
     public String getJWT(){
-        Log.d("jwt",""+JWT);
         return JWT;
     }
 
