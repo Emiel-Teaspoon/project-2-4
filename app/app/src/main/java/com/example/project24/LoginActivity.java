@@ -56,8 +56,11 @@ public class LoginActivity extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JWTResponse = response.getString("token");
                             messageResponse = response.getString("Message");
+                        }
+                        catch (JSONException ex){}
+                        try {
+                            JWTResponse = response.getString("token");
                             userIDResponse = Integer.parseInt(response.getString("UserID"));
                             usernameResponse = response.getString("Username");
                             emailResponse = response.getString("Email");
@@ -66,13 +69,13 @@ public class LoginActivity extends Fragment {
                         catch (JSONException ex){}
                         Toast.makeText(getContext(),messageResponse,Toast.LENGTH_SHORT).show();
                         Log.d("Login Response", response.toString());
-                        MainActivity.app.setJWT(JWTResponse);
-                        MainActivity.app.setUser(userIDResponse,usernameResponse,APIKeyResponse);
-                        MainActivity.app.setLoggedIn(true);
-                        updateNavHeader(usernameResponse,emailResponse);
-                        updateNavItems();
 
                         if (messageResponse.equals("Success")){
+                            MainActivity.app.setJWT(JWTResponse);
+                            MainActivity.app.setUser(userIDResponse,usernameResponse,APIKeyResponse);
+                            MainActivity.app.setLoggedIn(true);
+                            updateNavHeader(usernameResponse,emailResponse);
+                            updateNavItems();
                             getFragmentManager().popBackStack();
                         }
                     }
