@@ -23,3 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 webapp/src/hoc/Aux.js
 webapp/node_modules/
+.idea/vcs.xml
+.idea/project-2-4.iml
+.idea/modules.xml
+.idea/workspace.xml
+.idea/encodings.xml
+.gitignore
