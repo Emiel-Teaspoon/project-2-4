@@ -65,7 +65,7 @@ public class EventActivity extends Fragment {
                         eventnaam.setText(EventInfoObject.getString("title"));
                         eventbegin.setText(EventInfoObject.getString("eventStartDT"));
                         eventeinde.setText(EventInfoObject.getString("eventEndDT"));
-                        eventmaker.setText(EventInfoObject.getString("event_owner"));
+                        eventmaker.setText(EventInfoObject.getString("username"));
                         eventbeschrijvig.setText(EventInfoObject.getString("description"));
                         double langi = Double.parseDouble(EventInfoObject.getString("latitude"));
                         double longi = Double.parseDouble(EventInfoObject.getString("longitude"));
