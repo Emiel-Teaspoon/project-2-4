@@ -87,6 +87,7 @@ public class FriendDetailActivity extends Fragment {
             public void onResponse(JSONObject response) {
                 Log.d("Friend Detail response", response.toString());
                 try {
+
                     JSONArray result = response.getJSONArray("result");
                     for (int i = 0; i < result.length(); i++) {
                         JSONObject eventObject = result.getJSONObject(i);

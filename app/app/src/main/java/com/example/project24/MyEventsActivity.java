@@ -30,7 +30,7 @@ import java.util.List;
 
 public class MyEventsActivity extends Fragment {
     public static final String EXTRA_MYEVENT = "com.example.project2.4.MYEVENTNAAM";
-    public ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
+    public ArrayList<HashMap<String,String>> list;
     private SimpleAdapter sa;
 
     @Override
@@ -42,14 +42,17 @@ public class MyEventsActivity extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final ListView listView = getView().findViewById(R.id.myEventsListView);
         final TextView textView = getView().findViewById(R.id.noMyEventsText);
+        list = new ArrayList<HashMap<String,String>>();
 
         ApiClient.getEventsById(getContext(), MainActivity.app.getUser_id(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("response", response.toString());
-                textView.setVisibility(View.INVISIBLE);
                 try {
-                    JSONArray result = response.getJSONArray("result");
+                    if (!response.getString("result").equals("null")) {
+                        textView.setVisibility(View.INVISIBLE);
+
+                        JSONArray result = response.getJSONArray("result");
                         for (int i = 0; i < result.length(); i++) {
                             JSONObject friendsEventsObject = result.getJSONObject(i);
                             HashMap<String, String> item = new HashMap<String, String>();
@@ -59,18 +62,21 @@ public class MyEventsActivity extends Fragment {
 
                         }
 
+
+                        sa = new SimpleAdapter(getContext(), list,
+                                R.layout.twolines,
+                                new String[]{"naam", "event_ID"},
+                                new int[]{R.id.line_one, R.id.line_two});
+
+                        listView.setAdapter(sa);
+                    } else {
+                        textView.setVisibility(View.VISIBLE);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                        textView.setVisibility(View.VISIBLE);
                 }
-                sa = new SimpleAdapter(getContext(), list,
-                        R.layout.twolines,
-                        new String[] { "naam","event_ID"},
-                        new int[] {R.id.line_one, R.id.line_two});
-
-                listView.setAdapter(sa);
             }
-        }, new Response.ErrorListener() {
+            }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Error", ""+ error);
