@@ -49,6 +49,7 @@ public class AddFriendFragment extends Fragment {
                 String zoekopdracht = text.getText().toString();
                 int user_id = MainActivity.app.getUser_id();
                 Log.d("zoekopdracht", zoekopdracht);
+                list.clear();
 
                 ApiClient.searchUserByUsername(getContext(), zoekopdracht,user_id, new Response.Listener<JSONObject>() {
                     @Override
@@ -56,12 +57,16 @@ public class AddFriendFragment extends Fragment {
                         Log.d("response", response.toString());
                         try {
                             JSONArray result = response.getJSONArray("result");
-                            JSONObject friendsEventsObject = result.getJSONObject(0);
-                            HashMap<String, String> item = new HashMap<String, String>();
-                            item.put("naam", friendsEventsObject.getString("username"));
-                            item.put("user_id", friendsEventsObject.getString("user_id"));
-                            list.add(item);
-
+                            for (int i = 0; i < result.length(); i++) {
+                                JSONObject friendsEventsObject = result.getJSONObject(i);
+                                HashMap<String, String> item = new HashMap<String, String>();
+                                if (!friendsEventsObject.getString("username").equals(MainActivity.app.getUserName()) && friendsEventsObject.getBoolean("isFollowing") == false) {
+                                    Log.d("isfollowing", Boolean.toString(friendsEventsObject.getBoolean("isFollowing")));
+                                    item.put("naam", friendsEventsObject.getString("username"));
+                                    item.put("user_id", friendsEventsObject.getString("user_id"));
+                                    list.add(item);
+                                }
+                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();

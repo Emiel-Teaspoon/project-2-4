@@ -1,53 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddFriendFragment">
+    android:paddingTop="60dp">
 
 
     <EditText
         android:id="@+id/addFriendsEditText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@id/addFriendsListView"
-        app:layout_constraintEnd_toStartOf="@id/addFriendsButton3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignParentTop="true"
+
+        android:inputType="textPersonName" />
 
     <Button
         android:id="@+id/addFriendsButton3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:text="zoeken"
-        app:layout_constraintBottom_toTopOf="@id/addFriendsListView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignRight="@id/addFriendsEditText"
+        android:layout_alignParentTop="true"
+        android:text="zoeken" />
 
 
     <ListView
         android:id="@+id/addFriendsListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addFriendsEditText"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp"
-        android:divider="#00000000"
-        android:dividerHeight="16dp"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginTop="@dimen/nav_header_vertical_spacing"
+        android:layout_below="@id/addFriendsEditText" />
+</RelativeLayout>
