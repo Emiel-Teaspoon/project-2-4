@@ -36,7 +36,8 @@ public class FriendsEventsFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final ListView listView = getView().findViewById(R.id.friendsEventsListView);
-        final TextView textView = getView().findViewById(R.id.noFriendsEventsText);
+        TextView emptyListText = getView().findViewById(R.id.noFriendsEventsText);
+        listView.setEmptyView(emptyListText);
         list = new ArrayList<HashMap<String,String>>();
 
         ApiClient.getFriendsEvents(getContext(), MainActivity.app.getUser_id(), new Response.Listener<JSONObject>() {
@@ -45,7 +46,6 @@ public class FriendsEventsFragment extends Fragment {
                 Log.d("response", response.toString());
                 try {
                     if(!response.getString("result").equals("null")){
-                        textView.setVisibility(View.INVISIBLE);
                         JSONArray result = response.getJSONArray("result");
                             for (int i = 0; i < result.length(); i++) {
                                 JSONObject friendsEventsObject = result.getJSONObject(i);
@@ -62,8 +62,6 @@ public class FriendsEventsFragment extends Fragment {
                                 new int[] {R.id.line_one, R.id.line_two});
 
                         listView.setAdapter(sa);
-                    } else{
-                        textView.setVisibility(View.VISIBLE);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

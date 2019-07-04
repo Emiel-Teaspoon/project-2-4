@@ -78,6 +78,8 @@ public class FriendDetailFragment extends Fragment {
         friendEventLabel.setText(eventLabel);
 
         final ListView listView = getView().findViewById(R.id.detailEvents);
+        TextView emptyViewText = getView().findViewById(R.id.noFriendEventsText);
+        listView.setEmptyView(emptyViewText);
 
         ApiClient.getFriendEvents(getContext(), friend, new Response.Listener<JSONObject>() {
             @Override

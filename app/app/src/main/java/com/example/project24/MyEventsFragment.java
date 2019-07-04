@@ -36,6 +36,7 @@ public class MyEventsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final ListView listView = getView().findViewById(R.id.myEventsListView);
         final TextView textView = getView().findViewById(R.id.noMyEventsText);
+        listView.setEmptyView(textView);
         list = new ArrayList<HashMap<String,String>>();
 
         ApiClient.getEventsById(getContext(), MainActivity.app.getUser_id(), new Response.Listener<JSONObject>() {

@@ -2,31 +2,41 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="60dp">
+    android:layout_height="match_parent">
 
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/linearAddFriend"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_alignParentTop="true"
+    android:layout_centerVertical="true">
     <EditText
         android:id="@+id/addFriendsEditText"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-
+        android:layout_weight="1"
         android:inputType="textPersonName" />
 
     <Button
         android:id="@+id/addFriendsButton3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@id/addFriendsEditText"
-        android:layout_alignParentTop="true"
-        android:text="zoeken" />
-
+        android:layout_weight="0.1"
+        android:text="Search" />
+</LinearLayout>
 
     <ListView
         android:id="@+id/addFriendsListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/nav_header_vertical_spacing"
-        android:layout_below="@id/addFriendsEditText" />
+        android:layout_below="@id/linearAddFriend"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

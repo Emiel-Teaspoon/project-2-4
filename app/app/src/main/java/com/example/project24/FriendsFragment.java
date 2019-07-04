@@ -9,12 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,8 +23,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class FriendsFragment extends Fragment {
-
-    public final static String EXTRA_FRIEND = "com.example.project24.FRIEND";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,8 +34,9 @@ public class FriendsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final ListView listView = getView().findViewById(R.id.friendsListView);
         ArrayList<String> friendsList = new ArrayList<>();
-        final TextView textView = getView().findViewById(R.id.noFriendsText);
-        Button addFriendsButton = getView().findViewById(R.id.addFriendsButton);
+        TextView emptyListText = getView().findViewById(R.id.noFriendsText);
+        listView.setEmptyView(emptyListText);
+        FloatingActionButton addFriendsButton = getView().findViewById(R.id.addFriendsButton);
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getContext(),
                 android.R.layout.simple_list_item_1,
@@ -49,7 +48,6 @@ public class FriendsFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("FriendList Response", response.toString());
-                textView.setVisibility(View.INVISIBLE);
                 try {
                     JSONArray result = response.getJSONArray("result");
                     for (int i = 0; i < result.length(); i++) {
@@ -58,7 +56,6 @@ public class FriendsFragment extends Fragment {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    textView.setVisibility(View.VISIBLE);
                 }
             }
         }, new Response.ErrorListener() {
