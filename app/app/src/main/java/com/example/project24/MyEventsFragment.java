@@ -1,9 +1,6 @@
 package com.example.project24;
 
-import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -24,18 +20,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
-public class MyEventsActivity extends Fragment {
+public class MyEventsFragment extends Fragment {
     public static final String EXTRA_MYEVENT = "com.example.project2.4.MYEVENTNAAM";
     public ArrayList<HashMap<String,String>> list;
     private SimpleAdapter sa;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_my_events, container, false);
+        return inflater.inflate(R.layout.fragment_my_events, container, false);
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -91,11 +85,11 @@ public class MyEventsActivity extends Fragment {
                 String[] firstStep= eventnaam.split(",");
                 String[] secondStep = firstStep[0].split("=");
                 String eventId= secondStep[1];
-                EventActivity eventActivity = new EventActivity();
+                EventFragment eventFragment = new EventFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("event_id",eventId);
-                eventActivity.setArguments(bundle);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,eventActivity).addToBackStack(null).commit();
+                eventFragment.setArguments(bundle);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, eventFragment).addToBackStack(null).commit();
                     }
             });
     }

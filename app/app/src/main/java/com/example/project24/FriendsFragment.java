@@ -1,7 +1,5 @@
 package com.example.project24;
 
-import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
@@ -24,13 +22,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class FriendsActivity extends Fragment {
+public class FriendsFragment extends Fragment {
 
     public final static String EXTRA_FRIEND = "com.example.project24.FRIEND";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_friends, container, false);
+        return inflater.inflate(R.layout.fragment_friends, container, false);
     }
 
     @Override
@@ -74,11 +72,11 @@ public class FriendsActivity extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 String friend = (String) listView.getItemAtPosition(pos);
-                FriendDetailActivity friendDetailActivity = new FriendDetailActivity();
+                FriendDetailFragment friendDetailFragment = new FriendDetailFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("friend_name",friend);
-                friendDetailActivity.setArguments(bundle);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,friendDetailActivity).addToBackStack(null).commit();
+                friendDetailFragment.setArguments(bundle);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, friendDetailFragment).addToBackStack(null).commit();
 
             }
         });

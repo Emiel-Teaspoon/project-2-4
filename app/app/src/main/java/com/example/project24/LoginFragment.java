@@ -3,7 +3,7 @@ package com.example.project24;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +21,7 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class LoginActivity extends Fragment {
+public class LoginFragment extends Fragment {
     private Button loginButton;
     private Button registerButton;
     private TextInputLayout usernameText;
@@ -37,7 +37,7 @@ public class LoginActivity extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_login, container, false);
+        return inflater.inflate(R.layout.fragment_login, container, false);
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -90,8 +90,8 @@ public class LoginActivity extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RegisterActivity registerActivity = new RegisterActivity();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,registerActivity).addToBackStack(null).commit();
+                RegisterFragment registerFragment = new RegisterFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,registerFragment).addToBackStack(null).commit();
             }
         });
 

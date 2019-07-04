@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 import java.util.regex.Pattern;
 
-public class AccountActivity extends Fragment {
+public class AccountFragment extends Fragment {
 
     private View mView;
 
@@ -35,7 +35,7 @@ public class AccountActivity extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.activity_account, container, false);
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
         mView = view;
         return view;
     }
@@ -136,7 +136,7 @@ public class AccountActivity extends Fragment {
     }
 
     private boolean validPasswordCheck(String current, String pwOne, String pwTwo) {
-        Pattern pattern = RegisterActivity.PASSWORD_PATTERN;
+        Pattern pattern = RegisterFragment.PASSWORD_PATTERN;
         if (current.isEmpty()) {
             currentPW.setError("No current password");
             return false;

@@ -1,7 +1,5 @@
 package com.example.project24;
 
-import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.location.Address;
@@ -24,7 +22,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class EventActivity extends Fragment {
+public class EventFragment extends Fragment {
     String naam;
     int id;
     int event_ID;
@@ -36,7 +34,7 @@ public class EventActivity extends Fragment {
     TextView eventbeschrijvig;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_event, container, false);
+        return inflater.inflate(R.layout.fragment_event, container, false);
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

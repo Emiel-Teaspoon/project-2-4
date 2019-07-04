@@ -1,6 +1,6 @@
 package com.example.project24;
 
-import android.app.DownloadManager;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -16,7 +16,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.project24.MainActivity.app;
 
 class ApiClient {
 

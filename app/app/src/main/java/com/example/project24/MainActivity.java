@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.fragment_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -47,11 +47,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 if(app.isLoggedIn()) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new AccountActivity()).addToBackStack(null).commit();
+                            new AccountFragment()).addToBackStack(null).commit();
                     drawer.closeDrawer(GravityCompat.START);
                 } else{
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new LoginActivity()).addToBackStack(null).commit();
+                            new LoginFragment()).addToBackStack(null).commit();
                     Toast.makeText(getBaseContext(), "Not logged in", Toast.LENGTH_SHORT).show();
                     drawer.closeDrawer(GravityCompat.START);
                 }
@@ -123,30 +123,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_myEvents:
                 if(app.isLoggedIn()) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new MyEventsActivity()).addToBackStack(null).commit();
+                        new MyEventsFragment()).addToBackStack(null).commit();
                 } else{
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new LoginActivity()).addToBackStack(null).commit();
+                            new LoginFragment()).addToBackStack(null).commit();
                     Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.nav_friendsEvents:
                 if(app.isLoggedIn()) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new FriendsEventsActivity()).addToBackStack(null).commit();
+                        new FriendsEventsFragment()).addToBackStack(null).commit();
                 } else{
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new LoginActivity()).addToBackStack(null).commit();
+                            new LoginFragment()).addToBackStack(null).commit();
                     Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.nav_friends:
                 if(app.isLoggedIn()) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new FriendsActivity()).addToBackStack(null).commit();
+                        new FriendsFragment()).addToBackStack(null).commit();
                 } else{
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new LoginActivity()).addToBackStack(null).commit();
+                            new LoginFragment()).addToBackStack(null).commit();
                     Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_login:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new LoginActivity()).addToBackStack(null).commit();
+                        new LoginFragment()).addToBackStack(null).commit();
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);

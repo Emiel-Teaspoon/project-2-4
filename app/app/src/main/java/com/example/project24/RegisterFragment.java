@@ -1,7 +1,7 @@
 package com.example.project24;
 
 import com.google.android.material.textfield.TextInputLayout;
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 import java.util.regex.Pattern;
 
-public class RegisterActivity extends Fragment {
+public class RegisterFragment extends Fragment {
     static final Pattern PASSWORD_PATTERN =
             Pattern.compile("^" +
                     //"(?=.*[0-9])" +         //at least 1 digit
@@ -48,7 +48,7 @@ public class RegisterActivity extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_register, container, false);
+        return inflater.inflate(R.layout.fragment_register, container, false);
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

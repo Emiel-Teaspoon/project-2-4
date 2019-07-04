@@ -1,7 +1,5 @@
 package com.example.project24;
 
-import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
@@ -10,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -25,7 +22,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FriendDetailActivity extends Fragment {
+public class FriendDetailFragment extends Fragment {
 
     String friend;
     public ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
@@ -33,7 +30,7 @@ public class FriendDetailActivity extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_friend_detail, container, false);
+        return inflater.inflate(R.layout.fragment_friend_detail, container, false);
     }
 
     @Override
@@ -120,11 +117,11 @@ public class FriendDetailActivity extends Fragment {
                 String[] firstStep= eventnaam.split(",");
                 String[] secondStep = firstStep[0].split("=");
                 String eventId= secondStep[1];
-                EventActivity eventActivity = new EventActivity();
+                EventFragment eventFragment = new EventFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("event_id",eventId);
-                eventActivity.setArguments(bundle);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,eventActivity).addToBackStack(null).commit();
+                eventFragment.setArguments(bundle);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, eventFragment).addToBackStack(null).commit();
             }
         });
     }
