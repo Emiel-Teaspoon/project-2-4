@@ -25,6 +25,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,6 +47,7 @@ public class EventFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_event, container, false);
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -61,44 +65,74 @@ public class EventFragment extends Fragment {
         if (bundle != null) {
             event_ID = Integer.valueOf(bundle.getString("event_id"));
 
-            ApiClient.getEventByEventID(getContext(),event_ID, new Response.Listener<JSONObject>() {
+            ApiClient.getEventByEventID(getContext(), event_ID, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.d("response", response.toString());
                     try {
                         JSONArray result = response.getJSONArray("result");
                         JSONObject EventInfoObject = result.getJSONObject(0);
-                        Log.d("result",EventInfoObject.toString());
+                        Log.d("result", EventInfoObject.toString());
+
                         eventNaam.setText(EventInfoObject.getString("title"));
-                        eventBegin.setText(EventInfoObject.getString("eventStartDT"));
+
+                        String eventStart = EventInfoObject.getString("eventStartDT");
+                        String formattedDate = parseDateTime(eventStart);
+                        eventBegin.setText(formattedDate);
+
+                        String eventEnd = EventInfoObject.getString("eventEndDT");
+                        String formattedDate2 = parseDateTime(eventEnd);
+                        eventEinde.setText(formattedDate2);
+
                         new DownloadImageTask(eventImage).execute(EventInfoObject.getString("image"));
-                        eventEinde.setText(EventInfoObject.getString("eventEndDT"));
+
                         eventMaker.setText(EventInfoObject.getString("username"));
+
                         eventBeschrijvig.setText(EventInfoObject.getString("description"));
+
                         double langi = Double.parseDouble(EventInfoObject.getString("latitude"));
                         double longi = Double.parseDouble(EventInfoObject.getString("longitude"));
-                        Geocoder coder;
-                        List<Address> address;
-                        coder = new Geocoder(getContext(), Locale.getDefault());
-                        address = coder.getFromLocation(langi,longi,1);
-                        String adres = address.get(0).getAddressLine(0);
-                        eventAdres.setText(adres);
+                        eventAdres.setText(parseCoordinates(langi,longi));
 
 
                     } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e("Error", ""+ error);
+                    Log.e("Error", "" + error);
                 }
             });
+        }
     }
-}
-
+    public String parseDateTime(String datumTime){
+        String datum = "";
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(datumTime);
+            String formattedDate = new SimpleDateFormat("EEEE, d MMMM yyyy HH:mm z", new Locale("en","nl")).format(date);
+            String splittedDate[] = formattedDate.split(" ");
+            datum = splittedDate[0]+" " + splittedDate[1]+" " + splittedDate[2]+" " + splittedDate[3]+"\n" + splittedDate[4]+" " + splittedDate[5]+ "\n";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return datum;
+    }
+    public String parseCoordinates(Double langi, Double longi){
+        String stringReturn = "";
+        try {
+            Geocoder coder;
+            List<Address> address;
+            coder = new Geocoder(getContext(), Locale.getDefault());
+            address = coder.getFromLocation(langi, longi, 1);
+            String adres = address.get(0).getAddressLine(0);
+            String splittedDate[] = adres.split(",");
+            stringReturn = " "+splittedDate[0]+ "\n" + splittedDate[1]+ "\n" + splittedDate[2]+ "\n";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stringReturn;
+    }
 
 }

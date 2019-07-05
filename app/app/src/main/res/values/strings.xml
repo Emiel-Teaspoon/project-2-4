@@ -18,11 +18,11 @@
     <string name="menu_addfriends">Add Friend</string>
 
 
-    <string name="event_name">Name</string>
-    <string name="event_adres">Adres</string>
-    <string name="event_begin">Start Time</string>
-    <string name="event_einde">End Time</string>
-    <string name="event_maker">Organisor</string>
+    <string name="event_name">Name:</string>
+    <string name="event_adres">Address:</string>
+    <string name="event_begin">Start Time:</string>
+    <string name="event_einde">End Time:</string>
+    <string name="event_maker">organizer:</string>
 
 
     <!--Login Activity-->
