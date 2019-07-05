@@ -132,7 +132,7 @@ class ApiClient {
         HashMap<String, String> hmap = new HashMap<>();
         hmap.put("title", title);
         hmap.put("description", description);
-        hmap.put("img", "/img/");
+        hmap.put("img", "https://spicymemes.app/eventimage/default.jpg");
         hmap.put("latd", latitude.toString());
         hmap.put("lotd", longitude.toString());
         hmap.put("attendees", "0");

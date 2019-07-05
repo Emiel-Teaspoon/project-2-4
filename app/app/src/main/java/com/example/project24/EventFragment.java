@@ -2,13 +2,17 @@ package com.example.project24;
 
 import androidx.fragment.app.Fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -19,6 +23,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,12 +32,14 @@ public class EventFragment extends Fragment {
     String naam;
     int id;
     int event_ID;
-    TextView eventnaam;
-    TextView eventadres;
-    TextView eventbegin;
-    TextView eventeinde;
-    TextView eventmaker;
-    TextView eventbeschrijvig;
+    private TextView eventNaam;
+    private TextView eventAdres;
+    private TextView eventBegin;
+    private TextView eventEinde;
+    private TextView eventMaker;
+    private TextView eventBeschrijvig;
+    private ImageView eventImage;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_event, container, false);
@@ -40,12 +48,13 @@ public class EventFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        eventnaam = getView().findViewById(R.id.textView28);
-        eventadres = getView().findViewById(R.id.textView30);
-        eventbegin = getView().findViewById(R.id.textView32);
-        eventeinde = getView().findViewById(R.id.textView34);
-        eventmaker = getView().findViewById(R.id.textView36);
-        eventbeschrijvig = getView().findViewById(R.id.textView26);
+        eventNaam = getView().findViewById(R.id.textView28);
+        eventAdres = getView().findViewById(R.id.textView30);
+        eventBegin = getView().findViewById(R.id.textView32);
+        eventEinde = getView().findViewById(R.id.textView34);
+        eventMaker = getView().findViewById(R.id.textView36);
+        eventImage = getView().findViewById(R.id.eventImage);
+        eventBeschrijvig = getView().findViewById(R.id.textView26);
 
 
         Bundle bundle = this.getArguments();
@@ -60,11 +69,12 @@ public class EventFragment extends Fragment {
                         JSONArray result = response.getJSONArray("result");
                         JSONObject EventInfoObject = result.getJSONObject(0);
                         Log.d("result",EventInfoObject.toString());
-                        eventnaam.setText(EventInfoObject.getString("title"));
-                        eventbegin.setText(EventInfoObject.getString("eventStartDT"));
-                        eventeinde.setText(EventInfoObject.getString("eventEndDT"));
-                        eventmaker.setText(EventInfoObject.getString("username"));
-                        eventbeschrijvig.setText(EventInfoObject.getString("description"));
+                        eventNaam.setText(EventInfoObject.getString("title"));
+                        eventBegin.setText(EventInfoObject.getString("eventStartDT"));
+                        new DownloadImageTask(eventImage).execute(EventInfoObject.getString("image"));
+                        eventEinde.setText(EventInfoObject.getString("eventEndDT"));
+                        eventMaker.setText(EventInfoObject.getString("username"));
+                        eventBeschrijvig.setText(EventInfoObject.getString("description"));
                         double langi = Double.parseDouble(EventInfoObject.getString("latitude"));
                         double longi = Double.parseDouble(EventInfoObject.getString("longitude"));
                         Geocoder coder;
@@ -72,7 +82,7 @@ public class EventFragment extends Fragment {
                         coder = new Geocoder(getContext(), Locale.getDefault());
                         address = coder.getFromLocation(langi,longi,1);
                         String adres = address.get(0).getAddressLine(0);
-                        eventadres.setText(adres);
+                        eventAdres.setText(adres);
 
 
                     } catch (JSONException e) {
@@ -89,4 +99,6 @@ public class EventFragment extends Fragment {
             });
     }
 }
+
+
 }
