@@ -43,7 +43,7 @@ public class FriendDetailFragment extends Fragment {
         }
 
         TextView friendNameLabel = getView().findViewById(R.id.nameLabel);
-        String nameLabel = "Naam:";
+        String nameLabel = "Name:";
         friendNameLabel.setText(nameLabel);
 
         TextView friendName = getView().findViewById(R.id.friendName);
@@ -74,7 +74,7 @@ public class FriendDetailFragment extends Fragment {
         });
 
         TextView friendEventLabel = getView().findViewById(R.id.eventLabel);
-        String eventLabel = "Events van " + friend;
+        String eventLabel = "The events of " + friend;
         friendEventLabel.setText(eventLabel);
 
         final ListView listView = getView().findViewById(R.id.detailEvents);
