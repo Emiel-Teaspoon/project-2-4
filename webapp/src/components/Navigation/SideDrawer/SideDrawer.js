@@ -108,7 +108,7 @@ class SideDrawer extends Component {
   clickUser = (id) => {
     console.log("Remove " + id);
     console.log(this.state.user);
-    axios.delete('https://spicymemes.app/eventmap/public/unfollowUser/' + this.state.user.user_id + '/' + id, { headers: { Authorization: 'Bearer ' + this.state.user.token }})
+    axios.delete('https://spicymemes.app/eventmap/public/unfollowUser/' + this.state.user.userId + '/' + id, { headers: { Authorization: 'Bearer ' + this.state.user.token }})
     .then(res => {
       console.log(res);
     })
