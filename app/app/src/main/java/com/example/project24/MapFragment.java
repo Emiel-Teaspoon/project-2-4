@@ -11,6 +11,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ import androidx.core.content.ContextCompat;
 
 import androidx.fragment.app.Fragment;
 
+import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.android.volley.Response;
@@ -65,6 +69,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -112,6 +117,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
             @Override
             public void onClick(View view) {
                 loadMarkers();
+                polyline.remove();
             }
         });
     }
@@ -215,11 +221,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
         mMap.setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {
             @Override
             public void onInfoWindowLongClick(Marker marker) {
-                LatLng origin = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-                LatLng destination = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
-                String url = getDirectionsUrl(origin, destination);
-                DownloadTask downloadTask = new DownloadTask();
-                downloadTask.execute(url);
+                if (isLocationEnabled(getContext())) {
+                    LatLng origin = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                    LatLng destination = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+                    String url = getDirectionsUrl(origin, destination);
+                    DownloadTask downloadTask = new DownloadTask();
+                    downloadTask.execute(url);
+                }
+                else{
+                    Toast.makeText(getContext(), "Location is not enabled", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -285,9 +296,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
                             Date now = dateformat.parse(dateformat.format(new Date()));
                             if (now.compareTo(endDate) <= 0) {
                                 LatLng position = new LatLng(eventObject.getDouble("latitude"), eventObject.getDouble("longitude"));
-                                String markerInfo = "Description: " + eventObject.getString("description") + "\n" +
-                                        "Starting date: " + eventObject.getString("eventStartDT") + "\n" +
-                                        "End date: " + eventObject.getString("eventEndDT");
+                                String markerInfo =  eventObject.getString("description") + "\n" +
+                                        "\nStarting date: " + parseDateTime(eventObject.getString("eventStartDT")) + "\n" +
+                                        "End date: " + parseDateTime(eventObject.getString("eventEndDT"))+ "\n" +
+                                        "Organizer: " + eventObject.getString("username");
                                 MarkerOptions marker = new MarkerOptions().position(position).title(eventObject.getString("title")).snippet(markerInfo).icon(bitmapDescriptorFromVector(getContext(),R.drawable.ic_icon));
                                 mMap.addMarker(marker);
                             }
@@ -427,6 +439,42 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
             ParserTask parserTask = new ParserTask();
             parserTask.execute(result);
         }
+    }
+
+    public String parseDateTime(String datumTime){
+        String datum = "";
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(datumTime);
+            String formattedDate = new SimpleDateFormat("EEEE, d MMMM yyyy HH:mm", new Locale("en","nl")).format(date);
+            String splittedDate[] = formattedDate.split(" ");
+            datum = splittedDate[0]+" " + splittedDate[1]+" " + splittedDate[2]+" " + splittedDate[3]+" " + splittedDate[4];
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return datum;
+    }
+
+    public static boolean isLocationEnabled(Context context) {
+        int locationMode = 0;
+        String locationProviders;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            try {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+
+        }else{
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
+
+
     }
 }
 

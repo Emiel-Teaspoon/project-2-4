@@ -28,6 +28,11 @@
         android:layout_height="wrap_content"
         android:layout_weight="1.5"
         android:text="test"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Remove Friend"
+        android:id="@+id/removeFriend"/>
     </LinearLayout>
 
     <LinearLayout
@@ -46,12 +51,12 @@
         android:layout_weight="0.5"
         android:text="test"/>
 
-    <TextView
-        android:id="@+id/friendEmail"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.5"
-        android:text="test"/>
+        <TextView
+            android:id="@+id/friendEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.5"
+            android:text="test" />
     </LinearLayout>
     <View
         android:id="@+id/divider"

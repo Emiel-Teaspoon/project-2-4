@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 public class FriendDetailFragment extends Fragment {
 
     String friend;
+    String followerId;
     public ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
     private SimpleAdapter sa;
 
@@ -49,6 +51,8 @@ public class FriendDetailFragment extends Fragment {
         TextView friendName = getView().findViewById(R.id.friendName);
         friendName.setText(friend);
 
+        Button removeFriendButton = getView().findViewById(R.id.removeFriend);
+
         TextView friendEmailLabel = getView().findViewById(R.id.emailLabel);
         String emailLabel = "Email:";
         friendEmailLabel.setText(emailLabel);
@@ -61,6 +65,7 @@ public class FriendDetailFragment extends Fragment {
                 try {
                     JSONArray result = response.getJSONArray("result");
                     JSONObject friendObject = result.getJSONObject(0);
+                    followerId = friendObject.getString("user_id");
                     friendEmail.setText(friendObject.getString("email"));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -85,6 +90,7 @@ public class FriendDetailFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("Friend Detail response", response.toString());
+                list.clear();
                 try {
 
                     JSONArray result = response.getJSONArray("result");
@@ -124,6 +130,23 @@ public class FriendDetailFragment extends Fragment {
                 bundle.putString("event_id",eventId);
                 eventFragment.setArguments(bundle);
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, eventFragment).addToBackStack(null).commit();
+            }
+        });
+        removeFriendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ApiClient.deleteFriend(getContext(), MainActivity.app.getUser_id(), Integer.parseInt(followerId), new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        getFragmentManager().popBackStack();
+                        Log.d("test","test");
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Error", ""+error);
+                    }
+                });
             }
         });
     }
