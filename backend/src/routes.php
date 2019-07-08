@@ -176,7 +176,6 @@ return function (App $app) {
     });
 
     $app->delete('/unfollowUser/{user_id}/{follower_id}', function (Request $request, Response $response) {
-        $data = $request->getParsedBody();
             $user_id = $args['user_id'];
             $follower_id = $args['follower_id'];
 
