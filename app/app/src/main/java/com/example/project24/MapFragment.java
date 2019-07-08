@@ -117,7 +117,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Activit
             @Override
             public void onClick(View view) {
                 loadMarkers();
-                polyline.remove();
+                if (polyline != null) {
+                    polyline.remove();
+                }
             }
         });
     }
